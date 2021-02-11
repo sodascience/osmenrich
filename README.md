@@ -84,7 +84,9 @@ create a query using the `enrich_osm()` function. This function uses the
 bounding box created by the points present in the example dataset and searches
 for the specified `key = "amenity"` and `value = "waste_basket`. We also add a
 custom `name` for the newly created column and specify the radius (`r`) used
-in the search.
+in the search. See
+[Map Features on the website of OSM](https://wiki.openstreetmap.org/wiki/Map_features)
+for a complete list of `key` and `value` combinations.
 
 ```r
 # Simple OSMEnrich query
