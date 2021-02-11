@@ -12,7 +12,7 @@
 </p>
 <br/>
 
-# Enrich geocoded data using openstreetmaps (Coming soon!!!)
+# Enrich geocoded data using openstreetmaps
 
 ![Github Action test](https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg) [![DOI](https://zenodo.org/badge/337555188.svg)](https://zenodo.org/badge/latestdoi/337555188)
 
