@@ -1,0 +1,39 @@
+# YAML 1.2
+---
+authors:
+  -
+    affiliation: "Utrecht University"
+    family-names: "van Kesteren"
+    given-names: "Erik-Jan"
+    orcid: "https://orcid.org/0000-0003-1548-1663"
+  -
+    affiliation: "Utrecht University"
+    family-names: Vida
+    given-names: Leonardo
+    orcid: "https://orcid.org/0000-0002-0461-016X"
+  -
+    affiliation: "Utrecht University"
+    family-names: "de Bruin"
+    given-names: Jonathan
+    orcid: "https://orcid.org/0000-0002-4297-0502"
+  -
+    affiliation: "Utrecht University"
+    family-names: "Oberski"
+    given-names: Daniel
+    orcid: "https://orcid.org/0000-0001-7467-2297"
+cff-version: "1.1.0"
+date-released: 2021-02-15
+keywords:
+  - "data enrichment"
+  - openstreetmap
+  - "simple features"
+  - r
+  - "geo-data"
+  - spatial
+  - statistics
+license: MIT
+message: "If you use this software, please cite it using these metadata."
+repository-code: "https://github.com/sodascience/osmenrich"
+title: Enrich sf Data with Geographic Features from OpenStreetMaps
+abstract: Add columns to sf data using geographic features from OpenStreetMap. In the case of point geocoded observations, column values are based on weighted distances to the desired features.
+version: "1.0.0"

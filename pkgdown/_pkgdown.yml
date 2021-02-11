@@ -1,0 +1,78 @@
+home:
+  title: An R package to enrich geocoded data with OpenStreetMaps
+  description: Enrich sf data using geographic features retrieved from OpenStreetMaps public data.
+  links:
+  - text: Ask a question about osmenrich on GitHub
+    href: https://github.com/sodascience/osmenrich/issues
+  - text: View the GitHub repository with the backend setup
+    href: https://github.com/sodascience/osmenrich_docker
+
+authors:
+  Erik-Jan van Kesteren:
+    href: https://erikjanvankesteren.nl/
+  Leonardo Vida:
+    href: https://leonardovida.com/
+
+development:
+  mode: auto
+
+repo:
+  url:
+    home: https://github.com/sodascience/osmenrich
+    issue: https://github.com/sodascience/osmenrich/issues/
+  branch: main
+
+template:
+  params:
+    ganalytics: G-NEMHDHYTS8
+
+reference:
+- title: Enrich sf data
+  desc: Enrich sf data with OpenStreetMap features.
+- contents:
+  - enrich_osm
+  - enrich_opq
+- title: Retrieve and compute distances and durations
+  desc: Functions used to retrieve distances and duration from OSRM servers and kernel functions used to compute aggregation of these metrics.
+- contents:
+  - distancefuns
+  - kernels
+- title: OSRM functions
+  desc: Functions to communicate with remote or local OSRM servers.
+- contents:
+  - osrmtable
+  - create_osrm_input_table
+  - format_osrm_output_table
+- title: Utilities functions
+  desc: Additional utilities functions.
+- contents:
+  - check_osrm_limits
+  - set_server_profile
+  - transform_to_df
+  - url_available
+  - adjust_coord
+  - format_coord_table
+
+navbar:
+  structure:
+    left:
+    - home
+    - intro
+    - reference
+    - articles
+    - news
+    right: github
+  components:
+    home:
+      icon: fas fa-home fa-lg
+      href: index.html
+    reference:
+      text: Reference
+      href: reference/index.html
+
+
+articles:
+- title: Introduction
+  contents:
+  - osmenrich
+

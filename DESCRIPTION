@@ -1,0 +1,44 @@
+Package: osmenrich
+Type: Package
+Title: Enrich sf Data with Geographic Features from OpenStreetMaps
+Description: Add columns to sf data using geographic features from 
+    OpenStreetMap. In the case of point geocoded observations, column values
+    are based on weighted distances to the desired features.
+Version: 1.0
+Author: ODISSEI SoDa Team
+Authors@R: c(
+    person("Erik-Jan", "van Kesteren", email = "e.vankesteren1@uu.nl",
+    role = "cre", comment = c(ORCID = "0000-0003-1548-1663")
+    ),
+    person("Leonardo Jaya", "Vida", email = "l.j.vida@uu.nl", role = "aut",
+    comment = c(ORCID = "0000-0002-0461-016X")
+    ),
+    person("Jonathan", "de Bruin", email = "j.debruin1@uu.nl", role = "aut",
+    comment = c(ORCID = "0000-0002-4297-0502")
+    ),
+    person("Daniel", "Oberksi", email = "d.l.oberski@uu.nl", role = "ctb",
+    comment = c(ORCID = "0000-0001-7467-2297")
+    ),
+    person("SoDa Team", role = c("cph", "fnd"))
+    )
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    osmdata,
+    sf,
+    magrittr,
+    methods,
+    lwgeom,
+    tibble,
+    httr,
+    RCurl,
+    jsonlite
+RoxygenNote: 7.1.1.9000
+Roxygen: list(markdown = TRUE)
+Suggests:
+    testthat,
+    covr,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

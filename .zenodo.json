@@ -1,0 +1,38 @@
+{
+    "creators": [
+        {
+            "affiliation": "Utrecht University",
+            "name": "van Kesteren, Erik-Jan",
+            "orcid": "0000-0003-1548-1663"
+        },
+        {
+            "affiliation": "Utrecht University",
+            "name": "Vida, Leonardo",
+            "orcid": "0000-0002-0461-016X"
+        },
+        {
+            "affiliation": "Utrecht University",
+            "name": "de Bruin, Jonathan",
+            "orcid": "0000-0002-4297-0502"
+        },
+        {
+            "affiliation": "Utrecht University",
+            "name": "Oberski, Daniel",
+            "orcid": "0000-0001-7467-2297"
+        }
+    ],
+    "description": "Add columns to sf data using geographic features from OpenStreetMap. In the case of point geocoded observations, column values are based on weighted distances to the desired features.",
+    "keywords": [
+        "data enrichment",
+        "openstreetmap",
+        "simple features",
+        "r",
+        "geo-data",
+        "spatial",
+        "statistics"
+    ],
+    "license": {
+        "id": "MIT"
+    },
+    "title": "Enrich sf Data with Geographic Features from OpenStreetMaps"
+}
