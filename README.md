@@ -109,7 +109,7 @@ The resulting enriched dataset is a `sf` object and can be printed as usual
 and we can inspect the newly added column `waste_baskets`.
 
 ```r
-sf_example_enriched
+sf_example_simple
 #> Simple feature collection with 2 features and 4 fields
 #> geometry type:  POINT
 #> dimension:      XY
