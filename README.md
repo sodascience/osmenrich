@@ -81,14 +81,14 @@ sf_example
 #> 2 Bob        2     2 (5.08 52.13)
 ```
 
-To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, we
-create a query using the `enrich_osm()` function. This function uses the
+To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, you
+can create a query using the `enrich_osm()` function. This function uses the
 bounding box created by the points present in the example dataset and searches
-for the specified `key = "amenity"` and `value = "waste_basket`. We also add a
-custom `name` for the newly created column and specify the radius (`r`) used
-in the search. See
-[Map Features on the website of OSM](https://wiki.openstreetmap.org/wiki/Map_features)
-for a complete list of `key` and `value` combinations.
+for the specified `key = "amenity"` and `value = "waste_basket`. You can also
+add a custom `name` for the newly created column and specify the radius (`r`)
+used in the search. See [Map Features on the website of
+OSM](https://wiki.openstreetmap.org/wiki/Map_features) for a complete list of
+`key` and `value` combinations.
 
 ```r
 # Simple OSMEnrich query
@@ -106,8 +106,8 @@ sf_example_simple <- sf_example %>%
 
 ```
 
-The resulting enriched dataset is a `sf` object and can be printed as usual
-and we can inspect the newly added column `waste_baskets`.
+The resulting enriched dataset is a `sf` object and can be printed as usual.
+The `sf` object has a new column named `n_waste_baskets`.
 
 ```r
 sf_example_enriched
@@ -130,7 +130,7 @@ OSM enrichment can ask for a lot of data, which can overload public APIs. If
 you intend to enrich large amounts of data or compute routing distances (e.g.,
 driving duration) between many points, you should set up a local API endpoint.
 
-We provide a `docker-compose` workflow for this in the separate
+A `docker-compose` workflow for this is available in the separate
 [osmenrich_docker
 repository](https://github.com/sodascience/osmenrich_docker). Use the `README`
 on the repository for setup instructions.
@@ -145,10 +145,9 @@ Contributions are what make the open source community an amazing place to
 learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
-In this project we use the
-[Gitflow workflow](https://nvie.com/posts/a-successful-git-branching-model/)
-to help us with continious development. Instead of having a single
-`master`/`main` branch we use two branches to record the history of the
+In this project, the [Gitflow workflow](https://nvie.com/posts/a-successful-
+git-branching-model/) is used. Instead of having a single `master`/`main`
+branch, the project makes use of two branches to record the history of the
 project: `develop` and `master`. The `master` branch is used only for the
 official releases of the project, while the `develop` branch is used to
 integrate the new features developed. Finally, `feature` branches are used to
@@ -179,7 +178,7 @@ Enrich sf Data with Geographic Features from OpenStreetMaps (Version v1.0). Zeno
 This package is developed and maintained by the [ODISSEI Social Data Science
 (SoDa)](https://odissei-data.nl/nl/soda/) team.
 
-Do you have questions, suggestions, or remarks? File an issue in our issue
+Do you have questions, suggestions, or remarks? File an issue in the issue
 tracker or feel free to contact [Erik-Jan van
 Kesteren](https://github.com/vankesteren)
 ([@ejvankesteren](https://twitter.com/ejvankesteren)) or [Leonardo
