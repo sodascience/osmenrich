@@ -12,38 +12,6 @@
 #' @param .verbose `bool` whether to print info during enrichment
 #' @param ... arguments passed to the kernel function
 #'
-#' @details
-#' `Type` represents the feature type to be considered. Usually this would be
-#' points, but polygons and multipolygons are also possible. This argument can
-#' also be a vector of multiple types. Non-point types will be converted to
-#' points using the st_centroid function from the sf package (NB this does not
-#' necessarily work well for all features!) Available options are:
-#' - points
-#' - lines
-#' - polygons
-#' - multilines
-#' - multipolygons
-#'
-#' `Distance` represents the metric used to compute the distances between the
-#' rows in the dataset and the osm features. `Duration` represents the metric
-#' that indicates the average duration to cover the distances between the
-#' rows in the dataset and the osm features. The following metrics are
-#' available in this package, assuming that the OSRM server is setup as
-#' suggested in our guide at:
-#' https://github.com/sodascience/osmenrich_docker:
-#' - spherical ("as the crow flies")
-#' - distance_by_foot
-#' - duration_by_foot
-#' - distance_by_car
-#' - duration_by_car
-#' - distance_by_bike
-#' - duration_by_bike
-#'
-#' `Kernel` is a kernel function from the osmenrich package to be used in weighing
-#' the features and the radius/distance where features are considered. For
-#' simply counting the number of occurrences within a radius, use kernel_uniform
-#' with radius r.
-#'
 #' @importFrom methods is
 #' @rdname enrich_opq
 #'
