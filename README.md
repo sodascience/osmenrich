@@ -16,11 +16,12 @@
 
 ![Github Action test](https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg) [![DOI](https://zenodo.org/badge/337555188.svg)](https://zenodo.org/badge/latestdoi/337555188)
 
-
 The goal of `osmenrich` is to easily enrich geocoded data
 (`latitude`/`longitude`) with geographic features from OpenStreetMap (OSM).
 The main language of the package is `R` and this package is designed to work
-with the `sf` and `osmdata` packages for collecting and manipulating geodata.
+with the [`sf`](https://r-spatial.github.io/sf/) and [`osmdata`](
+https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html)
+packages for collecting and manipulating geodata.
 
 ## Installation
 
