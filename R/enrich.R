@@ -21,7 +21,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' #' # Enrich data creating new column `waste_baskets`
+#' # Enrich data creating new column `waste_baskets`
 #' sf_enriched <- dataset %>%
 #'   enrich_osm(
 #'     name = "waste_baskets",
