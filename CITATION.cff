@@ -22,7 +22,6 @@ authors:
     given-names: Daniel
     orcid: "https://orcid.org/0000-0001-7467-2297"
 cff-version: "1.1.0"
-date-released: 2021-02-15
 keywords:
   - "data enrichment"
   - openstreetmap
@@ -37,3 +36,5 @@ repository-code: "https://github.com/sodascience/osmenrich"
 title: Enrich sf Data with Geographic Features from OpenStreetMaps
 abstract: Add columns to sf data using geographic features from OpenStreetMap. In the case of point geocoded observations, column values are based on weighted distances to the desired features.
 version: "1.0.0"
+doi: 10.5281/zenodo.4534188
+date-released: 2021-02-15

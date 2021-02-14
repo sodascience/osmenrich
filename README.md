@@ -12,9 +12,10 @@
 </p>
 <br/>
 
-# Enrich geocoded data using openstreetmaps (Coming soon!!!)
+# Enrich geocoded data using openstreetmaps
 
-![Github Action test](https://github.com/sodascience/osmenrich/workflows/.github/workflows/R-CMD-check.yaml/badge.svg)
+![Github Action test](https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg) [![DOI](https://zenodo.org/badge/337555188.svg)](https://zenodo.org/badge/latestdoi/337555188)
+
 
 The goal of `osmenrich` is to easily enrich geocoded data
 (`latitude`/`longitude`) with geographic features from OpenStreetMap (OSM).
@@ -167,7 +168,8 @@ The `osmenrich` package is published under the MIT license. When using
 `osmenrich` for academic work, please cite:
 
 ```
-Will soon follow.
+van Kesteren, Erik-Jan, Vida, Leonardo, de Bruin, Jonathan, & Oberski, Daniel. (2021, February 11).
+Enrich sf Data with Geographic Features from OpenStreetMaps (Version v1.0). Zenodo. http://doi.org/10.5281/zenodo.4534188
 ```
 
 <!-- CONTACT -->
