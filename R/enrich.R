@@ -19,7 +19,7 @@
 #' @param .verbose `bool` whether to print info during enrichment
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # Enrich data creating new column `waste_baskets`
 #' sf_enriched <- dataset %>%
