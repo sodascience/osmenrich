@@ -1,5 +1,5 @@
 #' @name enrich
-#' @title Enrich OSM Data
+#' @title Enrich `sf` object with OSM data
 #' @description Perform enriched query on osm and add as new column.
 #'
 #' The enrichment call works in the following way: an `enriched_overpass_query`
