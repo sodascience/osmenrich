@@ -61,24 +61,27 @@ library(osmenrich)
 # Create an example dataset to enrich
 sf_example <-
   tribble(
-    ~person, ~id,  ~lat,  ~lon, ~val,
-    "Alice",   1, 52.12,  5.09,   5L,
-    "Bob",     2, 52.13,  5.08,   2L
+    ~person,  ~lat,   ~lon,
+    "Alice",  52.12,  5.09,
+    "Bob",    52.13,  5.08,
   ) %>%
-  sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
+  sf::st_as_sf(
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
 
 # Print it
 sf_example
-#> Simple feature collection with 2 features and 3 fields
+#> Simple feature collection with 2 features and 1 field
 #> geometry type:  POINT
 #> dimension:      XY
 #> bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
 #> CRS:            EPSG:4326
-#> # A tibble: 2 x 4
-#>  person    id   val     geometry
-#> * <chr>  <dbl> <int>  <POINT [°]>
-#> 1 Alice      1     5 (5.09 52.12)
-#> 2 Bob        2     2 (5.08 52.13)
+#> # A tibble: 2 x 2
+#>   person     geometry
+#> * <chr>   <POINT [°]>
+#> 1 Alice  (5.09 52.12)
+#> 2 Bob    (5.08 52.13)
 ```
 
 To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, you
@@ -94,7 +97,7 @@ OSM](https://wiki.openstreetmap.org/wiki/Map_features) for a complete list of
 # Simple OSMEnrich query
 sf_example_simple <- sf_example %>%
   enrich_osm(
-    name = "waste_baskets",
+    name = "n_waste_baskets",
     key = "amenity",
     value = "waste_basket",
     r = 100
@@ -116,11 +119,11 @@ sf_example_simple
 #> dimension:      XY
 #> bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
 #> CRS:            EPSG:4326
-#>  A tibble: 2 x 5
-#>  person    id   val     geometry waste_baskets
-#> * <chr>  <dbl> <int>  <POINT [°]>         <int>
-#> 1 Alice      1     5 (5.09 52.12)             3
-#> 2 Bob        2     2 (5.08 52.13)             0
+#> # A tibble: 2 x 3
+#>   person     geometry n_waste_baskets
+#> * <chr>   <POINT [°]>           <int>
+#> 1 Alice  (5.09 52.12)               3
+#> 2 Bob    (5.08 52.13)               0
 ```
 
 
