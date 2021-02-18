@@ -99,12 +99,11 @@ sf_example_enriched <- sf_example %>%
     name = "n_waste_baskets",
     key = "amenity",
     value = "waste_basket",
-    r = 100
+    r = 500
   )
-#> Downloading data for n_waste_baskets... Done.
-#> Downloaded 26 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
-#> Computing distance matrix for wastebaskets...Done.
-#> Adding n_waste_baskets to data.
+#> Downloading data for waste_baskets... Done.
+#> Downloaded 147 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
+#> Computing distance matrix for waste_baskets...Done.
 ```
 
 The resulting enriched dataset `sf_example_enriched` is a `sf` object and can be printed as usual
@@ -112,17 +111,20 @@ to inspect the newly added column `n_waste_baskets`.
 
 ```r
 sf_example_enriched
-#> Simple feature collection with 2 features and 4 fields
+#> Simple feature collection with 2 features and 2 fields
 #> geometry type:  POINT
 #> dimension:      XY
 #> bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
-#> CRS:            EPSG:4326
+#> geographic CRS: WGS 84
 #> # A tibble: 2 x 3
-#>   person     geometry n_waste_baskets
-#> * <chr>   <POINT [°]>           <int>
-#> 1 Alice  (5.09 52.12)               3
-#> 2 Bob    (5.08 52.13)               0
+#>   person     geometry waste_baskets
+#> * <chr>   <POINT [°]>         <int>
+#> 1 Alice  (5.09 52.12)            75
+#> 2 Bob    (5.08 52.13)             1
 ```
+
+The waste baskets column is now the result of summing all the wastebaskets in a 500 meter radius for Alice and Bob:
+![](man/figures/example_wastebaskets_r500.png)
 
 ## Local API setup
 
