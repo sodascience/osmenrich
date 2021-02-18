@@ -94,24 +94,24 @@ for a complete list of `key` and `value` combinations.
 
 ```r
 # Simple OSMEnrich query
-sf_example_simple <- sf_example %>%
+sf_example_enriched <- sf_example %>%
   enrich_osm(
     name = "n_waste_baskets",
     key = "amenity",
     value = "waste_basket",
     r = 100
   )
-#> Downloading data for waste_baskets... Done.
+#> Downloading data for n_waste_baskets... Done.
 #> Downloaded 26 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
 #> Computing distance matrix for wastebaskets...Done.
-#> Adding waste_baskets to data.
+#> Adding n_waste_baskets to data.
 ```
 
-The resulting enriched dataset is a `sf` object and can be printed as usual
-to inspect the newly added column `waste_baskets`.
+The resulting enriched dataset `sf_example_enriched` is a `sf` object and can be printed as usual
+to inspect the newly added column `n_waste_baskets`.
 
 ```r
-sf_example_simple
+sf_example_enriched
 #> Simple feature collection with 2 features and 4 fields
 #> geometry type:  POINT
 #> dimension:      XY
