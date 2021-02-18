@@ -12,7 +12,7 @@
 </p>
 <br/>
 
-# Enrich geocoded data using openstreetmaps
+# Enrich geocoded data using OpenStreetMap
 
 ![Github Action test](https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg) [![DOI](https://zenodo.org/badge/337555188.svg)](https://zenodo.org/badge/latestdoi/337555188)
 
@@ -55,7 +55,6 @@ dataset:
 # Import libraries
 library(tidyverse)
 library(sf)
-library(osmdata)
 library(osmenrich)
 
 # Create an example dataset to enrich
@@ -87,33 +86,32 @@ sf_example
 To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, you
 can create a query using the `enrich_osm()` function. This function uses the
 bounding box created by the points present in the example dataset and searches
-for the specified `key = "amenity"` and `value = "waste_basket`. You can also
-add a custom `name` for the newly created column and specify the radius (`r`)
-used in the search. See [Map Features on the website of
-OSM](https://wiki.openstreetmap.org/wiki/Map_features) for a complete list of
-`key` and `value` combinations.
+for the specified `key = "amenity"` and `value = "waste_basket`. You can also add a
+custom `name` for the newly created column and specify the radius (`r`) used
+in the search. See
+[Map Features on the website of OSM](https://wiki.openstreetmap.org/wiki/Map_features)
+for a complete list of `key` and `value` combinations.
 
 ```r
 # Simple OSMEnrich query
-sf_example_simple <- sf_example %>%
+sf_example_enriched <- sf_example %>%
   enrich_osm(
     name = "n_waste_baskets",
     key = "amenity",
     value = "waste_basket",
     r = 100
   )
-#> Downloading data for waste_baskets... Done.
+#> Downloading data for n_waste_baskets... Done.
 #> Downloaded 26 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
 #> Computing distance matrix for wastebaskets...Done.
-#> Adding waste_baskets to data.
-
+#> Adding n_waste_baskets to data.
 ```
 
-The resulting enriched dataset is a `sf` object and can be printed as usual.
-The `sf` object has a new column named `n_waste_baskets`.
+The resulting enriched dataset `sf_example_enriched` is a `sf` object and can be printed as usual
+to inspect the newly added column `n_waste_baskets`.
 
 ```r
-sf_example_simple
+sf_example_enriched
 #> Simple feature collection with 2 features and 4 fields
 #> geometry type:  POINT
 #> dimension:      XY
@@ -126,18 +124,16 @@ sf_example_simple
 #> 2 Bob    (5.08 52.13)               0
 ```
 
-
 ## Local API setup
 
 OSM enrichment can ask for a lot of data, which can overload public APIs. If
 you intend to enrich large amounts of data or compute routing distances (e.g.,
 driving duration) between many points, you should set up a local API endpoint.
 
-A `docker-compose` workflow for this is available in the separate
+Multiple `docker-compose` workflows for doing this are avaialble in the separate
 [osmenrich_docker
 repository](https://github.com/sodascience/osmenrich_docker). Use the `README`
-on the repository for setup instructions.
-
+in the repository to select the workflow that fits your desired outcome.
 
 <img src="man/figures/docker.png" width="250px"></img>
 
@@ -154,8 +150,8 @@ branch, the project makes use of two branches to record the history of the
 project: `develop` and `master`. The `master` branch is used only for the
 official releases of the project, while the `develop` branch is used to
 integrate the new features developed. Finally, `feature` branches are used to
-develop new features or additions to the project that will be `rebased and
-squash` in the `develop` branch.
+develop new features or additions to the project that will be `rebased and squashed`
+in the `develop` branch.
 
 The workflow to contribute with Gitflow becomes:
 
