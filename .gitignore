@@ -1,5 +1,8 @@
 # From: https://github.com/github/gitignore/blob/master/R.gitignore
 
+# R osm cache
+rosm.cache/
+
 # History files
 .Rhistory
 .Rapp.history

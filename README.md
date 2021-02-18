@@ -12,15 +12,16 @@
 </p>
 <br/>
 
-# Enrich geocoded data using openstreetmaps
+# Enrich geocoded data using OpenStreetMap
 
 ![Github Action test](https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg) [![DOI](https://zenodo.org/badge/337555188.svg)](https://zenodo.org/badge/latestdoi/337555188)
-
 
 The goal of `osmenrich` is to easily enrich geocoded data
 (`latitude`/`longitude`) with geographic features from OpenStreetMap (OSM).
 The main language of the package is `R` and this package is designed to work
-with the `sf` and `osmdata` packages for collecting and manipulating geodata.
+with the [`sf`](https://r-spatial.github.io/sf/) and [`osmdata`](
+https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html)
+packages for collecting and manipulating geodata.
 
 ## Installation
 
@@ -54,72 +55,76 @@ dataset:
 # Import libraries
 library(tidyverse)
 library(sf)
-library(osmdata)
 library(osmenrich)
 
 # Create an example dataset to enrich
 sf_example <-
   tribble(
-    ~person, ~id,  ~lat,  ~lon, ~val,
-    "Alice",   1, 52.12,  5.09,   5L,
-    "Bob",     2, 52.13,  5.08,   2L
+    ~person,  ~lat,   ~lon,
+    "Alice",  52.12,  5.09,
+    "Bob",    52.13,  5.08,
   ) %>%
-  sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
+  sf::st_as_sf(
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
 
 # Print it
 sf_example
-#> Simple feature collection with 2 features and 3 fields
+#> Simple feature collection with 2 features and 1 field
 #> geometry type:  POINT
 #> dimension:      XY
 #> bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
 #> CRS:            EPSG:4326
-#> # A tibble: 2 x 4
-#>  person    id   val     geometry
-#> * <chr>  <dbl> <int>  <POINT [°]>
-#> 1 Alice      1     5 (5.09 52.12)
-#> 2 Bob        2     2 (5.08 52.13)
+#> # A tibble: 2 x 2
+#>   person     geometry
+#> * <chr>   <POINT [°]>
+#> 1 Alice  (5.09 52.12)
+#> 2 Bob    (5.08 52.13)
 ```
 
-To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, we
-create a query using the `enrich_osm()` function. This function uses the
+To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, you
+can create a query using the `enrich_osm()` function. This function uses the
 bounding box created by the points present in the example dataset and searches
-for the specified `key = "amenity"` and `value = "waste_basket`. We also add a
+for the specified `key = "amenity"` and `value = "waste_basket`. You can also add a
 custom `name` for the newly created column and specify the radius (`r`) used
-in the search.
+in the search. See
+[Map Features on the website of OSM](https://wiki.openstreetmap.org/wiki/Map_features)
+for a complete list of `key` and `value` combinations.
 
 ```r
 # Simple OSMEnrich query
-sf_example_simple <- sf_example %>%
+sf_example_enriched <- sf_example %>%
   enrich_osm(
-    name = "waste_baskets",
+    name = "n_waste_baskets",
     key = "amenity",
     value = "waste_basket",
-    r = 100
+    r = 500
   )
 #> Downloading data for waste_baskets... Done.
-#> Downloaded 26 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
-#> Computing distance matrix for wastebaskets...Done.
-#> Adding waste_baskets to data.
-
+#> Downloaded 147 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
+#> Computing distance matrix for waste_baskets...Done.
 ```
 
-The resulting enriched dataset is a `sf` object and can be printed as usual
-and we can inspect the newly added column `waste_baskets`.
+The resulting enriched dataset `sf_example_enriched` is a `sf` object and can be printed as usual
+to inspect the newly added column `n_waste_baskets`.
 
 ```r
 sf_example_enriched
-#> Simple feature collection with 2 features and 4 fields
+#> Simple feature collection with 2 features and 2 fields
 #> geometry type:  POINT
 #> dimension:      XY
 #> bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
-#> CRS:            EPSG:4326
-#>  A tibble: 2 x 5
-#>  person    id   val     geometry waste_baskets
-#> * <chr>  <dbl> <int>  <POINT [°]>         <int>
-#> 1 Alice      1     5 (5.09 52.12)             3
-#> 2 Bob        2     2 (5.08 52.13)             0
+#> geographic CRS: WGS 84
+#> # A tibble: 2 x 3
+#>   person     geometry waste_baskets
+#> * <chr>   <POINT [°]>         <int>
+#> 1 Alice  (5.09 52.12)            75
+#> 2 Bob    (5.08 52.13)             1
 ```
 
+The waste baskets column is now the result of summing all the wastebaskets in a 500 meter radius for Alice and Bob:
+![](man/figures/example_wastebaskets_r500.png)
 
 ## Local API setup
 
@@ -127,11 +132,10 @@ OSM enrichment can ask for a lot of data, which can overload public APIs. If
 you intend to enrich large amounts of data or compute routing distances (e.g.,
 driving duration) between many points, you should set up a local API endpoint.
 
-We provide a `docker-compose` workflow for this in the separate
+Multiple `docker-compose` workflows for doing this are avaialble in the separate
 [osmenrich_docker
 repository](https://github.com/sodascience/osmenrich_docker). Use the `README`
-on the repository for setup instructions.
-
+in the repository to select the workflow that fits your desired outcome.
 
 <img src="man/figures/docker.png" width="250px"></img>
 
@@ -142,15 +146,14 @@ Contributions are what make the open source community an amazing place to
 learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
-In this project we use the
-[Gitflow workflow](https://nvie.com/posts/a-successful-git-branching-model/)
-to help us with continious development. Instead of having a single
-`master`/`main` branch we use two branches to record the history of the
+In this project, the [Gitflow workflow](https://nvie.com/posts/a-successful-
+git-branching-model/) is used. Instead of having a single `master`/`main`
+branch, the project makes use of two branches to record the history of the
 project: `develop` and `master`. The `master` branch is used only for the
 official releases of the project, while the `develop` branch is used to
 integrate the new features developed. Finally, `feature` branches are used to
-develop new features or additions to the project that will be `rebased and
-squash` in the `develop` branch.
+develop new features or additions to the project that will be `rebased and squashed`
+in the `develop` branch.
 
 The workflow to contribute with Gitflow becomes:
 
@@ -176,7 +179,7 @@ Enrich sf Data with Geographic Features from OpenStreetMaps (Version v1.0). Zeno
 This package is developed and maintained by the [ODISSEI Social Data Science
 (SoDa)](https://odissei-data.nl/nl/soda/) team.
 
-Do you have questions, suggestions, or remarks? File an issue in our issue
+Do you have questions, suggestions, or remarks? File an issue in the issue
 tracker or feel free to contact [Erik-Jan van
 Kesteren](https://github.com/vankesteren)
 ([@ejvankesteren](https://twitter.com/ejvankesteren)) or [Leonardo
