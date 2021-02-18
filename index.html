@@ -100,11 +100,11 @@
   </span>
   badges: end --></p>
 <p><br></p>
-<div id="enrich-geocoded-data-using-openstreetmaps" class="section level1">
+<div id="enrich-geocoded-data-using-openstreetmap" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#enrich-geocoded-data-using-openstreetmaps" class="anchor"></a>Enrich geocoded data using openstreetmaps</h1></div>
+<a href="#enrich-geocoded-data-using-openstreetmap" class="anchor"></a>Enrich geocoded data using OpenStreetMap</h1></div>
 <p><img src="https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg" alt="Github Action test"><a href="https://zenodo.org/badge/latestdoi/337555188"><img src="https://zenodo.org/badge/337555188.svg" alt="DOI"></a></p>
-<p>The goal of <code>osmenrich</code> is to easily enrich geocoded data (<code>latitude</code>/<code>longitude</code>) with geographic features from OpenStreetMap (OSM). The main language of the package is <code>R</code> and this package is designed to work with the <code>sf</code> and <code>osmdata</code> packages for collecting and manipulating geodata.</p>
+<p>The goal of <code>osmenrich</code> is to easily enrich geocoded data (<code>latitude</code>/<code>longitude</code>) with geographic features from OpenStreetMap (OSM). The main language of the package is <code>R</code> and this package is designed to work with the <a href="https://r-spatial.github.io/sf/"><code>sf</code></a> and <a href="https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html"><code>osmdata</code></a> packages for collecting and manipulating geodata.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -127,64 +127,66 @@
 <code class="sourceCode R"><span class="co"># Import libraries</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">tidyverse</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/osmdata/">osmdata</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">osmenrich</span><span class="op">)</span>
 
 <span class="co"># Create an example dataset to enrich</span>
 <span class="va">sf_example</span> <span class="op">&lt;-</span>
   <span class="fu">tribble</span><span class="op">(</span>
-    <span class="op">~</span><span class="va">person</span>, <span class="op">~</span><span class="va">id</span>,  <span class="op">~</span><span class="va">lat</span>,  <span class="op">~</span><span class="va">lon</span>, <span class="op">~</span><span class="va">val</span>,
-    <span class="st">"Alice"</span>,   <span class="fl">1</span>, <span class="fl">52.12</span>,  <span class="fl">5.09</span>,   <span class="fl">5L</span>,
-    <span class="st">"Bob"</span>,     <span class="fl">2</span>, <span class="fl">52.13</span>,  <span class="fl">5.08</span>,   <span class="fl">2L</span>
+    <span class="op">~</span><span class="va">person</span>,  <span class="op">~</span><span class="va">lat</span>,   <span class="op">~</span><span class="va">lon</span>,
+    <span class="st">"Alice"</span>,  <span class="fl">52.12</span>,  <span class="fl">5.09</span>,
+    <span class="st">"Bob"</span>,    <span class="fl">52.13</span>,  <span class="fl">5.08</span>,
   <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span>
+  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span>
+    coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>,
+    crs <span class="op">=</span> <span class="fl">4326</span>
+  <span class="op">)</span>
 
 <span class="co"># Print it</span>
 <span class="va">sf_example</span>
-<span class="co">#&gt; Simple feature collection with 2 features and 3 fields</span>
+<span class="co">#&gt; Simple feature collection with 2 features and 1 field</span>
 <span class="co">#&gt; geometry type:  POINT</span>
 <span class="co">#&gt; dimension:      XY</span>
 <span class="co">#&gt; bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13</span>
 <span class="co">#&gt; CRS:            EPSG:4326</span>
-<span class="co">#&gt; # A tibble: 2 x 4</span>
-<span class="co">#&gt;  person    id   val     geometry</span>
-<span class="co">#&gt; * &lt;chr&gt;  &lt;dbl&gt; &lt;int&gt;  &lt;POINT [°]&gt;</span>
-<span class="co">#&gt; 1 Alice      1     5 (5.09 52.12)</span>
-<span class="co">#&gt; 2 Bob        2     2 (5.08 52.13)</span></code></pre></div>
-<p>To enrich the <code>sf_example</code> dataset with “waste baskets” in a 100m radius, we create a query using the <code><a href="reference/enrich.html">enrich_osm()</a></code> function. This function uses the bounding box created by the points present in the example dataset and searches for the specified <code>key = "amenity"</code> and <code>value = "waste_basket</code>. We also add a custom <code>name</code> for the newly created column and specify the radius (<code>r</code>) used in the search.</p>
+<span class="co">#&gt; # A tibble: 2 x 2</span>
+<span class="co">#&gt;   person     geometry</span>
+<span class="co">#&gt; * &lt;chr&gt;   &lt;POINT [°]&gt;</span>
+<span class="co">#&gt; 1 Alice  (5.09 52.12)</span>
+<span class="co">#&gt; 2 Bob    (5.08 52.13)</span></code></pre></div>
+<p>To enrich the <code>sf_example</code> dataset with “waste baskets” in a 100m radius, you can create a query using the <code><a href="reference/enrich.html">enrich_osm()</a></code> function. This function uses the bounding box created by the points present in the example dataset and searches for the specified <code>key = "amenity"</code> and <code>value = "waste_basket</code>. You can also add a custom <code>name</code> for the newly created column and specify the radius (<code>r</code>) used in the search. See <a href="https://wiki.openstreetmap.org/wiki/Map_features">Map Features on the website of OSM</a> for a complete list of <code>key</code> and <code>value</code> combinations.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Simple OSMEnrich query</span>
-<span class="va">sf_example_simple</span> <span class="op">&lt;-</span> <span class="va">sf_example</span> <span class="op">%&gt;%</span>
+<span class="va">sf_example_enriched</span> <span class="op">&lt;-</span> <span class="va">sf_example</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/enrich.html">enrich_osm</a></span><span class="op">(</span>
-    name <span class="op">=</span> <span class="st">"waste_baskets"</span>,
+    name <span class="op">=</span> <span class="st">"n_waste_baskets"</span>,
     key <span class="op">=</span> <span class="st">"amenity"</span>,
     value <span class="op">=</span> <span class="st">"waste_basket"</span>,
-    r <span class="op">=</span> <span class="fl">100</span>
+    r <span class="op">=</span> <span class="fl">500</span>
   <span class="op">)</span>
 <span class="co">#&gt; Downloading data for waste_baskets... Done.</span>
-<span class="co">#&gt; Downloaded 26 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.</span>
-<span class="co">#&gt; Computing distance matrix for wastebaskets...Done.</span>
-<span class="co">#&gt; Adding waste_baskets to data.</span></code></pre></div>
-<p>The resulting enriched dataset is a <code>sf</code> object and can be printed as usual and we can inspect the newly added column <code>waste_baskets</code>.</p>
+<span class="co">#&gt; Downloaded 147 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.</span>
+<span class="co">#&gt; Computing distance matrix for waste_baskets...Done.</span></code></pre></div>
+<p>The resulting enriched dataset <code>sf_example_enriched</code> is a <code>sf</code> object and can be printed as usual to inspect the newly added column <code>n_waste_baskets</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sf_example_enriched</span>
-<span class="co">#&gt; Simple feature collection with 2 features and 4 fields</span>
+<span class="co">#&gt; Simple feature collection with 2 features and 2 fields</span>
 <span class="co">#&gt; geometry type:  POINT</span>
 <span class="co">#&gt; dimension:      XY</span>
 <span class="co">#&gt; bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13</span>
-<span class="co">#&gt; CRS:            EPSG:4326</span>
-<span class="co">#&gt;  A tibble: 2 x 5</span>
-<span class="co">#&gt;  person    id   val     geometry waste_baskets</span>
-<span class="co">#&gt; * &lt;chr&gt;  &lt;dbl&gt; &lt;int&gt;  &lt;POINT [°]&gt;         &lt;int&gt;</span>
-<span class="co">#&gt; 1 Alice      1     5 (5.09 52.12)             3</span>
-<span class="co">#&gt; 2 Bob        2     2 (5.08 52.13)             0</span></code></pre></div>
+<span class="co">#&gt; geographic CRS: WGS 84</span>
+<span class="co">#&gt; # A tibble: 2 x 3</span>
+<span class="co">#&gt;   person     geometry waste_baskets</span>
+<span class="co">#&gt; * &lt;chr&gt;   &lt;POINT [°]&gt;         &lt;int&gt;</span>
+<span class="co">#&gt; 1 Alice  (5.09 52.12)            75</span>
+<span class="co">#&gt; 2 Bob    (5.08 52.13)             1</span></code></pre></div>
+<p>The waste baskets column is now the result of summing all the wastebaskets in a 500 meter radius for Alice and Bob: <img src="reference/figures/example_wastebaskets_r500.png"></p>
 </div>
 </div>
 <div id="local-api-setup" class="section level2">
 <h2 class="hasAnchor">
 <a href="#local-api-setup" class="anchor"></a>Local API setup</h2>
 <p>OSM enrichment can ask for a lot of data, which can overload public APIs. If you intend to enrich large amounts of data or compute routing distances (e.g., driving duration) between many points, you should set up a local API endpoint.</p>
-<p>We provide a <code>docker-compose</code> workflow for this in the separate <a href="https://github.com/sodascience/osmenrich_docker">osmenrich_docker repository</a>. Use the <code>README</code> on the repository for setup instructions.</p>
+<p>Multiple <code>docker-compose</code> workflows for doing this are avaialble in the separate <a href="https://github.com/sodascience/osmenrich_docker">osmenrich_docker repository</a>. Use the <code>README</code> in the repository to select the workflow that fits your desired outcome.</p>
 <p><img src="reference/figures/docker.png" width="250px"></p>
 <!-- CONTRIBUTING -->
 </div>
@@ -192,7 +194,7 @@
 <h2 class="hasAnchor">
 <a href="#contributing" class="anchor"></a>Contributing</h2>
 <p>Contributions are what make the open source community an amazing place to learn, inspire, and create. Any contributions you make are <strong>greatly appreciated</strong>.</p>
-<p>In this project we use the <a href="https://nvie.com/posts/a-successful-git-branching-model/">Gitflow workflow</a> to help us with continious development. Instead of having a single <code>master</code>/<code>main</code> branch we use two branches to record the history of the project: <code>develop</code> and <code>master</code>. The <code>master</code> branch is used only for the official releases of the project, while the <code>develop</code> branch is used to integrate the new features developed. Finally, <code>feature</code> branches are used to develop new features or additions to the project that will be <code>rebased and squash</code> in the <code>develop</code> branch.</p>
+<p>In this project, the <a href="https://nvie.com/posts/a-successful-%20git-branching-model/">Gitflow workflow</a> is used. Instead of having a single <code>master</code>/<code>main</code> branch, the project makes use of two branches to record the history of the project: <code>develop</code> and <code>master</code>. The <code>master</code> branch is used only for the official releases of the project, while the <code>develop</code> branch is used to integrate the new features developed. Finally, <code>feature</code> branches are used to develop new features or additions to the project that will be <code>rebased and squashed</code> in the <code>develop</code> branch.</p>
 <p>The workflow to contribute with Gitflow becomes:</p>
 <ol>
 <li>Fork the Project</li>
@@ -214,7 +216,7 @@ Enrich sf Data with Geographic Features from OpenStreetMaps (Version v1.0). Zeno
 <h2 class="hasAnchor">
 <a href="#contact" class="anchor"></a>Contact</h2>
 <p>This package is developed and maintained by the <a href="https://odissei-data.nl/nl/soda/">ODISSEI Social Data Science (SoDa)</a> team.</p>
-<p>Do you have questions, suggestions, or remarks? File an issue in our issue tracker or feel free to contact <a href="https://github.com/vankesteren">Erik-Jan van Kesteren</a> (<a href="https://twitter.com/ejvankesteren">@ejvankesteren</a>) or <a href="https://github.com/leonardovida">Leonardo Vida</a> (<a href="https://twitter.com/leonardojvida">@leonardojvida</a>)</p>
+<p>Do you have questions, suggestions, or remarks? File an issue in the issue tracker or feel free to contact <a href="https://github.com/vankesteren">Erik-Jan van Kesteren</a> (<a href="https://twitter.com/ejvankesteren">@ejvankesteren</a>) or <a href="https://github.com/leonardovida">Leonardo Vida</a> (<a href="https://twitter.com/leonardojvida">@leonardojvida</a>)</p>
 <p><img src="reference/figures/word_colour-l.png" width="250px"></p>
 </div>
 </div>
