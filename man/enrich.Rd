@@ -78,6 +78,9 @@ https://github.com/sodascience/osmenrich_docker:
 weighing the features and the radius/distance where features are
 considered. For simply counting the number of occurrences within a radius,
 use \code{kernel_uniform} with radius \code{r}.
+
+For more details see the introductory vignette of \code{osmenrich}:
+\code{vignette("introduction", package = "osmenrich")}
 }
 \note{
 If you want to get a large number of points make sure to set the

@@ -33,8 +33,8 @@ install.packages("remotes")
 ```
 
 If you do have this package, due to recent changes in GitHub's naming of branches,
-please make sure you have the latest version of `remotes` or at least a version
->= 2.2.
+please make sure you have the latest version of `remotes` or at least version
+`2.2`.
 
 Once you did this, to continue the installation of the `osmenrich` package, run:
 
@@ -59,7 +59,7 @@ for large queries follow the instructions in section
 ### Simple enrichment example
 
 Let's enrich a spatial (`sf`) dataset (`sf_example`) with the number of waste
-baskets in a radius of 100 meters from each of the point specified in a
+baskets in a radius of 500 meters from each of the point specified in a
 dataset:
 
 ```r
@@ -94,7 +94,7 @@ sf_example
 #> 2 Bob    (5.08 52.13)
 ```
 
-To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, you
+To enrich the `sf_example` dataset with "waste baskets" in a 500m radius, you
 can create a query using the `enrich_osm()` function. This function uses the
 bounding box created by the points present in the example dataset and searches
 for the specified `key = "amenity"` and `value = "waste_basket`. You can also add a

@@ -47,6 +47,9 @@
 #'   considered. For simply counting the number of occurrences within a radius,
 #'   use `kernel_uniform` with radius `r`.
 #'
+#' For more details see the introductory vignette of `osmenrich`:
+#'   \code{vignette("introduction", package = "osmenrich")}
+#'
 #' @examples
 #' \donttest{
 #'
