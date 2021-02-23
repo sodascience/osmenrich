@@ -25,7 +25,14 @@ packages for collecting and manipulating geodata.
 
 ## Installation
 
-To install the package, run:
+To install the package, you first need to have the `remotes` package installed.
+If you do not have this package yet, please install it first with:
+
+```r
+install.packages("remotes")
+```
+
+Then to continue the installation of the `osmenrich` package, run:
 
 ```r
 remotes::install_github("sodascience/osmenrich")
@@ -146,8 +153,8 @@ Contributions are what make the open source community an amazing place to
 learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
-In this project, the [Gitflow workflow](https://nvie.com/posts/a-successful-
-git-branching-model/) is used. Instead of having a single `master`/`main`
+In this project, the [Gitflow workflow](https://nvie.com/posts/a-successful-git-branching-model/)
+is used. Instead of having a single `master`/`main`
 branch, the project makes use of two branches to record the history of the
 project: `develop` and `master`. The `master` branch is used only for the
 official releases of the project, while the `develop` branch is used to
