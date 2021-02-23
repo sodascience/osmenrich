@@ -1,21 +1,21 @@
 #' @title Test if server set is available.
 #'
 #' @description The user should indicate the address where one or more instance
-#' of the OSRM server are running. In case more instances are running at the
-#' same time, we force the user to place them behind a reverse proxy (we force
-#' to indicate only one server address). We further recommend to use our
-#' default docker-compose configuration to have a working configuration
-#' with three OSRM servers behind an nginx server
-#' (https://github.com/sodascience/osmenrich_docker).
+#'   of the OSRM server are running. In case more instances are running at the
+#'   same time, we force the user to place them behind a reverse proxy (we force
+#'   to indicate only one server address). We further recommend to use our
+#'   default docker-compose configuration to have a working configuration
+#'   with three OSRM servers behind an nginx server
+#'   (https://github.com/sodascience/osmenrich_docker).
 #'
-#' If no servers are used, the default server from the OSRM project
-#' (http://router.project-osrm.org/) will be used. This is not recommended
-#' as this server is intended only for demo purposes, might fail in case of
-#' overload and only returns distances for the driving profile.
+#'   If no servers are used, the default server from the OSRM project
+#'   (http://router.project-osrm.org/) will be used. This is not recommended
+#'   as this server is intended only for demo purposes, might fail in case of
+#'   overload and only returns distances for the driving profile.
 #' @param profile The name of the profile
 #' @return Set the `osrm.server` and the `osrm.profile`
-#' The name of the profile will be used only if the server (via `osrm.server`)
-#' is set. Otherwise, the default server will be used
+#'   The name of the profile will be used only if the server (via `osrm.server`)
+#'   is set. Otherwise, the default server will be used
 #'
 #' @keywords internal
 #' @seealso \code{\link{osrmtable}} for the main function
@@ -105,8 +105,8 @@ adjust_coord <- function(coord) {
 
 #' @title Check OSRM's query limits and provide warnings.
 #' @description This function is created in order to prevent the user
-#' from composing queries that go over the `default` limits of the
-#' OSRM servers.
+#'   from composing queries that go over the `default` limits of the
+#'   OSRM servers.
 #' @keywords internal
 #' @seealso \code{\link{osrmtable}} for the main function
 check_osrm_limits <- function(src, dst) {

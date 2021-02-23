@@ -10,7 +10,7 @@
 \alias{distance_by_bike}
 \alias{osrm_distance}
 \alias{osrm_duration}
-\title{Compute distance measures matrix using the OSRM server}
+\title{Compute distance and duration measures matrix using the OSRM server.}
 \usage{
 duration_by_foot(src, dst)
 
@@ -29,14 +29,15 @@ osrm_distance(src, dst, profile)
 osrm_duration(src, dst, profile)
 }
 \arguments{
-\item{src}{\code{sfc_POINT} sfc object with the source points.}
+\item{src}{\code{sfc_POINT} \code{sfc} object with the source points.}
 
-\item{dst}{\code{sfc_POINT} sfc object with the destination points.}
+\item{dst}{\code{sfc_POINT} \code{sfc} object with the destination points.}
 
-\item{profile}{\code{character} str object indicating the OSRM profile needed.}
+\item{profile}{\code{character} \code{str} object indicating the OSRM profile needed.}
 }
 \value{
-\code{matrix} with measures from src (rows) to dst (cols).
+\code{matrix} Matrix with measures (distances or durations)
+from src (rows) to dst (cols).
 }
 \description{
 Uses an OSRM (open source routing machine) instance to compute distance
@@ -48,4 +49,4 @@ duration (in minutes) and distance (in meters).
 \seealso{
 link{osrm_table} and link{osrm_opqenrich}
 }
-\concept{distance measure functions}
+\concept{Functions to measure distance and duration.}

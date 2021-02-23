@@ -1,16 +1,16 @@
 #' Enrich an overpass query for column output
 #'
-#' @param name name of the enriched column
-#' @param dataset target `sf` dataset to enrich with this package
-#' @param key target OSM feature key to add, see \link{add_osm_feature}
-#' @param value target value for OSM feature key to add, see \link{add_osm_feature}
-#' @param type `character` the osm feature type or types to consider
-#' (e.g., points, polygons), see details
-#' @param distance `character` the distance metric used, see details
-#' @param kernel `function` the kernel function used, see details
-#' @param opq overpass query that is being enriched
-#' @param .verbose `bool` whether to print info during enrichment
-#' @param ... arguments passed to the kernel function
+#' @param name Name of the enriched column.
+#' @param dataset Target `sf` dataset to enrich with this package.
+#' @param key Target OSM feature key to add, see \link{add_osm_feature}.
+#' @param value Target value for OSM feature key to add, see \link{add_osm_feature}.
+#' @param type `character` The OSM feature type or types to consider
+#'   (e.g., points, polygons), see details
+#' @param distance `character` The distance metric used, see details.
+#' @param kernel `function` The kernel function used, see details.
+#' @param opq Overpass query that is being enriched.
+#' @param .verbose `bool` Whether to print info during enrichment.
+#' @param ... Arguments passed to the `kernel` function (`r` and `sd`).
 #'
 #' @importFrom methods is
 #' @rdname enrich_opq
@@ -258,8 +258,7 @@ osmenrich_kernelfuns <- list(
 )
 
 #' @keywords internal
-#' The kernel types are always expressed in meters
-# TODO: change name
+#' @details The kernel types are always expressed in meters
 kernel_pars <- c("r", "sd")
 
 #' @method print enriched_overpass_query

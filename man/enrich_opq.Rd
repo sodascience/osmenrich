@@ -32,65 +32,29 @@ add_distance(opq, distance)
 add_kernel(opq, kernel, ...)
 }
 \arguments{
-\item{dataset}{target \code{sf} dataset to enrich with this package}
+\item{dataset}{Target \code{sf} dataset to enrich with this package.}
 
-\item{name}{name of the enriched column}
+\item{name}{Name of the enriched column.}
 
-\item{key}{target OSM feature key to add, see \link{add_osm_feature}}
+\item{key}{Target OSM feature key to add, see \link{add_osm_feature}.}
 
-\item{value}{target value for OSM feature key to add, see \link{add_osm_feature}}
+\item{value}{Target value for OSM feature key to add, see \link{add_osm_feature}.}
 
-\item{type}{\code{character} the osm feature type or types to consider
+\item{type}{\code{character} The OSM feature type or types to consider
 (e.g., points, polygons), see details}
 
-\item{distance}{\code{character} the distance metric used, see details}
+\item{distance}{\code{character} The distance metric used, see details.}
 
-\item{kernel}{\code{function} the kernel function used, see details}
+\item{kernel}{\code{function} The kernel function used, see details.}
 
-\item{.verbose}{\code{bool} whether to print info during enrichment}
+\item{.verbose}{\code{bool} Whether to print info during enrichment.}
 
-\item{...}{arguments passed to the kernel function}
+\item{...}{Arguments passed to the \code{kernel} function (\code{r} and \code{sd}).}
 
-\item{opq}{overpass query that is being enriched}
+\item{opq}{Overpass query that is being enriched.}
 }
 \description{
 Enrich an overpass query for column output
-}
-\details{
-\code{Type} represents the feature type to be considered. Usually this would be
-points, but polygons and multipolygons are also possible. This argument can
-also be a vector of multiple types. Non-point types will be converted to
-points using the st_centroid function from the sf package (NB this does not
-necessarily work well for all features!) Available options are:
-\itemize{
-\item points
-\item lines
-\item polygons
-\item multilines
-\item multipolygons
-}
-
-\code{Distance} represents the metric used to compute the distances between the
-rows in the dataset and the osm features. \code{Duration} represents the metric
-that indicates the average duration to cover the distances between the
-rows in the dataset and the osm features. The following metrics are
-available in this package, assuming that the OSRM server is setup as
-suggested in our guide at:
-https://github.com/sodascience/osmenrich_docker:
-\itemize{
-\item spherical ("as the crow flies")
-\item distance_by_foot
-\item duration_by_foot
-\item distance_by_car
-\item duration_by_car
-\item distance_by_bike
-\item duration_by_bike
-}
-
-\code{Kernel} is a kernel function from the osmenrich package to be used in weighing
-the features and the radius/distance where features are considered. For
-simply counting the number of occurrences within a radius, use kernel_uniform
-with radius r.
 }
 \seealso{
 \link{enrich_osm}

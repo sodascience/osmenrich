@@ -32,7 +32,11 @@ If you do not have this package yet, please install it first with:
 install.packages("remotes")
 ```
 
-Then to continue the installation of the `osmenrich` package, run:
+If you do have this package, due to recent changes in GitHub's naming of branches,
+please make sure you have the latest version of `remotes` or at least a version
+>= 2.2.
+
+Once you did this, to continue the installation of the `osmenrich` package, run:
 
 ```r
 remotes::install_github("sodascience/osmenrich")

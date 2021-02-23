@@ -3,7 +3,7 @@
 \name{enrich}
 \alias{enrich}
 \alias{enrich_osm}
-\title{Enrich OSM Data}
+\title{Enrich \code{sf} object with OSM data}
 \usage{
 enrich_osm(
   dataset,
@@ -18,44 +18,78 @@ enrich_osm(
 )
 }
 \arguments{
-\item{dataset}{target \code{sf} dataset to enrich with this package}
+\item{dataset}{Target \code{sf} dataset to enrich with this package.}
 
-\item{name}{the column name of the feature to be added}
+\item{name}{The column name of the feature to be added.}
 
-\item{key}{target OSM feature key to add, see \link{add_osm_feature}}
+\item{key}{Target OSM feature key to add, see \link{add_osm_feature}.}
 
-\item{value}{target value for OSM feature key to add, see \link{add_osm_feature}}
+\item{value}{Target value for OSM feature key to add, see \link{add_osm_feature}.}
 
-\item{type}{\code{character} the osm feature type or types to consider
-(e.g., points, polygons), see details}
+\item{type}{\code{character} The OSM feature type or types to consider
+(e.g., points, polygons), see details.}
 
-\item{distance}{\code{character} the distance metric used, see details}
+\item{distance}{\code{character} The distance metric used, see details.}
 
-\item{kernel}{\code{function} the kernel function used, see details}
+\item{kernel}{\code{function} The kernel function used, see details.}
 
-\item{...}{\code{enriched_overpass_query} column or columns to add}
+\item{...}{Additional parameters for \code{kernel} (\code{r} and \code{sd}) and for request
+to OSRM server: \code{.timeout} (time before request times out) and \code{.memsize}
+(maxmimum size of the request).}
 
-\item{.verbose}{\code{bool} whether to print info during enrichment}
+\item{.verbose}{\code{bool} Whether to print info during enrichment.}
 }
 \description{
-Perform enriched query on osm and add as new column.
+Perform enriched query on OSM and add as new column.
+}
+\details{
+\code{Type} represents the feature type to be considered. Usually this
+would be points, but polygons and multipolygons are also possible. This
+argument can also be a vector of multiple types. Non-point types will be
+converted to points using the \code{st_centroid} function from the \code{sf} package
+(NB this does not necessarily work well for all features!).
+Available options are:
+\itemize{
+\item points
+\item lines
+\item polygons
+\item multilines
+\item multipolygons
+}
 
-The enrichment call works in the following way: an \code{enriched_overpass_query}
-(e.g. \code{waste_query}) is created and then a new column is added by specifying
-the name of the column (\code{"waste_baskets = waste_query"}). This call
-also works with more than one queries.
+\code{Distance} represents the metric used to compute the distances between the
+rows in the dataset and the OSM features. \code{Duration} represents the metric
+that indicates the average duration to cover the distances between the
+rows in the dataset and the OSM features. The following metrics are
+available in this package, assuming that the OSRM server is setup as
+suggested in our guide at:
+https://github.com/sodascience/osmenrich_docker:
+\itemize{
+\item spherical
+\item distance_by_foot
+\item duration_by_foot
+\item distance_by_car
+\item duration_by_car
+\item distance_by_bike
+\item duration_by_bike
+}
+
+\code{Kernel} is a kernel function from the \code{osmenrich} package to be used in
+weighing the features and the radius/distance where features are
+considered. For simply counting the number of occurrences within a radius,
+use \code{kernel_uniform} with radius \code{r}.
 }
 \note{
 If you want to get a large number of points make sure to set the
-.timeout (time before request times out) and .memsize (maxmimum
+\code{.timeout} (time before request times out) and \code{.memsize} (maxmimum
 size of the request) arguments for the Overpass server and set
 the "max-table-size" argument correctly when starting the
 OSRM server(s).
 }
 \examples{
-\dontrun{
+\donttest{
 
-#' # Enrich data creating new column `waste_baskets`
+# Enrich data creating new column `waste_baskets`
 sf_enriched <- dataset \%>\%
   enrich_osm(
     name = "waste_baskets",

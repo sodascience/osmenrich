@@ -1,30 +1,34 @@
-# Adapted from: https://github.com/rCarto/osrm/blob/master/R/osrmTable.R
 #' @name osrmtable
 #' @title Get Travel Time Matrices Between Points
 #' @description Build and send OSRM API queries to get travel time matrices
-#' between points. This function interfaces the \emph{table} OSRM service.
-#' @param src a data frame containing origin points identifiers, longitudes
-#' and latitudes (WGS84). It can also be a SpatialPointsDataFrame, a
-#' SpatialPolygonsDataFrame or an sf object. If so, row names are used as identifiers.
-#' If dst and src parameters are used, only pairs between scr/dst are computed.
-#' @param dst a data frame containing destination points identifiers, longitudes
-#' and latitudes (WGS84). It can also be a SpatialPointsDataFrame a
-#' SpatialPolygonsDataFrame or an sf object. If so, row names are used as identifiers.
-#' @param measure a character indicating what measures are calculated. It can
-#' be "duration" (in minutes), "distance" (meters), or both c('duration',
-#' 'distance'). The demo server only allows "duration".
-#' @param osrm_server the base URL of the routing server.
-#' getOption("osrm.server") by default.
-#' @param osrm_profile the routing profile to use, e.g. "car", "bike" or "foot"
-#' (when using the routing.openstreetmap.de test server).
-#' getOption("osrm.profile") by default.
+#'   between points. This function interfaces the \emph{table} OSRM service.
+#'
+#' @param src A data frame containing origin points identifiers, longitudes
+#'   and latitudes (WGS84). It can also be a `SpatialPointsDataFrame`, a
+#'   `SpatialPolygonsDataFrame` or an `sf` object. If so, row names are
+#'   used as identifiers. If dst and src parameters are used,
+#'   only pairs between scr/dst are computed.
+#' @param dst A data frame containing destination points identifiers, longitudes
+#'   and latitudes (WGS84). It can also be a `SpatialPointsDataFrame` a
+#'   `SpatialPolygonsDataFrame` or an `sf` object. If so, row names are used
+#'   as identifiers.
+#' @param measure A character indicating what measures are calculated. It can
+#'   be "duration" (in minutes), "distance" (meters), or both c('duration',
+#'   'distance'). The public server only allows "duration".
+#' @param osrm_server The base URL of the routing server. Uses
+#'   `getOption("osrm.server")` to retrieve the current server by default.
+#' @param osrm_profile The routing profile to use, e.g. "car", "bike" or "foot"
+#'   (when not using the public server). Uses `getOption("osrm.profile")` to
+#'   retrieve the default profile ("car").
+#'
 #' @return A list containing 3 data frames is returned.
-#' durations is the matrix of travel times (in minutes),
-#' sources and destinations are the coordinates of
-#' the origin and destination points actually used to compute the travel
-#' times (WGS84).
+#'   `durations` is the matrix of travel times (in minutes);
+#'   `sources` and `destinations` are the coordinates of
+#'   the origin and destination points actually used to compute the travel
+#'   times (WGS84).
+#'
 #' @seealso \code{\link{set_server_profile}} and \code{\link{utils}} for
-#' helper functions used in this function
+#'   helper functions used in this function
 osrm_table <- function(src = NULL, dst = NULL, measure = "duration",
                        osrm_profile = "driving",
                        osrm_server = getOption("osrm.server")) {
