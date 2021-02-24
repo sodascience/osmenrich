@@ -15,6 +15,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+install.packages(c("tidyverse", "mgcv", "ggspatial", "ggeffects", "sf", "osmenrich"))
+remotes::install_github("vankesteren/firatheme")
 ```
 
 
@@ -63,13 +65,13 @@ If you already set up one of these options, you can set the connection variables
 
 ### Data: sparrows
 
-To demonstrate the usage of `osmenrich`, in this example we will use the dataset of sparrows provided openly by the municipality of Utrecht (The Netherlands).
+To demonstrate the usage of `osmenrich`, in this example you will use the dataset of sparrows provided openly by the municipality of Utrecht (The Netherlands).
   
 ```{r}
 data_url <- "https://ckan.dataplatform.nl/dataset/8ceaae10-fb90-4ec0-961c-ef02691bb861/resource/baae4cde-cf33-416b-aa4e-d0fba160eed9/download/gierzwaluwinventarisatie2014.csv"
 ```
 
-Once you downloaded the dataset, select only the relevant columns using the tidyverse syntax. In this example we are interested in retrieving the `latitude` and `longitude` for each sparrow nest, and the number of nests (`nestcount`). We then convert the latitude and longitude coordinates to a spatial format using the `st_as_sf` from the `sf` package.
+Once you downloaded the dataset, select only the relevant columns using the tidyverse syntax. In this example, you are interested in retrieving the `latitude` and `longitude` for each sparrow nest, and the number of nests (`nestcount`). You then need to convert the latitude and longitude coordinates to a spatial format using the `st_as_sf` from the `sf` package.
 
 ```{r, message=FALSE}
 bird_sf <-
@@ -99,20 +101,22 @@ plot_bird
 
 ### Data agumentation
 
-Once we know how the data look like, we can proceed with the data augmentation. We need to make some assumptions about the position of the birds, in order to have a working model later on. Therefore, you can assume that the common swift inventarisation is comprehensive over the grid. Therefore, we will randomly sample the data over 200 non-bird sites
+Once you know how the data look like, a necessary step, given the dataset at hand is proceeding with data augmentation. However, you need to make some assumptions about the position of the birds, in order to have a working model later on. Thus, you can assume that:
+- The data contains all nests within Utrecht ("the common swift inventarisation is comprehensive over the grid").
+- You can randomly sample the data over 200 non-bird sites and assume that those are realistic non-bird sites (i.e. have 0 nests counts).
 
-Centroids of grid cells where nests were not found
+You will use these sites in the prediction of actual bird sites.
 
 ```{r, message=FALSE}
 set.seed(45)
-bird_grid  <- st_make_grid(bird_sf, n = c(40, 60))
-has_nests  <- apply(st_contains(bird_grid, bird_sf, sparse = FALSE), 1, any)
-zerosample <- st_centroid(sample(bird_grid[!has_nests], 200))
-nonbird_sf <- st_sf(geometry = zerosample) %>% mutate(nestcount = 0)
+bird_grid  <- sf::st_make_grid(bird_sf, n = c(40, 60))
+has_nests  <- apply(sf::st_contains(bird_grid, bird_sf, sparse = FALSE), 1, any)
+zerosample <- sf::st_centroid(sample(bird_grid[!has_nests], 200))
+nonbird_sf <- sf::st_sf(geometry = zerosample) %>% mutate(nestcount = 0)
 bird_sf    <- bind_rows(bird_sf, nonbird_sf)
 ```
 
-We plot augmented data:
+Once you augmented the data following these assumptions, you can plot the augmented data.
 
 ```{r}
 plot_bird +
@@ -123,9 +127,20 @@ plot_bird +
 
 ### Data enrichment
 
+Moving to the data enrichment, you need to make another set of assumptions concerning the behavior of sparrows within Utrecht. You will assume the following:
+- **Nesting behaviour is spatially correlated**. We are more likely to find a nest close to other nests.
+
+- **Common swifts benefit from commercial activity, but not too much**. The birds need food but also they need peace. They are peaceful birds.
+
+- **Nature is important to the common swift**. The birds need trees to do bird things like sitting and nesting.
+
+Given these assumptions, you can now use our package `osmenrich` to gather these data from sources such as OSM.
+
 #### Use `osmenrich` for computing the data enrichment
 
-We use the the number of trees as a proxy of natural material availability and the number of shops as a proxy of commercial activity. To retrieve these OSM features, you will use the main function from `osmenrich`: `enrich_osm`.
+As stated above, you are now interested in retrieving a proxy of natural material availability and a proxy of commercial activity. For the sake of this example, you decide to retrieve trees and shops, as they represent a close enough proxy to naturla materials and commercial activity. 
+
+To retrieve these OSM features, you will use the main function from `osmenrich`: `enrich_osm()`. In the code below we retrieve shops and trees within a radius of 1km (`r = 1000`). If you are interested in retrieving other data points, please refer to the [official list of available features](https://wiki.openstreetmap.org/wiki/Map_features) in OSM.
 
 ```{r}
 bird_sf <-
@@ -145,7 +160,7 @@ bird_sf <-
   )
 ```
  
-We can do the same for a grid covering the bounding box of the data
+You also want to retrieve the same data points for a grid covering the bounding box of the data.
 
 ```{r}
 grid_sf_c <-
@@ -168,7 +183,7 @@ grid_sf_c <-
   )
 ```
 
-And add the geometry to the grid
+And add the geometry to the grid, before plotting the results.
 
 ```{r}
 grid_sf_p <- grid_sf_c %>% st_set_geometry(bird_grid)
@@ -176,6 +191,8 @@ grid_sf_p <- grid_sf_c %>% st_set_geometry(bird_grid)
 
 
 #### Plot predictors on the grid
+
+Plotting the results of the data enrichment, it is easy to identify the points on the map that represent the larger concetration of shops and trees.
 
 ```{r}
 plot_commercial_activity <-
@@ -208,7 +225,9 @@ plot_trees
 
 ### Modeling
 
-To model the data we will use a zero-inflated poisson spatial generalized additive model. First, we need a function to turn sf with coordinates into df with x and y
+Now that you have the data, you can create a model to predict the presence of other nests. To model the data we will use a zero-inflated poisson spatial generalized additive model. 
+
+First, you need to define a function to turn `sf` with coordinates into a `df` with x and y.
 
 ```{r}
 sf_to_df <- function(sf) {
@@ -220,7 +239,8 @@ sf_to_df <- function(sf) {
 ```
 
 
-Then we define a generalized additive model with mgcv
+Then, define a generalized additive model with `mgcv`. This is what we suggest using, but many other options are possible (gaussian process regression, regression kriging, other smoothing techniques, ...).
+
 ```{r}
 fit <- gam(
   nestcount ~
@@ -241,7 +261,7 @@ To see the effects of spline, commercial activity, and natural material availabi
 summary(fit)
 ```
 
-You can also plot the marginal effect of commercial activity
+You can also plot the marginal effect of commercial activity and check that birds are negatively affected by too little shops in the area (not enough food?) as well as too many (too many people?).
 
 ```{r}
 values <- seq(0, 0.10, 0.01)
@@ -258,13 +278,13 @@ plot_marginal <-
 plot_marginal
 ```
 
-And finally create predictions over previously defined grid
+Finally, you can create predictions over previously defined grid.
 
 ```{r}
 pred <- predict(fit, newdata = sf_to_df(grid_sf_c), type = "response", se = TRUE)
 ```
 
-Plot the predictions over the grid
+And plot these predictions over the grid.
 
 ```{r}
 grid_sf_p$pred <- pred$fit
@@ -283,7 +303,7 @@ plot_pred <-
 plot_pred
 ```
 
-Plot the spline only
+If you are interested in the spline, you can also only plot the spline.
 
 ```{r}
 grid_sf_c2 <-
@@ -309,3 +329,14 @@ plot_pred_smooth_only <-
 
 plot_pred_smooth_only
 ```
+
+### Conclusion
+
+From this short example, you can conclude:
+
+- Spatial observational data can be enriched easily using `sf` and `osmenrich`
+
+- Spatial models can then be used to test expectations about behaviour in the environment
+
+- Spatial predictions from these models can guide future data collection efforts
+
