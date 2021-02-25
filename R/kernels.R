@@ -11,7 +11,7 @@
 #'
 #' @param d vector of distances
 #' @param r radius of interest
-#' @param FUN reduce function
+#' @param reduce_fun reduce function
 #'
 #' @details
 #' Gaussian kernel is a truncated gaussian, where r = 4*sigma
@@ -28,15 +28,23 @@
 
 #' @rdname kernels
 #' @export
-kernel_gaussian <- function(d, r = 100, FUN = sum) FUN(4/(r*sqrt(2*pi))*exp(-(4 * d / r)^2/2)*I(abs(d) <= r))
+kernel_gaussian <- function(d, r = 100, reduce_fun = sum) {
+    reduce_fun(
+        4 / (r * sqrt(2 * pi)) * exp(-(4 * d / r)^2 / 2) * I(abs(d) <= r)
+    )
+}
 
 #' @rdname kernels
 #' @export
-kernel_parabola <- function(d, r = 100, FUN = sum) FUN(pmax(0, (1 - (d / r)^2)))
+kernel_parabola <- function(d, r = 100, reduce_fun = sum) {
+    reduce_fun(pmax(0, (1 - (d / r)^2)))
+}
 
 #' @rdname kernels
 #' @export
-kernel_uniform <- function(d, r = 100, FUN = sum) FUN(abs(d) <= r)
+kernel_uniform <- function(d, r = 100, reduce_fun = sum) {
+    reduce_fun(abs(d) <= r)
+}
 
 # Add kernel to the classes
 class(kernel_gaussian) <- c("kernel", "function")

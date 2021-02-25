@@ -25,16 +25,19 @@ enrich_opq <- function(
                        value = NULL,
                        type = "points",
                        distance = "spherical",
+                       r = 100,
                        kernel = "uniform",
+                       reduce_fun = sum,
+                       control = list(),
                        .verbose = TRUE,
                        ...) {
   opq <-
     dataset %>%
-    add_bbox(...) %>%
+    add_bbox(r, control) %>%
     add_feature(key, value) %>%
     add_type(type) %>%
     add_distance(distance) %>%
-    add_kernel(kernel, ...)
+    add_kernel(kernel, reduce_fun, ...)
   opq$kernel <- as.character(substitute(kernel))
   opq$name <- name
   opq$key <- key
@@ -44,17 +47,14 @@ enrich_opq <- function(
 
 #' @rdname enrich_opq
 #' @export
-add_bbox <- function(dataset, ...) {
+add_bbox <- function(dataset, r, control) {
   if (is.null(dataset)) {
     stop("Specify a dataset to enrich.")
   }
-  # Extract distance specified by user
-  dst <- match.call(expand.dots = FALSE)$`...`
-  pos <- (match(kernel_pars, names(dst), 0L))
   # Extract bbox and transform 3488 (meters)
   bbox_tmp <- sf::st_transform(sf::st_as_sfc(sf::st_bbox(dataset)), 3488)
   # Add buffer of distance
-  bbox_tmp <- sf::st_buffer(x = bbox_tmp, dist = dst[[kernel_pars[pos]]])
+  bbox_tmp <- sf::st_buffer(x = bbox_tmp, dist = r)
   # Convert back to 4326  (lat, lon) and find bbox of polygon
   bbox <- sf::st_bbox(sf::st_transform(bbox_tmp, 4326))
   # Find bbox "limits", Overpass ignores after 7 digits
@@ -63,17 +63,10 @@ add_bbox <- function(dataset, ...) {
   xmax <- as.double(formatC(bbox["xmax"], digits = 7, format = "f"))
   xmin <- as.double(formatC(bbox["xmin"], digits = 7, format = "f"))
   # Set timeout 300 seconds, memsize = 1GiB if not set
-  kwargs <- list(...)
-  if (is.null(kwargs$timeout)) {
-    kwargs$timeout <- 300
-  }
-  if (is.null(kwargs$memsize)) {
-    kwargs$memsize <- 1073741824
-  }
   opq <- osmdata::opq(
     bbox = c(xmin, ymin, xmax, ymax),
-    timeout = kwargs$timeout,
-    memsize = kwargs$memsize
+    timeout = control$timeout,
+    memsize = control$memsize
   )
   if (!is(opq, "enriched_overpass_query")) {
     class(opq) <- c(class(opq), "enriched_overpass_query")
@@ -172,13 +165,16 @@ add_distance <- function(opq, distance) {
 
 #' @rdname enrich_opq
 #' @export
-add_kernel <- function(opq, kernel, ...) {
+add_kernel <- function(opq, kernel, reduce_fun, ...) {
   if (!(class(kernel) == "function") && !is.character(kernel)) {
     stop(
       "Kernel should be either be chosen among the available options:\n- ",
       paste(names(osmenrich_kernelfuns), collapse = "\n- "),
       "\nOr should be a function of the form: `function(d, r, fun) fun(d,r)`"
     )
+  }
+  if (!(class(reduce_fun) == "function")) {
+    stop("The reduce function should be a function (E.g. 'sum')")
   }
   if (class(kernel) == "function") {
     kernelfun <- kernel
@@ -188,8 +184,8 @@ add_kernel <- function(opq, kernel, ...) {
       },
       error = function(e) {
         message("The kernel is not a recognized function.\n
-    It should be of the form `function(d, r, fun) fun(d,r).\n
-    Error: \n", e)
+  It should be of the form `function(d, r, fun) fun(d,r).\n
+  Error: \n", e)
       }
     )
   }
@@ -197,7 +193,7 @@ add_kernel <- function(opq, kernel, ...) {
     if (kernel %in% names(osmenrich_kernelfuns)) {
 
       # Match kernel function among pre-defined ones
-      kernelfun <- osmenrich_kernelfuns[[kernel]]
+      kernelfun <- osmenrich_kernelfuns[[kernel]]#(reduce_fun = reduce_fun)
 
       if (length(kernelfun(c(1, 1, 1))) != 1) {
         stop("Kernel should output scalar for vector input.")
@@ -256,11 +252,6 @@ osmenrich_kernelfuns <- list(
   "parabola" = kernel_parabola,
   "uniform" = kernel_uniform
 )
-
-#' @keywords internal
-#' The kernel types are always expressed in meters
-# TODO: change name
-kernel_pars <- c("r", "sd")
 
 #' @method print enriched_overpass_query
 #' @export

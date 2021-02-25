@@ -81,29 +81,39 @@ enrich_osm <- function(
                        value = NULL,
                        type = "points",
                        distance = "spherical",
+                       r = 100,
                        kernel = "uniform",
-                       ...,
-                       .verbose = TRUE) {
+                       reduce_fun = sum,
+                       control = list(),
+                       .verbose = TRUE,
+                       ...) {
   if (is.null(name)) stop("Enter a query name.")
   if (length(name) > 1) {
     stop("You can enrich one query at the time only.")
   } else {
+    control <- do.call("control_enrich", control)
+    # OR THIS? (match(kernel_pars, names(dst), 0L))
     query <- enrich_opq(
-      dataset, name, key, value, type,
-      distance, kernel, .verbose, ...
+      dataset,
+      name = name, key = key, value = value, type = type,
+      distance = distance, r = r, kernel = kernel,
+      reduce_fun = reduce_fun, control = control, .verbose = .verbose,
+      ...
     )
     enriched_data <- data_enrichment(
-      dataset, query, name, .verbose
+      data = dataset, query = query, colname = name, .verbose = .verbose
     )
     return(enriched_data)
   }
 }
 
+#' @rdname enrich
 #' @keywords internal
 data_enrichment <- function(data, query, colname, .verbose = TRUE) {
   # check inputs
   if (!is(data, "sf")) stop("Data should be sf object.")
   check_enriched_opq(query)
+  print(query[["kernelpars"]])
 
   # extract the feature points and/or centroids
   # only download points if only points are requested
@@ -205,4 +215,16 @@ distance_matrix <- function(
       }
     }
   }
+}
+
+#' @rdname enrich
+#' @keywords internal
+control_enrich <- function(timeout = 300, memsize = 1073741824) {
+  if (!is.numeric(timeout) || timeout <= 0) {
+    stop("Value of 'timeout' must be > 0")
+  }
+  if (!is.numeric(memsize) || memsize <= 0) {
+    stop("Value of 'memsize' must be > 0")
+  }
+  list(timeout = timeout, memsize = memsize)
 }
