@@ -53,7 +53,7 @@ Once you did this, to continue the installation of the `osmenrich` package, run:
 `osmenrich` can be installed with the remotes package from GitHub with
 
 ```{r, eval = FALSE}
-remotes::install_github("sodascience/osmenrich")
+remotes::install_github("sodascience/osmenrich@main")
 ```
 
 and then load it in the usual way:

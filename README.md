@@ -39,7 +39,7 @@ please make sure you have the latest version of `remotes` or at least version
 Once you did this, to continue the installation of the `osmenrich` package, run:
 
 ```r
-remotes::install_github("sodascience/osmenrich")
+remotes::install_github("sodascience/osmenrich@main")
 ```
 
 or, for the development version, run:
