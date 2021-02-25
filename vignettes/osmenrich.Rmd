@@ -6,7 +6,7 @@ description: >
   Learn how OSMenrich works, and how you can 
   customise it.
 vignette: >
-  %\VignetteIndexEntry{introduction}
+  %\VignetteIndexEntry{Introduction to osmenrich}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -5,7 +5,7 @@ output: rmarkdown::html_vignette
 description: >
   A tutorial to use osmenrich in a complex project.
 vignette: >
-  %\VignetteIndexEntry{advanced_enrichment}
+  %\VignetteIndexEntry{Advanced enrichment with osmenrich}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,8 +15,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-install.packages(c("tidyverse", "mgcv", "ggspatial", "ggeffects", "sf", "osmenrich"))
-remotes::install_github("vankesteren/firatheme")
 ```
 
 
@@ -26,7 +24,14 @@ In this advanced example, you will go through the steps of an example project to
 
 ### Load libraries
 
-You need to install and load the following libraries to be able to run this example.
+You need to install following libraries to be able to run this example.
+
+```{r}
+install.packages(c("tidyverse", "mgcv", "ggspatial", "ggeffects", "sf", "osmenrich"))
+remotes::install_github("vankesteren/firatheme")
+```
+
+Once you installed these libraries, please load them.
 
 Libraries for data wrangling and enrichment:
 
@@ -49,8 +54,9 @@ Libraries for plotting:
 ```{r}
 # Plotting
 library(ggspatial)
-library(firatheme) # remotes::install_github("vankesteren/firatheme")
+library(firatheme)
 library(ggeffects)
+library(ggplot2)
 ```
 
 If you already followed the introductory tutorial, you will know that the `osmenrich` package offers the possibility of creating local instances of both the Overpass API, to serve an instance of OpenStreetMap (OSM) and of OSRM servers, to calculate the routing information.
@@ -119,15 +125,14 @@ bird_sf    <- bind_rows(bird_sf, nonbird_sf)
 Once you augmented the data following these assumptions, you can plot the augmented data.
 
 ```{r}
-plot_bird +
-  geom_sf(data = nonbird_sf, colour = "black", bg = "black", size = 1, shape = 22)
+plot_bird + 
+  ggplot2::geom_sf(data = nonbird_sf, colour = "black", bg = "black", size = 1, shape = 22)
 ```
-
-
 
 ### Data enrichment
 
 Moving to the data enrichment, you need to make another set of assumptions concerning the behavior of sparrows within Utrecht. You will assume the following:
+    
 - **Nesting behaviour is spatially correlated**. We are more likely to find a nest close to other nests.
 
 - **Common swifts benefit from commercial activity, but not too much**. The birds need food but also they need peace. They are peaceful birds.
@@ -140,7 +145,7 @@ Given these assumptions, you can now use our package `osmenrich` to gather these
 
 As stated above, you are now interested in retrieving a proxy of natural material availability and a proxy of commercial activity. For the sake of this example, you decide to retrieve trees and shops, as they represent a close enough proxy to naturla materials and commercial activity. 
 
-To retrieve these OSM features, you will use the main function from `osmenrich`: `enrich_osm()`. In the code below we retrieve shops and trees within a radius of 1km (`r = 1000`). If you are interested in retrieving other data points, please refer to the [official list of available features](https://wiki.openstreetmap.org/wiki/Map_features) in OSM.
+To retrieve these OSM features, you will use the main function from `osmenrich`, `enrich_osm()`. In the code below we retrieve shops and trees within a radius of 1km (r = 1000). If you are interested in retrieving other data points, please refer to the [official list of available features](https://wiki.openstreetmap.org/wiki/Map_features) in OSM.
 
 ```{r}
 bird_sf <-
