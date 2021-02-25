@@ -9,8 +9,12 @@
 #' @param distance `character` the distance metric used, see details
 #' @param kernel `function` the kernel function used, see details
 #' @param opq overpass query that is being enriched
+#' @param r The search radius used by the `kernel` function.
+#' @param reduce_fun The aggregation function used by the `kernel` function to
+#'   aggregate the retrieved data points.
 #' @param .verbose `bool` whether to print info during enrichment
-#' @param ... arguments passed to the kernel function
+#' @param ... Additional parameters to be passed into the OSM query, such as
+#'   a user-defined kernel.
 #'
 #' @importFrom methods is
 #' @rdname enrich_opq
@@ -37,7 +41,7 @@ enrich_opq <- function(
     add_feature(key, value) %>%
     add_type(type) %>%
     add_distance(distance) %>%
-    add_kernel(kernel, reduce_fun, ...)
+    add_kernel(kernel, r, reduce_fun, ...)
   opq$kernel <- as.character(substitute(kernel))
   opq$name <- name
   opq$key <- key
@@ -165,7 +169,7 @@ add_distance <- function(opq, distance) {
 
 #' @rdname enrich_opq
 #' @export
-add_kernel <- function(opq, kernel, reduce_fun, ...) {
+add_kernel <- function(opq, kernel, r, reduce_fun, ...) {
   if (!(class(kernel) == "function") && !is.character(kernel)) {
     stop(
       "Kernel should be either be chosen among the available options:\n- ",
@@ -193,7 +197,7 @@ add_kernel <- function(opq, kernel, reduce_fun, ...) {
     if (kernel %in% names(osmenrich_kernelfuns)) {
 
       # Match kernel function among pre-defined ones
-      kernelfun <- osmenrich_kernelfuns[[kernel]]#(reduce_fun = reduce_fun)
+      kernelfun <- osmenrich_kernelfuns[[kernel]]
 
       if (length(kernelfun(c(1, 1, 1))) != 1) {
         stop("Kernel should output scalar for vector input.")
@@ -208,7 +212,7 @@ add_kernel <- function(opq, kernel, reduce_fun, ...) {
     }
   }
   opq$kernel <- as.character(substitute(kernel))
-  opq$kernelpars <- list(...)
+  opq$kernelpars <- list(r, reduce_fun, ...)
   opq$kernelfun <- kernelfun
   if (!is(opq, "enriched_overpass_query")) {
     class(opq) <- c(class(opq), "enriched_overpass_query")

@@ -9,9 +9,9 @@
 #' and the value decreases as the distance increases, reaching 0 at the limit
 #' of the support.
 #'
-#' @param d vector of distances
-#' @param r radius of interest
-#' @param reduce_fun reduce function
+#' @param d The vector of distances.
+#' @param r The radius of interest for the kernel to aggregate data.
+#' @param reduce_fun The reduce function used to aggregate data.
 #'
 #' @details
 #' Gaussian kernel is a truncated gaussian, where r = 4*sigma
