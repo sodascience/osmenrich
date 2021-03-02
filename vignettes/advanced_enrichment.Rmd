@@ -26,8 +26,10 @@ In this advanced example, you will go through the steps of an example project to
 
 You need to install following libraries to be able to run this example.
 
-```{r}
+```{r, eval=FALSE}
+# Install required packages
 install.packages(c("tidyverse", "mgcv", "ggspatial", "ggeffects", "sf", "osmenrich"))
+# For nice visualization
 remotes::install_github("vankesteren/firatheme")
 ```
 
