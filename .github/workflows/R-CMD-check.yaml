@@ -72,10 +72,12 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "16.04"))')
 
-      - name: Install dependencies
+      - name: Install dependencies and packages used in the documentation
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+          remotes::install_github("vankesteren/firatheme")
+          install.packages(c("tidyverse", "mgcv", "ggspatial", "ggeffects", "sf", "osmenrich"))
         shell: Rscript {0}
 
       - name: Session info
