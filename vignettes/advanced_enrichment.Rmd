@@ -37,7 +37,7 @@ Once you installed these libraries, please load them.
 
 Libraries for data wrangling and enrichment:
 
-```{r}
+```{r, message=FALSE}
 # Data
 library(tidyverse)
 library(sf)
@@ -46,14 +46,14 @@ library(osmenrich)
 
 Libraries for modeling:
 
-```{r}
+```{r, message=FALSE}
 # Modeling
 library(mgcv)
 ```
 
 Libraries for plotting:
 
-```{r}
+```{r, message=FALSE}
 # Plotting
 library(ggspatial)
 library(firatheme)
