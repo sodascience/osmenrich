@@ -77,7 +77,7 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
           remotes::install_github("vankesteren/firatheme")
-          install.packages(c("tidyverse", "mgcv", "ggspatial", "ggeffects", "sf", "osmenrich"))
+          install.packages(c("tidyverse", "mgcv", "ggspatial", "ggeffects", "sf", "osmenrich", "raster"))
         shell: Rscript {0}
 
       - name: Session info
