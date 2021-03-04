@@ -2,18 +2,24 @@
 #' @title Enrich `sf` object with OSM data
 #' @description Perform enriched query on OSM and add as new column.
 #'
-#' @param name The column name of the feature to be added.
-#' @param dataset Target `sf` dataset to enrich with this package.
-#' @param key Target OSM feature key to add, see \link{add_osm_feature}.
-#' @param value Target value for OSM feature key to add, see \link{add_osm_feature}.
-#' @param type `character` The OSM feature type or types to consider
-#'   (e.g., points, polygons), see details.
-#' @param distance `character` The distance metric used, see details.
-#' @param kernel `function` The kernel function used, see details.
-#' @param ... Additional parameters for `kernel` (`r` and `sd`) and for request
-#'   to OSRM server: `.timeout` (time before request times out) and `.memsize`
-#'   (maxmimum size of the request).
-#' @param .verbose `bool` Whether to print info during enrichment.
+#' @param name the column name of the feature to be added
+#' @param dataset target `sf` dataset to enrich with this package
+#' @param key target OSM feature key to add, see \link{add_osm_feature}
+#' @param value target value for OSM feature key to add, see \link{add_osm_feature}
+#' @param type `character` the osm feature type or types to consider
+#' (e.g., points, polygons), see details
+#' @param distance `character` the distance metric used, see details
+#' @param kernel `function` the kernel function used, see details
+#' @param r The search radius used by the `kernel` function.
+#' @param reduce_fun The aggregation function used by the `kernel` function to
+#'   aggregate the retrieved data points.
+#' @param control The list with configuration variables for the OSRM server.
+#'   It containes `timeout`, defining the number of seconds before the request
+#'   to OSRM times out, and `memsize`, defining the maximum size of the query to
+#'   OSRM.
+#' @param .verbose `bool` whether to print info during enrichment
+#' @param ... Additional parameters to be passed into the OSM query, such as
+#'   a user-defined kernel.
 #'
 #' @details `Type` represents the feature type to be considered. Usually this
 #'   would be points, but polygons and multipolygons are also possible. This
@@ -80,24 +86,33 @@ enrich_osm <- function(
                        value = NULL,
                        type = "points",
                        distance = "spherical",
+                       r = 100,
                        kernel = "uniform",
-                       ...,
-                       .verbose = TRUE) {
+                       reduce_fun = sum,
+                       control = list(),
+                       .verbose = TRUE,
+                       ...) {
   if (is.null(name)) stop("Enter a query name.")
   if (length(name) > 1) {
     stop("You can enrich one query at the time only.")
   } else {
+    control <- do.call("control_enrich", control)
+    # OR THIS? (match(kernel_pars, names(dst), 0L))
     query <- enrich_opq(
-      dataset, name, key, value, type,
-      distance, kernel, .verbose, ...
+      dataset,
+      name = name, key = key, value = value, type = type,
+      distance = distance, r = r, kernel = kernel,
+      reduce_fun = reduce_fun, control = control, .verbose = .verbose,
+      ...
     )
     enriched_data <- data_enrichment(
-      dataset, query, name, .verbose
+      data = dataset, query = query, colname = name, .verbose = .verbose
     )
     return(enriched_data)
   }
 }
 
+#' @rdname enrich
 #' @keywords internal
 data_enrichment <- function(data, query, colname, .verbose = TRUE) {
   # check inputs
@@ -204,4 +219,16 @@ distance_matrix <- function(
       }
     }
   }
+}
+
+#' @rdname enrich
+#' @keywords internal
+control_enrich <- function(timeout = 300, memsize = 1073741824) {
+  if (!is.numeric(timeout) || timeout <= 0) {
+    stop("Value of 'timeout' must be > 0")
+  }
+  if (!is.numeric(memsize) || memsize <= 0) {
+    stop("Value of 'memsize' must be > 0")
+  }
+  list(timeout = timeout, memsize = memsize)
 }
