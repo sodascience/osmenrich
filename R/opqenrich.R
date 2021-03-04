@@ -258,7 +258,6 @@ osmenrich_kernelfuns <- list(
 )
 
 #' @keywords internal
-#' @details The kernel types are always expressed in meters
 kernel_pars <- c("r", "sd")
 
 #' @method print enriched_overpass_query

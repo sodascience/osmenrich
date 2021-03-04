@@ -11,3 +11,8 @@
 ^pkgdown/$
 ^doc$
 ^Meta$
+^\.zenodo.json
+^rosm.cache
+^CITATION.cff
+^pkgdown
+^docs

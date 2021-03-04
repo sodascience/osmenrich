@@ -99,8 +99,6 @@ tibble(x = seq(-120, 120, length.out = 1000)) %>%
 
 * The `gaussian` kernel weights the features retrieved using the classical "bell curve" shape. The features on the border of the retrieved space are weighted zero.
 
-% the distribution is as follows $\frac{4}{r * \sqrt{2 * \pi}} * \exp{\frac{-(4 * \frac{d}{r})^2}{2}} * I(|(d)| <= r)$
-
 * The `parabola` kernel
 
 * Finally, the `uniform` kernel gives the same weight to all the features retrieved. 
@@ -118,6 +116,7 @@ Most of the time you will find yourself wanting to just `sum` the (un)weighted p
 In the examples above, you were introduced to the syntax needed to choose both the kernel and the aggregation (`reduce_fun`) function. Now, you will go through a basic example to see the differences between kernels.
 
 Borrowing from the base example in our introductory vignette, you first create an example dataset to enrich `sf_example`.
+
 ```{r, message=FALSE}
 # Load packages used in this example, install if needed
 library(tidyverse)
@@ -137,7 +136,7 @@ sf_example <-
   )
 ```
 
-Once the `sf` dataset is created, you enrich it using the base syntax:
+Once the `sf` dataset is created, you can enrich it using the base syntax:
 
 ```{r, eval=FALSE}
 sf_enriched_uniform <- sf_example %>%
@@ -149,7 +148,7 @@ sf_enriched_uniform <- sf_example %>%
   )
 ```
 
-Which, behind the scene uses kernel `"uniform"` and the aggregation function `sum`, as seen below.
+Which, behind the scenes, sets automatically the kernel variable to `"uniform"` and the aggregation function to `sum`, as seen below.
 
 ```{r, eval=FALSE}
 sf_enriched_uniform <- sf_example %>%
@@ -187,7 +186,7 @@ sf_enriched_gaussian <- sf_example %>%
 sf_enriched_gaussian
 ```
 
-As you can see, the 
+As you can see, the
 
 ### Plotting kernels
 
