@@ -40,5 +40,11 @@ Suggests:
     testthat,
     covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggspatial,
+    mgcv,
+    ggeffects,
+    firatheme,
+    tidyverse
+Remotes: vankesteren/firatheme
 VignetteBuilder: knitr
