@@ -14,20 +14,20 @@ kernel_parabola(d, r = 100, FUN = sum)
 kernel_uniform(d, r = 100, FUN = sum)
 }
 \arguments{
-\item{d}{vector of distances}
+\item{d}{Vector of distances.}
 
-\item{r}{radius of interest}
+\item{r}{Radius of interest.}
 
-\item{FUN}{reduce function}
+\item{FUN}{Reduce function.}
 }
 \value{
 numeric, function (usually sum) of kernel-weighted distances
 }
 \description{
-Kernels convert distance vectors to single numbers, with a certain weight
-for certain distances. In general, at 0 distance, these return a value of 1,
-and the value decreases as the distance increases, reaching 0 at the limit
-of the support.
+Kernels convert distance vectors to single numbers,
+with a certain weight for certain distances. In general, at 0 distance,
+these return a value of 1, and the value decreases as the distance
+increases, reaching 0 at the limit of the support.
 }
 \details{
 Gaussian kernel is a truncated gaussian, where r = 4*sigma

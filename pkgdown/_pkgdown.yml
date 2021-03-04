@@ -72,7 +72,8 @@ navbar:
 
 
 articles:
-- title: Introduction
+- title: Introduction to osmenrich
   contents:
   - osmenrich
+  - advanced_enrichment
 

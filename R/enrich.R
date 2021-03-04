@@ -1,11 +1,6 @@
 #' @name enrich
 #' @title Enrich `sf` object with OSM data
-#' @description Perform enriched query on osm and add as new column.
-#'
-#' The enrichment call works in the following way: an `enriched_overpass_query`
-#' (e.g. `waste_query`) is created and then a new column is added by specifying
-#' the name of the column (`"waste_baskets = waste_query"`). This call
-#' also works with more than one queries.
+#' @description Perform enriched query on OSM and add as new column.
 #'
 #' @param name the column name of the feature to be added
 #' @param dataset target `sf` dataset to enrich with this package
@@ -26,37 +21,40 @@
 #' @param ... Additional parameters to be passed into the OSM query, such as
 #'   a user-defined kernel.
 #'
-#' @details
-#' `Type` represents the feature type to be considered. Usually this would be
-#' points, but polygons and multipolygons are also possible. This argument can
-#' also be a vector of multiple types. Non-point types will be converted to
-#' points using the st_centroid function from the sf package (NB this does not
-#' necessarily work well for all features!) Available options are:
-#' - points
-#' - lines
-#' - polygons
-#' - multilines
-#' - multipolygons
+#' @details `Type` represents the feature type to be considered. Usually this
+#'   would be points, but polygons and multipolygons are also possible. This
+#'   argument can also be a vector of multiple types. Non-point types will be
+#'   converted to points using the `st_centroid` function from the `sf` package
+#'   (NB this does not necessarily work well for all features!).
+#'   Available options are:
+#'   - points
+#'   - lines
+#'   - polygons
+#'   - multilines
+#'   - multipolygons
 #'
-#' `Distance` represents the metric used to compute the distances between the
-#' rows in the dataset and the osm features. `Duration` represents the metric
-#' that indicates the average duration to cover the distances between the
-#' rows in the dataset and the osm features. The following metrics are
-#' available in this package, assuming that the OSRM server is setup as
-#' suggested in our guide at:
-#' https://github.com/sodascience/osmenrich_docker:
-#' - spherical ("as the crow flies")
-#' - distance_by_foot
-#' - duration_by_foot
-#' - distance_by_car
-#' - duration_by_car
-#' - distance_by_bike
-#' - duration_by_bike
+#'   `Distance` represents the metric used to compute the distances between the
+#'   rows in the dataset and the OSM features. `Duration` represents the metric
+#'   that indicates the average duration to cover the distances between the
+#'   rows in the dataset and the OSM features. The following metrics are
+#'   available in this package, assuming that the OSRM server is setup as
+#'   suggested in our guide at:
+#'   https://github.com/sodascience/osmenrich_docker:
+#'   - spherical
+#'   - distance_by_foot
+#'   - duration_by_foot
+#'   - distance_by_car
+#'   - duration_by_car
+#'   - distance_by_bike
+#'   - duration_by_bike
 #'
-#' `Kernel` is a kernel function from the osmenrich package to be used in weighing
-#' the features and the radius/distance where features are considered. For
-#' simply counting the number of occurrences within a radius, use kernel_uniform
-#' with radius r.
+#' `Kernel` is a kernel function from the `osmenrich` package to be used in
+#'   weighing the features and the radius/distance where features are
+#'   considered. For simply counting the number of occurrences within a radius,
+#'   use `kernel_uniform` with radius `r`.
+#'
+#' For more details see the introductory vignette of `osmenrich`:
+#'   \code{vignette("introduction", package = "osmenrich")}
 #'
 #' @examples
 #' \donttest{
@@ -75,12 +73,11 @@
 #' }
 #'
 #' @seealso \code{\link{enrich_opq}}
-#' @note
-#' If you want to get a large number of points make sure to set the
-#' .timeout (time before request times out) and .memsize (maxmimum
-#' size of the request) arguments for the Overpass server and set
-#' the "max-table-size" argument correctly when starting the
-#' OSRM server(s).
+#' @note If you want to get a large number of points make sure to set the
+#'   `.timeout` (time before request times out) and `.memsize` (maxmimum
+#'   size of the request) arguments for the Overpass server and set
+#'   the "max-table-size" argument correctly when starting the
+#'   OSRM server(s).
 #' @export
 enrich_osm <- function(
                        dataset,

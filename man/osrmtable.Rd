@@ -14,30 +14,32 @@ osrm_table(
 )
 }
 \arguments{
-\item{src}{a data frame containing origin points identifiers, longitudes
-and latitudes (WGS84). It can also be a SpatialPointsDataFrame, a
-SpatialPolygonsDataFrame or an sf object. If so, row names are used as identifiers.
-If dst and src parameters are used, only pairs between scr/dst are computed.}
+\item{src}{A data frame containing origin points identifiers, longitudes
+and latitudes (WGS84). It can also be a \code{SpatialPointsDataFrame}, a
+\code{SpatialPolygonsDataFrame} or an \code{sf} object. If so, row names are
+used as identifiers. If dst and src parameters are used,
+only pairs between scr/dst are computed.}
 
-\item{dst}{a data frame containing destination points identifiers, longitudes
-and latitudes (WGS84). It can also be a SpatialPointsDataFrame a
-SpatialPolygonsDataFrame or an sf object. If so, row names are used as identifiers.}
+\item{dst}{A data frame containing destination points identifiers, longitudes
+and latitudes (WGS84). It can also be a \code{SpatialPointsDataFrame} a
+\code{SpatialPolygonsDataFrame} or an \code{sf} object. If so, row names are used
+as identifiers.}
 
-\item{measure}{a character indicating what measures are calculated. It can
+\item{measure}{A character indicating what measures are calculated. It can
 be "duration" (in minutes), "distance" (meters), or both c('duration',
-'distance'). The demo server only allows "duration".}
+'distance'). The public server only allows "duration".}
 
-\item{osrm_profile}{the routing profile to use, e.g. "car", "bike" or "foot"
-(when using the routing.openstreetmap.de test server).
-getOption("osrm.profile") by default.}
+\item{osrm_profile}{The routing profile to use, e.g. "car", "bike" or "foot"
+(when not using the public server). Uses \code{getOption("osrm.profile")} to
+retrieve the default profile ("car").}
 
-\item{osrm_server}{the base URL of the routing server.
-getOption("osrm.server") by default.}
+\item{osrm_server}{The base URL of the routing server. Uses
+\code{getOption("osrm.server")} to retrieve the current server by default.}
 }
 \value{
 A list containing 3 data frames is returned.
-durations is the matrix of travel times (in minutes),
-sources and destinations are the coordinates of
+\code{durations} is the matrix of travel times (in minutes);
+\code{sources} and \code{destinations} are the coordinates of
 the origin and destination points actually used to compute the travel
 times (WGS84).
 }
