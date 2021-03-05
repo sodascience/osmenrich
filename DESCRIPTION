@@ -37,15 +37,24 @@ Imports:
 RoxygenNote: 7.1.1.9000
 Roxygen: list(markdown = TRUE)
 Suggests:
-    testthat,
     covr,
-    knitr,
-    rmarkdown,
+    firatheme,
     ggspatial,
     ggplot2,
+    knitr,
     mgcv,
     ggeffects,
-    firatheme,
+    raster,
+    rmarkdown,
+    testthat,
     tidyverse
 Remotes: vankesteren/firatheme
+Collate:
+    exports.R
+    utils.R
+    kernels.R
+    distance_funs.R
+    osrm_table.R
+    enrich_opq.R
+    enrich_osm.R
 VignetteBuilder: knitr
