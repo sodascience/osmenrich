@@ -37,17 +37,17 @@ Imports:
 RoxygenNote: 7.1.1.9000
 Roxygen: list(markdown = TRUE)
 Suggests:
-    covr,
-    firatheme,
-    ggspatial,
-    ggplot2,
+    tidyverse,
+    rmarkdown,
     knitr,
-    mgcv,
+    ggplot2,
+    ggspatial,
     ggeffects,
     raster,
-    rmarkdown,
+    mgcv,
+    covr,
     testthat,
-    tidyverse
+    firatheme
 Remotes: vankesteren/firatheme
 Collate:
     exports.R
