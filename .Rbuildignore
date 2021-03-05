@@ -14,5 +14,5 @@
 ^\.zenodo.json
 ^rosm.cache
 ^CITATION.cff
-^pkgdown
 ^docs
+^pkgdown
