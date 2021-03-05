@@ -18,7 +18,7 @@
 #'   is set. Otherwise, the default server will be used
 #'
 #' @keywords internal
-#' @seealso \code{\link{osrmtable}} for the main function
+#' @seealso [enrich_osm()] for the main enrichment function
 set_server_profile <- function(server, profile) {
     # If server not set or not reachable use default server
     tryCatch(
@@ -48,7 +48,7 @@ set_server_profile <- function(server, profile) {
 
 #' @title Check if server is available
 #' @keywords internal
-#' @seealso \code{\link{set_server_profile}}
+#' @seealso [set_server_profile()]
 url_available <- function(u) {
     tryCatch(
         {
@@ -63,7 +63,7 @@ url_available <- function(u) {
 #' @description Dataframes are necessary for the transformations
 #' needed to query the osrm servers.
 #' @keywords internal
-#' @seealso \code{\link{osrmtable}}
+#' @seealso [osrm_table()] for the main function
 transform_to_df <- function(sf) {
     coords_matrix <- sf::st_coordinates(sf)
     df <- data.frame(
@@ -78,7 +78,7 @@ transform_to_df <- function(sf) {
 
 #' @title Build OSRM query applying google encryption algorithm if necessary
 #' @keywords internal
-#' @seealso \code{\link{osrmtable}} for the main function
+#' @seealso [osrm_table()] for the main function
 create_osrm_input_table <- function(loc, osrm_server, osrm_profile) {
     # Check if user forgot to insert "/" at the end of the osrm.server
     if (!endsWith(osrm_server, "/")) {
@@ -95,7 +95,7 @@ create_osrm_input_table <- function(loc, osrm_server, osrm_profile) {
 
 #' @title Adjust coordinates to fit within OSRM requirements
 #' @keywords internal
-#' @seealso \code{\link{osrmtable}}
+#' @seealso [osrm_table()] for the main function
 adjust_coord <- function(coord) {
     format(round(as.numeric(coord), 5),
         scientific = FALSE, justify = "none",
@@ -108,7 +108,7 @@ adjust_coord <- function(coord) {
 #'   from composing queries that go over the `default` limits of the
 #'   OSRM servers.
 #' @keywords internal
-#' @seealso \code{\link{osrmtable}} for the main function
+#' @seealso [osrm_table()] for the main function
 check_osrm_limits <- function(src, dst) {
     nrow_src <- nrow(sf::st_coordinates(src))
     nrow_dst <- nrow(sf::st_coordinates(dst))
@@ -143,7 +143,7 @@ check_osrm_limits <- function(src, dst) {
 
 #' @title Format OSRM output tables
 #' @keywords internal
-#' @seealso \code{\link{osrmtable}} for the main function
+#' @seealso [osrm_table()] for the main function
 format_osrm_output_table <- function(out, features, type) {
     if (type == "durations") {
         out_matrix <- out$durations
@@ -162,7 +162,7 @@ format_osrm_output_table <- function(out, features, type) {
 
 #' @title Format output coordinates table
 #' @keywords internal
-#' @seealso \code{\link{osrmtable}} for the main function
+#' @seealso [osrm_table()] for the main function
 format_coord_table <- function(out, features, type) {
     if (type == "sources") {
         sources <- format_sources(out, features)
@@ -175,7 +175,7 @@ format_coord_table <- function(out, features, type) {
 }
 
 #' @keywords internal
-#' @seealso \code{\link{format_coord_table}}
+#' @seealso [format_coord_table()]
 format_sources <- function(out, features) {
     return(data.frame(matrix(unlist(out$sources$location,
         use.names = T
@@ -186,7 +186,7 @@ format_sources <- function(out, features) {
 }
 
 #' @keywords internal
-#' @seealso \code{\link{format_coord_table}}
+#' @seealso [format_coord_table()]
 format_destinations <- function(out, features) {
     return(data.frame(matrix(unlist(out$destinations$location,
         use.names = T

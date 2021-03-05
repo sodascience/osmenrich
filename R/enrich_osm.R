@@ -4,8 +4,9 @@
 #'
 #' @param name the column name of the feature to be added
 #' @param dataset target `sf` dataset to enrich with this package
-#' @param key target OSM feature key to add, see \link{add_osm_feature}
-#' @param value target value for OSM feature key to add, see \link{add_osm_feature}
+#' @param key target OSM feature key to add, see [osmdata::add_osm_feature()]
+#' @param value target value for OSM feature key to add, see
+#'   [osmdata::add_osm_feature()]
 #' @param type `character` the osm feature type or types to consider
 #' (e.g., points, polygons), see details
 #' @param distance `character` the distance metric used, see details
@@ -14,7 +15,7 @@
 #' @param reduce_fun The aggregation function used by the `kernel` function to
 #'   aggregate the retrieved data points.
 #' @param control The list with configuration variables for the OSRM server.
-#'   It containes `timeout`, defining the number of seconds before the request
+#'   It contains `timeout`, defining the number of seconds before the request
 #'   to OSRM times out, and `memsize`, defining the maximum size of the query to
 #'   OSRM.
 #' @param .verbose `bool` whether to print info during enrichment
@@ -62,17 +63,18 @@
 #' # Enrich data creating new column `waste_baskets`
 #' sf_enriched <- dataset %>%
 #'   enrich_osm(
-#'     name = "waste_baskets",
+#'     name = "n_waste_baskets",
 #'     key = "amenity",
 #'     value = "waste_basket",
 #'     type = "points",
 #'     distance = "walking_duration",
+#'     r = 100,
 #'     kernel = "uniform",
-#'     r = 100
+#'     reduce_fun = sum
 #'   )
 #' }
 #'
-#' @seealso \code{\link{enrich_opq}}
+#' @seealso [enrich_opq()]
 #' @note If you want to get a large number of points make sure to set the
 #'   `.timeout` (time before request times out) and `.memsize` (maxmimum
 #'   size of the request) arguments for the Overpass server and set
@@ -86,7 +88,7 @@ enrich_osm <- function(
                        value = NULL,
                        type = "points",
                        distance = "spherical",
-                       r = 100,
+                       r = NULL,
                        kernel = "uniform",
                        reduce_fun = sum,
                        control = list(),
@@ -187,6 +189,7 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
   return(data)
 }
 
+#' @rdname enrich
 #' @keywords internal
 distance_matrix <- function(
                             distancename,

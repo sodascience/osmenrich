@@ -1,4 +1,4 @@
-#' @name osrmtable
+#' @name osrm_table
 #' @title Get Travel Time Matrices Between Points
 #' @description Build and send OSRM API queries to get travel time matrices
 #'   between points. This function interfaces the \emph{table} OSRM service.
@@ -27,8 +27,7 @@
 #'   the origin and destination points actually used to compute the travel
 #'   times (WGS84).
 #'
-#' @seealso \code{\link{set_server_profile}} and \code{\link{utils}} for
-#'   helper functions used in this function
+#' @seealso [set_server_profile()]
 osrm_table <- function(src = NULL, dst = NULL, measure = "duration",
                        osrm_profile = "driving",
                        osrm_server = getOption("osrm.server")) {

@@ -21,9 +21,10 @@
 #'   Uniform kernel returns 1 within radius r, 0 elsewhere.
 #'
 #' @return numeric, function (usually sum) of kernel-weighted distances
+#'
 #' @name kernels
 #' @export
-#' @seealso [osmenrich::enrich_opq]
+#' @seealso [enrich_opq()]
 
 #' @rdname kernels
 #' @export
@@ -45,7 +46,6 @@ kernel_uniform <- function(d, r = 100, reduce_fun = sum) {
     reduce_fun(abs(d) <= r)
 }
 
-# Add kernel to the classes
 class(kernel_gaussian) <- c("kernel", "function")
 class(kernel_parabola) <- c("kernel", "function")
 class(kernel_uniform) <- c("kernel", "function")

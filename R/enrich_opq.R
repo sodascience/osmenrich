@@ -1,9 +1,11 @@
-#' Enrich an overpass query for column output
+#' @name enrich_opq
+#' @title Enrich an overpass query for column output
 #'
 #' @param name name of the enriched column
 #' @param dataset target `sf` dataset to enrich with this package
-#' @param key target OSM feature key to add, see \link{add_osm_feature}
-#' @param value target value for OSM feature key to add, see \link{add_osm_feature}
+#' @param key target OSM feature key to add, see [osmdata::add_osm_feature()]
+#' @param value target value for OSM feature key to add, see
+#'   [osmdata::add_osm_feature()]
 #' @param type `character` the osm feature type or types to consider
 #' (e.g., points, polygons), see details
 #' @param distance `character` the distance metric used, see details
@@ -12,14 +14,17 @@
 #' @param r The search radius used by the `kernel` function.
 #' @param reduce_fun The aggregation function used by the `kernel` function to
 #'   aggregate the retrieved data points.
+#' @param control The list with configuration variables for the OSRM server.
+#'   It contains `timeout`, defining the number of seconds before the request
+#'   to OSRM times out, and `memsize`, defining the maximum size of the query to
+#'   OSRM.
 #' @param .verbose `bool` whether to print info during enrichment
 #' @param ... Additional parameters to be passed into the OSM query, such as
 #'   a user-defined kernel.
 #'
 #' @importFrom methods is
-#' @rdname enrich_opq
 #'
-#' @seealso [osmenrich::enrich_osm]
+#' @seealso [enrich_osm()]
 #'
 #' @export
 enrich_opq <- function(
@@ -29,7 +34,7 @@ enrich_opq <- function(
                        value = NULL,
                        type = "points",
                        distance = "spherical",
-                       r = 100,
+                       r = NULL,
                        kernel = "uniform",
                        reduce_fun = sum,
                        control = list(),

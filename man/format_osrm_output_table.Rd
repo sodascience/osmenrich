@@ -10,6 +10,6 @@ format_osrm_output_table(out, features, type)
 Format OSRM output tables
 }
 \seealso{
-\code{\link{osrmtable}} for the main function
+\code{\link[=osrm_table]{osrm_table()}} for the main function
 }
 \keyword{internal}
