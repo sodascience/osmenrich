@@ -150,7 +150,7 @@ sf_enriched_uniform <- sf_example %>%
 
 Which, behind the scenes, sets automatically the kernel variable to `"uniform"` and the aggregation function to `sum`, as seen below.
 
-```{r, eval=FALSE}
+```{r, message=FALSE}
 sf_enriched_uniform <- sf_example %>%
   enrich_osm(
     name = "n_waste_baskets",
@@ -171,7 +171,7 @@ Taking as starting point the previous example, you can modify either the `"kerne
 
 Modify the `"kernel"` variable to `"gaussian"`, keeping the aggregation function to `sum`, and print the enriched dataset.
 
-```{r, eval=FALSE}
+```{r, message=FALSE}
 sf_enriched_gaussian <- sf_example %>%
   enrich_osm(
     name = "n_waste_baskets",
@@ -186,32 +186,51 @@ sf_enriched_gaussian <- sf_example %>%
 sf_enriched_gaussian
 ```
 
-As you can see, the
+The column `"n_waste_baskets"` provides the sum of the number of baskets weighted by the gaussian kernel. While when the kernel was `"uniform"` the waste baskets retrieved were weighted equally, now the with the kernel set to `"gaussian"` waste baskets are weighted in relation to their distance from the geometry of each person. The differences in results are not important in the context of this example, but the simplicity of the data enrichment is.
 
 ### Plotting kernels
 
+We easily can visualize the circles of radius `r` (in this example r = 500) that are used to aggregate the features retrieved from OSM. As you can see in the image below, all the feature points within each circle will be weighted and aggregated using the `kernel` and `reduce_fun` specified in the `enrich_osm()` call.
 
 ```{r, message=FALSE, echo=FALSE, fig.width=7}
 library(ggspatial)
 library(ggplot2)
 
+# Tranform to meters and create buffer
+circle <- st_buffer(st_transform(sf_enriched_uniform, 3488), dist = 500)
+
 ggplot() +
   annotation_map_tile(zoomin = 0) +
-  geom_sf(data = sf_example_enriched) +
+  geom_sf(data = sf_enriched_uniform, aes(color=sf_enriched_uniform$person)) +
+  geom_sf(data = circle, aes(alpha=0.2, color=sf_enriched_uniform$person)) +
   scale_fill_viridis_c() +
   annotation_scale(location = "tr") + 
-  labs(title = "Position of the two people", fill = "") +
+  labs(title = "Visualization of kernels around two people", fill = "") +
   theme_fira() +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90), legend.position = 'none')
 ```
 
 ### Changing the aggregation function
 
-XXX
+You can also easily change the aggregation function, by modifying the `reduce_fun` variable. As before, we take the previous example as starting point.
 
-## Writing your own kernel
+Let's modify the`"reduce_fun"` to `"mean"`, change the name of the column accordingly, and print the result.
 
-XXX
+```{r, message=FALSE}
+sf_enriched_uniform_mean <- sf_example %>%
+  enrich_osm(
+    name = "mean_waste_baskets",
+    key = "amenity",
+    value = "waste_basket",
+    r = 500,
+    kernel = "uniform",
+    # Modified aggregation function to mean
+    reduce_fun = mean
+  )
 
+sf_enriched_uniform_mean
+```
+
+Comparing it with the enriched dataset `sf_enriched_uniform` created before, you can see that the newly added column now reflects the metric chosen to aggregate the data (`mean` instead of `sum`).
 
 
