@@ -158,9 +158,9 @@ learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
 In this project, the [Gitflow workflow](https://nvie.com/posts/a-successful-git-branching-model/)
-is used. Instead of having a single `master`/`main`
+is used. Instead of having a single `main`
 branch, the project makes use of two branches to record the history of the
-project: `develop` and `master`. The `master` branch is used only for the
+project: `develop` and `main`. The `main` branch is used only for the
 official releases of the project, while the `develop` branch is used to
 integrate the new features developed. Finally, `feature` branches are used to
 develop new features or additions to the project that will be `rebased and squashed`
