@@ -10,6 +10,6 @@ url_available(u)
 Check if server is available
 }
 \seealso{
-\code{\link{set_server_profile}}
+\code{\link[=set_server_profile]{set_server_profile()}}
 }
 \keyword{internal}

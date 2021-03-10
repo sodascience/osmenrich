@@ -1,78 +1,100 @@
 #' @name enrich
 #' @title Enrich `sf` object with OSM data
-#' @description Perform enriched query on osm and add as new column.
-#'
-#' The enrichment call works in the following way: an `enriched_overpass_query`
-#' (e.g. `waste_query`) is created and then a new column is added by specifying
-#' the name of the column (`"waste_baskets = waste_query"`). This call
-#' also works with more than one queries.
+#' @description Perform enriched query on OSM and add as new column.
 #'
 #' @param name the column name of the feature to be added
 #' @param dataset target `sf` dataset to enrich with this package
-#' @param key target OSM feature key to add, see \link{add_osm_feature}
-#' @param value target value for OSM feature key to add, see \link{add_osm_feature}
+#' @param key target OSM feature key to add, see [osmdata::add_osm_feature()]
+#' @param value target value for OSM feature key to add, see
+#'   [osmdata::add_osm_feature()]
 #' @param type `character` the osm feature type or types to consider
 #' (e.g., points, polygons), see details
 #' @param distance `character` the distance metric used, see details
 #' @param kernel `function` the kernel function used, see details
-#' @param ... `enriched_overpass_query` column or columns to add
+#' @param r The search radius used by the `kernel` function.
+#' @param reduce_fun The aggregation function used by the `kernel` function to
+#'   aggregate the retrieved data points.
+#' @param control The list with configuration variables for the OSRM server.
+#'   It contains `timeout`, defining the number of seconds before the request
+#'   to OSRM times out, and `memsize`, defining the maximum size of the query to
+#'   OSRM.
 #' @param .verbose `bool` whether to print info during enrichment
+#' @param ... Additional parameters to be passed into the OSM query, such as
+#'   a user-defined kernel.
 #'
-#' @details
-#' `Type` represents the feature type to be considered. Usually this would be
-#' points, but polygons and multipolygons are also possible. This argument can
-#' also be a vector of multiple types. Non-point types will be converted to
-#' points using the st_centroid function from the sf package (NB this does not
-#' necessarily work well for all features!) Available options are:
-#' - points
-#' - lines
-#' - polygons
-#' - multilines
-#' - multipolygons
+#' @details `Type` represents the feature type to be considered. Usually this
+#'   would be points, but polygons and multipolygons are also possible. This
+#'   argument can also be a vector of multiple types. Non-point types will be
+#'   converted to points using the `st_centroid` function from the `sf` package
+#'   (NB this does not necessarily work well for all features!).
+#'   Available options are:
+#'   - points
+#'   - lines
+#'   - polygons
+#'   - multilines
+#'   - multipolygons
 #'
-#' `Distance` represents the metric used to compute the distances between the
-#' rows in the dataset and the osm features. `Duration` represents the metric
-#' that indicates the average duration to cover the distances between the
-#' rows in the dataset and the osm features. The following metrics are
-#' available in this package, assuming that the OSRM server is setup as
-#' suggested in our guide at:
-#' https://github.com/sodascience/osmenrich_docker:
-#' - spherical ("as the crow flies")
-#' - distance_by_foot
-#' - duration_by_foot
-#' - distance_by_car
-#' - duration_by_car
-#' - distance_by_bike
-#' - duration_by_bike
+#'   `Distance` represents the metric used to compute the distances between the
+#'   rows in the dataset and the OSM features. `Duration` represents the metric
+#'   that indicates the average duration to cover the distances between the
+#'   rows in the dataset and the OSM features. The following metrics are
+#'   available in this package, assuming that the OSRM server is setup as
+#'   suggested in our guide at:
+#'   https://github.com/sodascience/osmenrich_docker:
+#'   - spherical
+#'   - distance_by_foot
+#'   - duration_by_foot
+#'   - distance_by_car
+#'   - duration_by_car
+#'   - distance_by_bike
+#'   - duration_by_bike
 #'
-#' `Kernel` is a kernel function from the osmenrich package to be used in weighing
-#' the features and the radius/distance where features are considered. For
-#' simply counting the number of occurrences within a radius, use kernel_uniform
-#' with radius r.
+#' `Kernel` is a kernel function from the `osmenrich` package to be used in
+#'   weighing the features and the radius/distance where features are
+#'   considered. For simply counting the number of occurrences within a radius,
+#'   use `kernel_uniform` with radius `r`.
+#'
+#' For more details see the introductory vignette of `osmenrich`:
+#'   \code{vignette("introduction", package = "osmenrich")}
 #'
 #' @examples
 #' \donttest{
+#' # Load libraries
+#' library(tidyverse)
+#' library(sf)
+#'
+#' # Create example dataset
+#' sf_example <-
+#' tribble(
+#'   ~person,  ~lat,   ~lon,
+#'   "Alice",  52.12,  5.09,
+#'   "Bob",    52.13,  5.08,
+#'   ) %>%
+#'   sf::st_as_sf(
+#'   coords = c("lon", "lat"),
+#'   crs = 4326
+#'  )
 #'
 #' # Enrich data creating new column `waste_baskets`
 #' sf_enriched <- dataset %>%
 #'   enrich_osm(
-#'     name = "waste_baskets",
+#'     name = "n_waste_baskets",
 #'     key = "amenity",
 #'     value = "waste_basket",
 #'     type = "points",
 #'     distance = "walking_duration",
+#'     r = 100,
 #'     kernel = "uniform",
-#'     r = 100
+#'     reduce_fun = sum
 #'   )
 #' }
 #'
-#' @seealso \code{\link{enrich_opq}}
-#' @note
-#' If you want to get a large number of points make sure to set the
-#' .timeout (time before request times out) and .memsize (maxmimum
-#' size of the request) arguments for the Overpass server and set
-#' the "max-table-size" argument correctly when starting the
-#' OSRM server(s).
+#' @seealso [enrich_opq()]
+#' @note If you want to get a large number of points make sure to set the
+#'   `.timeout` (time before request times out) and `.memsize` (maxmimum
+#'   size of the request) arguments for the Overpass server and set
+#'   the "max-table-size" argument correctly when starting the
+#'   OSRM server(s).
 #' @export
 enrich_osm <- function(
                        dataset,
@@ -81,24 +103,33 @@ enrich_osm <- function(
                        value = NULL,
                        type = "points",
                        distance = "spherical",
+                       r = NULL,
                        kernel = "uniform",
-                       ...,
-                       .verbose = TRUE) {
+                       reduce_fun = sum,
+                       control = list(),
+                       .verbose = TRUE,
+                       ...) {
   if (is.null(name)) stop("Enter a query name.")
   if (length(name) > 1) {
     stop("You can enrich one query at the time only.")
   } else {
+    control <- do.call("control_enrich", control)
+    # OR THIS? (match(kernel_pars, names(dst), 0L))
     query <- enrich_opq(
-      dataset, name, key, value, type,
-      distance, kernel, .verbose, ...
+      dataset,
+      name = name, key = key, value = value, type = type,
+      distance = distance, r = r, kernel = kernel,
+      reduce_fun = reduce_fun, control = control, .verbose = .verbose,
+      ...
     )
     enriched_data <- data_enrichment(
-      dataset, query, name, .verbose
+      data = dataset, query = query, colname = name, .verbose = .verbose
     )
     return(enriched_data)
   }
 }
 
+#' @rdname enrich
 #' @keywords internal
 data_enrichment <- function(data, query, colname, .verbose = TRUE) {
   # check inputs
@@ -173,6 +204,7 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
   return(data)
 }
 
+#' @rdname enrich
 #' @keywords internal
 distance_matrix <- function(
                             distancename,
@@ -205,4 +237,16 @@ distance_matrix <- function(
       }
     }
   }
+}
+
+#' @rdname enrich
+#' @keywords internal
+control_enrich <- function(timeout = 300, memsize = 1073741824) {
+  if (!is.numeric(timeout) || timeout <= 0) {
+    stop("Value of 'timeout' must be > 0")
+  }
+  if (!is.numeric(memsize) || memsize <= 0) {
+    stop("Value of 'memsize' must be > 0")
+  }
+  list(timeout = timeout, memsize = memsize)
 }

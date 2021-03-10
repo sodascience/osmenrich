@@ -35,12 +35,12 @@ reference:
 - title: Retrieve and compute distances and durations
   desc: Functions used to retrieve distances and duration from OSRM servers and kernel functions used to compute aggregation of these metrics.
 - contents:
-  - distancefuns
+  - distance_funs
   - kernels
 - title: OSRM functions
   desc: Functions to communicate with remote or local OSRM servers.
 - contents:
-  - osrmtable
+  - osrm_table
   - create_osrm_input_table
   - format_osrm_output_table
 - title: Utilities functions
@@ -72,7 +72,11 @@ navbar:
 
 
 articles:
-- title: Introduction
+- title: Introduction to osmenrich
   contents:
   - osmenrich
+- title: Advanced tutorials
+  contents:
+  - advanced_enrichment
+  - introduction_kernels
 

@@ -25,10 +25,21 @@ packages for collecting and manipulating geodata.
 
 ## Installation
 
-To install the package, run:
+To install the package, you first need to have the `remotes` package installed.
+If you do not have this package yet, please install it first with:
 
 ```r
-remotes::install_github("sodascience/osmenrich")
+install.packages("remotes")
+```
+
+If you do have this package, due to recent changes in GitHub's naming of branches,
+please make sure you have the latest version of `remotes` or at least version
+`2.2`.
+
+Once you did this, to continue the installation of the `osmenrich` package, run:
+
+```r
+remotes::install_github("sodascience/osmenrich@main")
 ```
 
 or, for the development version, run:
@@ -48,7 +59,7 @@ for large queries follow the instructions in section
 ### Simple enrichment example
 
 Let's enrich a spatial (`sf`) dataset (`sf_example`) with the number of waste
-baskets in a radius of 100 meters from each of the point specified in a
+baskets in a radius of 500 meters from each of the point specified in a
 dataset:
 
 ```r
@@ -83,7 +94,7 @@ sf_example
 #> 2 Bob    (5.08 52.13)
 ```
 
-To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, you
+To enrich the `sf_example` dataset with "waste baskets" in a 500m radius, you
 can create a query using the `enrich_osm()` function. This function uses the
 bounding box created by the points present in the example dataset and searches
 for the specified `key = "amenity"` and `value = "waste_basket`. You can also add a
@@ -146,10 +157,10 @@ Contributions are what make the open source community an amazing place to
 learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
-In this project, the [Gitflow workflow](https://nvie.com/posts/a-successful-
-git-branching-model/) is used. Instead of having a single `master`/`main`
+In this project, the [Gitflow workflow](https://nvie.com/posts/a-successful-git-branching-model/)
+is used. Instead of having a single `main`
 branch, the project makes use of two branches to record the history of the
-project: `develop` and `master`. The `master` branch is used only for the
+project: `develop` and `main`. The `main` branch is used only for the
 official releases of the project, while the `develop` branch is used to
 integrate the new features developed. Finally, `feature` branches are used to
 develop new features or additions to the project that will be `rebased and squashed`

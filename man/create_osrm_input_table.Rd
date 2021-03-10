@@ -10,6 +10,6 @@ create_osrm_input_table(loc, osrm_server, osrm_profile)
 Build OSRM query applying google encryption algorithm if necessary
 }
 \seealso{
-\code{\link{osrmtable}} for the main function
+\code{\link[=osrm_table]{osrm_table()}} for the main function
 }
 \keyword{internal}
