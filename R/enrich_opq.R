@@ -182,7 +182,7 @@ add_kernel <- function(opq, kernel, r, reduce_fun, ...) {
       "\nOr should be a function of the form: `function(d, r, fun) fun(d,r)`"
     )
   }
-  if (!(class(reduce_fun) == "function")) {
+  if (!is.function(reduce_fun)) {
     stop("The reduce function should be a function (E.g. 'sum')")
   }
   if (class(kernel) == "function") {

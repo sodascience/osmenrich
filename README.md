@@ -114,7 +114,7 @@ sf_example_enriched <- sf_example %>%
   )
 #> Downloading data for waste_baskets... Done.
 #> Downloaded 147 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
-#> Computing distance matrix for waste_baskets...Done.
+#> Computing distance matrix for n_waste_baskets...Done.
 ```
 
 The resulting enriched dataset `sf_example_enriched` is a `sf` object and can be printed as usual
@@ -128,7 +128,7 @@ sf_example_enriched
 #> bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
 #> geographic CRS: WGS 84
 #> # A tibble: 2 x 3
-#>   person     geometry waste_baskets
+#>   person     geometry n_waste_baskets
 #> * <chr>   <POINT [°]>         <int>
 #> 1 Alice  (5.09 52.12)            75
 #> 2 Bob    (5.08 52.13)             1

@@ -81,10 +81,10 @@
 #'     name = "n_waste_baskets",
 #'     key = "amenity",
 #'     value = "waste_basket",
-#'     type = "points",
-#'     distance = "walking_duration",
-#'     r = 100,
-#'     kernel = "uniform",
+# '     type = "points",
+# '     distance = "duration_by_foot",
+# '     r = 100,
+# '     kernel = "uniform",
 #'     reduce_fun = sum
 #'   )
 #' }
