@@ -58,7 +58,7 @@
 #'   \code{vignette("introduction", package = "osmenrich")}
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Load libraries
 #' library(tidyverse)
 #' library(sf)
