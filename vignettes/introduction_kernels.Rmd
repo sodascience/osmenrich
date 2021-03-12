@@ -6,7 +6,7 @@ description: >
   Learn what are kernels and howto best use them to enrich your datasets.
 vignette: >
   %\VignetteIndexEntry{Introduction to kernels}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr}
   %\VignetteEncoding{UTF-8}
 ---
 

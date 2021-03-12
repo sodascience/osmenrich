@@ -148,7 +148,7 @@ Multiple `docker-compose` workflows for doing this are avaialble in the separate
 repository](https://github.com/sodascience/osmenrich_docker). Use the `README`
 in the repository to select the workflow that fits your desired outcome.
 
-<img src="man/figures/docker.png" width="250px"></img>
+<img src="img/docker.png" width="250px"></img>
 
 <!-- CONTRIBUTING -->
 ## Contributing

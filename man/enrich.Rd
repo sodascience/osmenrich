@@ -130,7 +130,7 @@ tribble(
  )
 
 # Enrich data creating new column `waste_baskets`
-sf_enriched <- dataset \%>\%
+sf_enriched <- sf_example \%>\%
   enrich_osm(
     name = "n_waste_baskets",
     key = "amenity",
