@@ -1,14 +1,5 @@
 <p align="center">
-  <img src="man/figures/logo.png" width="250px"></img>
-  <!-- badges: start
-  <br/>
-  <span>
-    <a href="https://travis-ci.org/vankesteren/tensorsem"><img src="https://travis-ci.org/vankesteren/tensorsem.svg?branch=master"></img></a>
-    <a href="https://zenodo.org/badge/latestdoi/168356695"><img src="https://zenodo.org/badge/168356695.svg" alt="DOI"></a>
-    [![R build status](https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg)](https://github.com/sodascience/osmenrich/actions)
-    [![Codecov test coverage](https://codecov.io/gh/sodascience/osmenrich/branch/master/graph/badge.svg)](https://codecov.io/gh/sodascience/osmenrich?branch=master)
-  </span>
-  badges: end -->
+  <img src="img/logo.png" width="250px"></img>
 </p>
 <br/>
 
@@ -135,7 +126,7 @@ sf_example_enriched
 ```
 
 The waste baskets column is now the result of summing all the wastebaskets in a 500 meter radius for Alice and Bob:
-![](man/figures/example_wastebaskets_r500.png)
+![](img/example_wastebaskets_r500.png)
 
 ## Local API setup
 
@@ -197,4 +188,4 @@ Kesteren](https://github.com/vankesteren)
 Vida](https://github.com/leonardovida)
 ([@leonardojvida](https://twitter.com/leonardojvida))
 
-<img src="man/figures/word_colour-l.png" width="250px"></img>
+<img src="img/word_colour-l.png" width="250px"></img>
