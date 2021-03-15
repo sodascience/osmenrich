@@ -113,17 +113,28 @@ OSRM server(s).
 }
 \examples{
 \donttest{
+# Load libraries
+library(tidyverse)
+library(sf)
+
+# Create example dataset
+sf_example <-
+tribble(
+  ~person,  ~lat,   ~lon,
+  "Alice",  52.12,  5.09,
+  "Bob",    52.13,  5.08,
+  ) \%>\%
+  sf::st_as_sf(
+  coords = c("lon", "lat"),
+  crs = 4326
+ )
 
 # Enrich data creating new column `waste_baskets`
-sf_enriched <- dataset \%>\%
+sf_enriched <- sf_example \%>\%
   enrich_osm(
     name = "n_waste_baskets",
     key = "amenity",
     value = "waste_basket",
-    type = "points",
-    distance = "walking_duration",
-    r = 100,
-    kernel = "uniform",
     reduce_fun = sum
   )
 }

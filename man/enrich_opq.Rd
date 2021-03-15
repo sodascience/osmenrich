@@ -39,9 +39,10 @@ add_kernel(opq, kernel, r, reduce_fun, ...)
 
 \item{name}{name of the enriched column}
 
-\item{key}{target OSM feature key to add, see \link{add_osm_feature}}
+\item{key}{target OSM feature key to add, see \code{\link[osmdata:add_osm_feature]{osmdata::add_osm_feature()}}}
 
-\item{value}{target value for OSM feature key to add, see \link{add_osm_feature}}
+\item{value}{target value for OSM feature key to add, see
+\code{\link[osmdata:add_osm_feature]{osmdata::add_osm_feature()}}}
 
 \item{type}{\code{character} the osm feature type or types to consider
 (e.g., points, polygons), see details}

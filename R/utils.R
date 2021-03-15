@@ -156,7 +156,7 @@ format_osrm_output_table <- function(out, features, type) {
         Please check your OSRM server configuration.")
         stop(e)
     }
-    dimnames(out_matrix) <- features$id
+    dimnames(out_matrix) <- list(features$id)
     return(out_matrix)
 }
 

@@ -58,7 +58,7 @@
 #'   \code{vignette("introduction", package = "osmenrich")}
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Load libraries
 #' library(tidyverse)
 #' library(sf)
@@ -76,15 +76,15 @@
 #'  )
 #'
 #' # Enrich data creating new column `waste_baskets`
-#' sf_enriched <- dataset %>%
+#' sf_enriched <- sf_example %>%
 #'   enrich_osm(
 #'     name = "n_waste_baskets",
 #'     key = "amenity",
 #'     value = "waste_basket",
-#'     type = "points",
-#'     distance = "walking_duration",
-#'     r = 100,
-#'     kernel = "uniform",
+# '    type = "points",
+# '    distance = "duration_by_foot",
+# '    r = 100,
+# '    kernel = "uniform",
 #'     reduce_fun = sum
 #'   )
 #' }

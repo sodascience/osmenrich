@@ -165,7 +165,7 @@ sf_example_enriched
 ```
 
 The waste baskets column is now the result of summing all the wastebaskets in a 500 meter radius for Alice and Bob:
-![](../man/figures/example_wastebaskets_r500.png)
+![](../img/example_wastebaskets_r500.png)
 
 ### Normal Example {#normalexample}
 

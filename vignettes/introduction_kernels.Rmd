@@ -6,7 +6,7 @@ description: >
   Learn what are kernels and howto best use them to enrich your datasets.
 vignette: >
   %\VignetteIndexEntry{Introduction to kernels}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -195,12 +195,13 @@ We easily can visualize the circles of radius `r` (in this example r = 500) that
 ```{r, message=FALSE, echo=FALSE, fig.width=7}
 library(ggspatial)
 library(ggplot2)
+library(raster)
 
-# Tranform to meters and create buffer
+# Tranform to meters and create buffer around each point
 circle <- st_buffer(st_transform(sf_enriched_uniform, 3488), dist = 500)
 
 ggplot() +
-  annotation_map_tile(zoomin = 0) +
+  annotation_map_tile(zoomin = 0, progress = "none") +
   geom_sf(data = sf_enriched_uniform, aes(color=sf_enriched_uniform$person)) +
   geom_sf(data = circle, aes(alpha=0.2, color=sf_enriched_uniform$person)) +
   scale_fill_viridis_c() +
