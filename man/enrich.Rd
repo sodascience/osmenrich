@@ -112,7 +112,7 @@ the "max-table-size" argument correctly when starting the
 OSRM server(s).
 }
 \examples{
-\donttest{
+\dontrun{
 # Load libraries
 library(tidyverse)
 library(sf)
