@@ -141,17 +141,25 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
   if (length(query[["type"]]) == 1 && query[["type"]] == "points") {
     attr(query, "nodes_only") <- TRUE
   }
-  if (.verbose) cat(sprintf(" Downloading data for %s... ", colname))
+  if (.verbose) {
+    cli::cli_process_start(
+      msg = cli::col_cyan(glue::glue("Downloading data for {colname}...")),
+      msg_done = cli::col_green("Downloaded data for {colname}."),
+      msg_failed = cli::col_red(glue::glue("Failed to download data for {colname}!"))
+    )
+  }
   dat <- osmdata::osmdata_sf(q = query)
   if (.verbose) {
-    cat("Done.\n", sprintf(
-      "Downloaded %i points, %i lines, %i polygons, %i mlines, %i mpolygons.\n",
+    cli::cli_process_done()
+
+    cli::cli_alert_info(cli::col_cyan(sprintf(
+      "Downloaded %i points, %i lines, %i polygons, %i mlines, %i mpolygons.",
       if (is.null(dat$osm_points)) 0 else nrow(dat$osm_points),
       if (is.null(dat$osm_lines)) 0 else nrow(dat$osm_lines),
       if (is.null(dat$osm_polygons)) 0 else nrow(dat$osm_polygons),
       if (is.null(dat$osm_multilines)) 0 else nrow(dat$osm_multilines),
       if (is.null(dat$osm_multipolygons)) 0 else nrow(dat$osm_multipolygons)
-    ))
+    )))
   }
 
   # Get feature sf::geometry
@@ -172,8 +180,13 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
     }
   }
 
-  if (.verbose) cat(sprintf(" Computing distance matrix for %s...", colname))
-
+  if (.verbose) {
+    cli::cli_process_start(
+      msg = cli::col_cyan(glue::glue("Computing distance matrix for {colname}...")),
+      msg_done = cli::col_green("Computed distance matrix for {colname}."),
+      msg_failed = cli::col_red(glue::glue("Failed to compute distance matrix for {colname}!"))
+    )
+  }
   # Get reference sf::geometry
   ref_geometry <- sf::st_geometry(
     sf::st_transform(data, crs = 4326)
@@ -182,7 +195,7 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
   # Create matrix ref <-> ftr
   distance_mat <- distance_matrix(
     distancename = query[["distance"]],
-    distancefun = query[["distancefun"]],
+    distancefun  = query[["distancefun"]],
     ref_geometry = ref_geometry,
     ftr_geometry = ftr_geometry
   )
@@ -199,15 +212,17 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
     )
   feature <- do.call(what = apply, args = apply_args)
 
-  if (.verbose) cat(sprintf("Done.\n Adding %s to data.\n", colname))
+  if (.verbose) {
+    cli::cli_process_done()
+    cli::cli_alert_info(cli::col_cyan(glue::glue("Adding {colname} to data.")))
+  }
   data[[colname]] <- feature
   return(data)
 }
 
 #' @rdname enrich
 #' @keywords internal
-distance_matrix <- function(
-                            distancename,
+distance_matrix <- function(distancename,
                             distancefun,
                             ref_geometry,
                             ftr_geometry) {

@@ -33,7 +33,9 @@ Imports:
     tibble,
     httr,
     RCurl,
-    jsonlite
+    jsonlite,
+    cli,
+    glue
 RoxygenNote: 7.1.1.9000
 Roxygen: list(markdown = TRUE)
 Suggests:
