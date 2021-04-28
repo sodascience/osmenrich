@@ -37,24 +37,40 @@ The R package `osmenrich` is available on [GitHub](https://github.com/sodascienc
 
 # Statement of need
 
-Geographic data is valuable in research where the environment influences the process under investigation. For example, the `osmenrich` package is useful in the analysis of data retrieved from citizen science projects such as [plastic spotter](https://www.plasticspotter.nl/) or the [great backyard bird count](https://www.birdcount.org/). At the same time, within the R ecosystem multiple software solutions exist for extracting data from geographic information systems [@osmdata:2017, @googleway:2020, @mapbox:2020]. However, in order to include these data in further analysis (e.g., universal kriging in `gstat`, @gstat:2004), these data often need further processing and, crucially, _aggregation_. Within this problem space, the contributions of `osmenrich` are as follows:
+Geographic data is valuable in research where the environment influences the process under investigation. For example, the `osmenrich` package is useful in the analysis of data retrieved from citizen science projects such as [plastic spotter](https://www.plasticspotter.nl/) or the [great backyard bird count](https://www.birdcount.org/). At the same time, within the R ecosystem multiple software solutions exist for extracting data from geographic information systems [@osmdata:2017, @googleway:2020, @mapbox:2020]. However, to include these geographic data in further analysis (e.g. carrying out kriging in `gstat`, @gstat:2004), the data often need further processing and, crucially, _aggregation_. Within this problem space, the contributions of `osmenrich` are as follows:
 
-- Creates a user-friendly interface to OpenStreetMap, abstracting away the necessary API calls.
-- Defines standardized ways to aggregate geographic information based on kernels (see \autoref{sec:kern}).
-- Allows distance measures based on routing, such as duration by foot or distance by car (see \autoref{sec:rout}).
+- Creating a user-friendly interface to OpenStreetMap, abstracting away the necessary API calls.
+- Defyining standardized ways to aggregate geographic information based on kernels (see \autoref{sec:kern}).
+- Allowing distance measures based on routing, such as duration by foot or distance by car (see \autoref{sec:rout}).
 
-Using this package, researchers can focus on research questions, rather than spending time figuring out how to aggregate geographic data. The `osmenrich` package can be especially useful answering questions relative to identifying **features within a determined distance from observations that are relevant to explain the process under investigation**.
+Using our package, researchers can focus on research questions, rather than spending time figuring out how to aggregate geographic data. The `osmenrich` package can be especially useful answering questions relative to identifying relevant features to explain the process under investigation within a determined distance from observations.
 
-Before introducing the main function and tools of this package, we introduce the grammar used in this paper. We call "_reference points_" the objects with geocoded data that a researcher wants to enrich, while "_feature points_" the objects the researcher is interested in retrieving. Thus, if a dataset contains geocoded data, with this package one can extract information about real-world object around each of the objects contained in the data, compute their distance/duration from the objects and then enrich the dataset with this information. The result is a `tidy sf` dataset.
+Before describing the main function and features of this package, we introduce the grammar used in this paper. We call "_reference points_" the objects with geocoded data that a researcher wants to enrich, while "_feature points_" the objects the researcher is interested in retrieving. If a dataset contains geocoded data, with the `osmenrich` package one can extract information about real-world objects (_feature points_) around each of the _reference points_ contained in the dataset, compute the distance/duration between them and enrich the initial dataset with this information. The result is a `tidy sf` dataset.
 
 # Main function
 
-To enrich data, the `osmenrich` package uses its main function `enrich_osm()`. This function takes a dataset containing geocoded _reference points_ in `sf` format, retrieved specified points from a local or remote OpenStreetMap server, computes the enrichment with the specified `kernel` parameters and outputs an enriched `sf` dataset. The `enrich_osm()` function uses the bounding box created by the _reference points_ from the input dataset and searches for the specified _feature points_ in OpenStreetMap using the parameters `key` and `value` within the radius `r` around each of the _reference points_. For each _reference points_ it uses the `kernel` parameter to compute the enrichment and finally adds a newly created column named using the variable `name` containing the enriched data. See section \autoref{sec:usage} for an example usage of this function.
+To enrich data, the `osmenrich` package uses the main function `enrich_osm()`. This function takes a dataset containing geocoded _reference points_ in `sf` format, retrieves specified points from a local or remote OpenStreetMap server, computes the enrichment with the specified parameters and outputs an enriched `sf` dataset.
+
+```R
+enrich_osm(
+  dataset = sf_dataset,
+  name = "waste",
+  key = "amenity",
+  value = "waste_basket",
+  r = 100,
+  # kernel = "uniform", # default kernel function
+  # reduce_fun = "sum", # default aggregation function
+  # distance = "spherical", # default type of distance measure 
+  # type = "points", # default type of shape retrieved from OpenStreetMap
+)
+```
+
+The example above shows an example of query and displays values that can be left to default. Specifically, the function uses the bounding box created by the _reference points_ from the input dataset and searches for the specified _feature points_ of type `type`, in OpenStreetMap using the parameters `key` and `value` within the radius `r` around each of the _reference points_. For each _reference points_ it uses the `kernel`, `reduce_fun` and `distance` parameters, that can be left to their deafult values, to compute the enrichment and finally adds a newly created column named using the variable `name` containing the enriched data. See section \autoref{sec:usage} for an example usage of this function.
 
 # Kernels
 \label{sec:kern}
 
-Kernels are a tool to weight and aggregate the features retrieved from OpenStreetMap and play a center role in the data enrichment process used in `osmenrich`. Kernels first weight the points retrieved by their distances (or durations) from the reference points and then convert these vectors into single numbers. This conversion is done by just specifying a kernel, or by specifying a kernel and the aggregation function used to reduce these weighted vectors of points into single numbers.
+Kernels are a tool to weight and aggregate the features retrieved from OpenStreetMap and play a center role in the data enrichment process used in `osmenrich`. Kernels first weight the points retrieved by their distances (or durations) from the reference points and then convert these vectors into single numbers. This conversion is done by specifying a kernel or by specifying a kernel and the aggregation function used to reduce these weighted vectors of points into single numbers.
 
 There are three main variables involved in the specification of a kernel:
 
@@ -87,6 +103,8 @@ We created a [GitHub repository](https://github.com/sodascience/osmenrich_docker
 2. **Normal use-case**. The user only wants to enrich adding features for a large area. The user might be interested in distances but does not require a specific metric (i.e. car vs. foot vs. bike). Only the setup of the OpenStreetMap server is recommended. The OSRM connection will rely on public servers.
 3. **Advanced use-case**. The user wants to enrich adding features for a large area and/or is interested in specific metrics for distances/durations (i.e. foot or bike). The setup of both the OpenStreetMap and OSRM servers is recommended.
 
+Finally, to specify which distance metric to use, the user can set the parameter `distance` to the desired choice as in the example below.
+
 ```R
 # Specify the address of local OSRM instance
 # options(osrm.server = "http://localhost:<port>/")
@@ -107,22 +125,10 @@ enrich_osm(
 library(osmenrich)
 ```
 
-TODO: Include the dataset in the package with usethis()
-
 As a brief example, suppose we have a dataset of common swift's nests provided openly by the city of Utrecht, the Netherlands. We want to enrich this dataset retrieving a proxy of natural material availability. For the sake of this example, we retrieve only "trees", as they represent a close enough proxy to natural materials. However, we could easily retrieve other data types, using the available list on OpenStreetMap at [Map Features](https://wiki.openstreetmap.org/wiki/Map_features)
 
 ```R
-# Retireve points
-data_url <- "https://ckan.dataplatform.nl/dataset/8ceaae10-fb90-4ec0-961c-ef02691bb861/resource/baae4cde-cf33-416b-aa4e-d0fba160eed9/download/gierzwaluwinventarisatie2014.csv"
-# Conver points into sf
-bird_sf <-
-  read_csv(data_url) %>%
-  drop_na(latitude, longitude, `aantal nesten`) %>%
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
-  select(nestcount = "aantal nesten", geometry)
-```
 
-```R
 head(common_swift())
 # Show the output of the command
 ```
@@ -137,15 +143,12 @@ bird_sf <-
     kernel = "gaussian",
     r = 1000
   )
-```
 
-```R
 bird_sf
 # Show the output of the command
 ```
 
 # Acknowledgements
 
-TODO: This project was funded
 
 # References
