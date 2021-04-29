@@ -1,6 +1,6 @@
-#' Nests count of common sparrows in Utrecht.
+#' Nests count of common swifts in Utrecht.
 #'
-#' An sf dataset containing 99 nests count of common sparrows in the
+#' An sf dataset containing 99 nests count of common swifts in the
 #' municipality of Utrecht (The Netherlands) and their geographical position.
 #' As the dataset is formatted as a simple feature collection it also contains
 #' attributes such as the geometry_type, dimension, bbox and CRS.
@@ -12,4 +12,4 @@
 #'   ...
 #' }
 #' @source \url{https://ckan.dataplatform.nl/dataset/gierzwaluwinventarisatie-2014}
-"bird_sf"
+"common_swift"
