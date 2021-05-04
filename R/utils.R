@@ -28,7 +28,7 @@ set_server_profile <- function(server, profile) {
                 url <- "http://router.project-osrm.org/"
                 query <- "route/v1/driving/13.388860,52.517037;13.397634,52.5"
                 query2 <- "29407?overview=false"
-                r <- GET(paste0(url, query, query2))
+                r <- httr::GET(paste0(url, query, query2))
 
                 if (r["status_code"] == 200) {
                     osrm_server <- "http://router.project-osrm.org/"

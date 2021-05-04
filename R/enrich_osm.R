@@ -201,7 +201,7 @@ data_enrichment <- function(ref_data, query, colname, .verbose = TRUE) {
   ref_geometry <- sf::st_transform(ref_data, crs = 4326)
   # This command raises a warning due to different versions of GDAL
   # see: https://github.com/r-spatial/sf/issues/1419
-  st_crs(ftr_geometry) <- 4326
+  sf::st_crs(ftr_geometry) <- 4326
   options(warn=0)
 
   # Create matrix ref <-> ftr
