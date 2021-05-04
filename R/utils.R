@@ -24,13 +24,20 @@ set_server_profile <- function(server, profile) {
     tryCatch(
         {
             if (is.null(server) || !url_available(server)) {
-                osrm_server <- "http://router.project-osrm.org/"
-                # options(
-                #     osrm.server = paste0(
-                #         osrm_server,
-                #         "routed-",
-                #         profile, "/"
-                #     )
+                # Test if public server is available by making small query
+                url <- "http://router.project-osrm.org/"
+                query <- "route/v1/driving/13.388860,52.517037;13.397634,52.5"
+                query2 <- "29407?overview=false"
+                r <- httr::GET(paste0(url, query, query2))
+
+                if (r["status_code"] == 200) {
+                    osrm_server <- "http://router.project-osrm.org/"
+                } else {
+                    e <- simpleError("Public OSRM server does not seem to
+                                     respond correctly.")
+                    stop(e)
+                }
+
                 options(osrm.server = osrm_server)
                 options(osrm.profile = profile)
             } else {
@@ -76,7 +83,7 @@ transform_to_df <- function(sf) {
     return(df)
 }
 
-#' @title Build OSRM query applying google encryption algorithm if necessary
+#' @title Build OSRM query
 #' @keywords internal
 #' @seealso [osrm_table()] for the main function
 create_osrm_input_table <- function(loc, osrm_server, osrm_profile) {
