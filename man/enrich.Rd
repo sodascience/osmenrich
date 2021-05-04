@@ -23,9 +23,9 @@ enrich_osm(
   ...
 )
 
-data_enrichment(data, query, colname, .verbose = TRUE)
+data_enrichment(ref_data, query, colname, .verbose = TRUE)
 
-distance_matrix(distancename, distancefun, ref_geometry, ftr_geometry)
+distance_matrix(distance_name, distance_fun, ref_geometry, ftr_geometry)
 
 control_enrich(timeout = 300, memsize = 1073741824)
 }

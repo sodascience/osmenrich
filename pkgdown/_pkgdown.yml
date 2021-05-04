@@ -6,12 +6,19 @@ home:
       href: https://github.com/sodascience/osmenrich/issues
     - text: View the GitHub repository with the backend setup
       href: https://github.com/sodascience/osmenrich_docker
+  strip_header: true
 
 authors:
   Erik-Jan van Kesteren:
-    href: https://erikjanvankesteren.nl/
-  Leonardo Vida:
-    href: https://leonardovida.com/
+    href: "https://erikjanvankesteren.nl/"
+  Leonardo Jaya Vida:
+    href: "https://leonardovida.com/"
+  Jonathan de Bruin:
+    href: "https://github.com/J535D165"
+  Daniel Oberski:
+    href: "https://daob.nl/"
+  SoDa Team:
+    href: "https://odissei-data.nl/nl/soda/"
 
 development:
   mode: auto

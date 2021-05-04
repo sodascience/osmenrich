@@ -1,9 +1,13 @@
 
 <!-- README.md is generated from README.Rmd-->
 
-<img src="img/logo.png" align="right" alt="" width="250" />
+<p align="center">
 
-# Enrich geocoded data using OpenStreetMap
+<img src="man/figures/logo.png" alt="osmenrich logo" width="250"></img>
+
+</p>
+
+# osmenrich: enrich geocoded data using OpenStreetMap
 
 <!-- badges: start -->
 
@@ -136,7 +140,8 @@ sf_example_enriched
 
 The waste baskets column is now the result of summing all the
 wastebaskets in a 500 meter radius for Alice and Bob:
-![](img/example_wastebaskets_r500.png)
+
+![](man/figures/example_wastebaskets_r500.png)
 
 ## Local API setup
 
@@ -151,7 +156,7 @@ repository](https://github.com/sodascience/osmenrich_docker). Use the
 `README` in the repository to select the workflow that fits your desired
 outcome.
 
-<img src="img/docker.png" width="250px"></img>
+<img src="man/figures/docker.png" alt="Docker logo" width="250px"/>
 
 <!-- CONTRIBUTING -->
 
@@ -202,4 +207,4 @@ Kesteren](https://github.com/vankesteren)
 Vida](https://github.com/leonardovida)
 (\[@leonardojvida\](<https://twitter.com/leonardojvida>))
 
-<img src="img/word_colour-l.png" width="250px"></img>
+<img src="man/figures/word_colour-l.png" alt="SoDa logo" width="250px"/>
