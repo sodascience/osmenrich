@@ -114,16 +114,17 @@ enrich_osm <- function(
     stop("You can enrich one query at the time only.")
   } else {
     control <- do.call("control_enrich", control)
-    # OR THIS? (match(kernel_pars, names(dst), 0L))
+    # Create query to OSM server
     query <- enrich_opq(
-      dataset,
+      dataset = dataset,
       name = name, key = key, value = value, type = type,
       distance = distance, r = r, kernel = kernel,
       reduce_fun = reduce_fun, control = control, .verbose = .verbose,
       ...
     )
+    # Enrichment call
     enriched_data <- data_enrichment(
-      data = dataset, query = query, colname = name, .verbose = .verbose
+      ref_data = dataset, query = query, colname = name, .verbose = .verbose
     )
     return(enriched_data)
   }
@@ -131,13 +132,13 @@ enrich_osm <- function(
 
 #' @rdname enrich
 #' @keywords internal
-data_enrichment <- function(data, query, colname, .verbose = TRUE) {
-  # check inputs
-  if (!is(data, "sf")) stop("Data should be sf object.")
+data_enrichment <- function(ref_data, query, colname, .verbose = TRUE) {
+  # Check inputs
+  if (!is(ref_data, "sf")) stop("Data should be sf object.")
   check_enriched_opq(query)
 
-  # extract the feature points and/or centroids
-  # only download points if only points are requested
+  # Extract the feature points and/or centroids
+  # Only download points if only points are requested
   if (length(query[["type"]]) == 1 && query[["type"]] == "points") {
     attr(query, "nodes_only") <- TRUE
   }
@@ -148,24 +149,31 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
       msg_failed = cli::col_red(glue::glue("Failed to download data for {colname}!"))
     )
   }
-  dat <- osmdata::osmdata_sf(q = query)
+
+  # Retrieve data from OSM server
+  ftr_data <- osmdata::osmdata_sf(q = query)
   if (.verbose) {
     cli::cli_process_done()
 
     cli::cli_alert_info(cli::col_cyan(sprintf(
       "Downloaded %i points, %i lines, %i polygons, %i mlines, %i mpolygons.",
-      if (is.null(dat$osm_points)) 0 else nrow(dat$osm_points),
-      if (is.null(dat$osm_lines)) 0 else nrow(dat$osm_lines),
-      if (is.null(dat$osm_polygons)) 0 else nrow(dat$osm_polygons),
-      if (is.null(dat$osm_multilines)) 0 else nrow(dat$osm_multilines),
-      if (is.null(dat$osm_multipolygons)) 0 else nrow(dat$osm_multipolygons)
+      if (is.null(ftr_data$osm_points)) 0 else
+        nrow(ftr_data$osm_points),
+      if (is.null(ftr_data$osm_lines)) 0 else
+        nrow(ftr_data$osm_lines),
+      if (is.null(ftr_data$osm_polygons)) 0 else
+        nrow(ftr_data$osm_polygons),
+      if (is.null(ftr_data$osm_multilines)) 0 else
+        nrow(ftr_data$osm_multilines),
+      if (is.null(ftr_data$osm_multipolygons)) 0 else
+        nrow(ftr_data$osm_multipolygons)
     )))
   }
 
   # Get feature sf::geometry
   first <- TRUE
   for (type in query$type) {
-    geometry <- dat[[paste0("osm_", type)]][["geometry"]]
+    geometry <- ftr_data[[paste0("osm_", type)]][["geometry"]]
     if (is.null(geometry)) next
     # Whatever the geometry, as long as not points use centroid
     # Here one could divide it depending on the geometry or choice of user
@@ -187,15 +195,19 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
       msg_failed = cli::col_red(glue::glue("Failed to compute distance matrix for {colname}!"))
     )
   }
-  # Get reference sf::geometry
-  ref_geometry <- sf::st_geometry(
-    sf::st_transform(data, crs = 4326)
-  ) # force WGS84
+
+  # Modify both ftr and ref to 4326
+  options(warn=-1)
+  ref_geometry <- sf::st_transform(ref_data, crs = 4326)
+  # This command raises a warning due to different versions of GDAL
+  # see: https://github.com/r-spatial/sf/issues/1419
+  st_crs(ftr_geometry) <- 4326
+  options(warn=0)
 
   # Create matrix ref <-> ftr
   distance_mat <- distance_matrix(
-    distancename = query[["distance"]],
-    distancefun  = query[["distancefun"]],
+    distance_name = query[["distance"]],
+    distance_fun  = query[["distancefun"]],
     ref_geometry = ref_geometry,
     ftr_geometry = ftr_geometry
   )
@@ -216,34 +228,34 @@ data_enrichment <- function(data, query, colname, .verbose = TRUE) {
     cli::cli_process_done()
     cli::cli_alert_info(cli::col_cyan(glue::glue("Adding {colname} to data.")))
   }
-  data[[colname]] <- feature
-  return(data)
+  ref_data[[colname]] <- feature
+  return(ref_data)
 }
 
 #' @rdname enrich
 #' @keywords internal
-distance_matrix <- function(distancename,
-                            distancefun,
+distance_matrix <- function(distance_name,
+                            distance_fun,
                             ref_geometry,
                             ftr_geometry) {
   # If "spherical" then no call to OSRM necessary
-  if (distancename == "spherical") {
-    matrix <- distancefun(ref_geometry, ftr_geometry)
+  if (distance_name == "spherical") {
+    matrix <- sf::st_distance(ref_geometry, ftr_geometry)
     return(matrix)
   }
 
   if (!check_osrm_limits(src = ref_geometry, dst = ftr_geometry)) {
-    matrix <- distancefun(ref_geometry, ftr_geometry)
+    matrix <- distance_fun(ref_geometry, ftr_geometry)
   } else {
     print("Splitting main call and creating sub-calls...")
     tot_nrows <- nrow(ref_geometry) * nrow(sf::st_coordinates(ftr_geometry))
     first <- TRUE
     chunk_size <- 20000
-    # TODO: improve function
     for (i in seq(1, tot_nrows, chunk_size)) {
       seq_size <- chunk_size
       if ((i + seq_size) > tot_nrows) seq_size <- tot_nrows - i + 1
-      # matrix <- distancefun(ref_geometry[i:], ftr_geometry[i:,:])
+      matrix <- distance_fun(ref_geometry[i:(i+seq_size),],
+                            ftr_geometry[i:(i+seq_size),])
       if (first) {
         result <- matrix
         first <- FALSE

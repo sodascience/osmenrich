@@ -2,16 +2,24 @@ library(tibble)
 library(sf)
 library(osmenrich)
 
-if (!is.character(RCurl::getURL("www.google.com"))) skip("No internet connection found!")
+# Skip tests if connection to internet is not available
+if (!is.character(RCurl::getURL("www.google.com")))
+  skip("No internet connection found!")
 
 # Set servers
 options(osrm.server = "http://localhost:8080/")
 
-# skip test if they don't exist
-if (!url_available(getOption("osrm.server"))) {
+# Skip test if they don't exist
+if (!osmenrich::url_available(getOption("osrm.server"))) {
+  server_available <- FALSE
+  run_tests(server_available)
   skip("Nginx server is unavailable!")
+} else {
+  server_available <- TRUE
+  run_tests(server_available)
 }
 
+# Create sf used in tests
 sf_people <-
   tribble(
     ~person, ~id,  ~lat,  ~lon, ~val,
@@ -28,26 +36,32 @@ sf_bins <-
   ) %>%
   st_as_sf(coords = c("lon", "lat"), crs = 4326)
 
-test_that("Walking distance and duration function", {
-  res_duration <- duration_by_foot(sf_people, sf_bins)
-  res_distance <- distance_by_foot(sf_people, sf_bins)
+# Run different tests depending on the connection available
+run_tests <- function(server_available) {
+  if (server_available == FALSE) {
+    test_that("Driving distance and duration function", {
+      res_duration <- duration_by_car(sf_people, sf_bins)
+      res_distance <- distance_by_car(sf_people, sf_bins)
 
-  expect_equal(res_duration[2][1], 166.1)
-  expect_equal(res_distance[3], 11569)
-})
+      expect_that(res_duration[1][1], is_a("numeric"))
+      expect_that(res_distance[1][1], is_a("numeric"))
+    })
+  }
+  else {
+    test_that("Walking distance and duration function", {
+      res_duration <- duration_by_foot(sf_people, sf_bins)
+      res_distance <- distance_by_foot(sf_people, sf_bins)
 
-test_that("Driving distance and duration function", {
-  res_duration <- duration_by_car(sf_people, sf_bins)
-  res_distance <- distance_by_car(sf_people, sf_bins)
+      expect_that(res_duration[1][1], is_a("numeric"))
+      expect_that(res_distance[1][1], is_a("numeric"))
+    })
 
-  expect_equal(res_duration[2][1], 12.2)
-  expect_equal(res_distance[3], 11708)
-})
+    test_that("Cycling distance and duration function", {
+      res_duration <- duration_by_bike(sf_people, sf_bins)
+      res_distance <- distance_by_bike(sf_people, sf_bins)
 
-test_that("Cycling distance and duration function", {
-  res_duration <- duration_by_bike(sf_people, sf_bins)
-  res_distance <- distance_by_bike(sf_people, sf_bins)
-
-  expect_equal(res_duration[2][1], 50.8)
-  expect_equal(res_distance[3], 8106)
-})
+      expect_that(res_duration[1][1], is_a("numeric"))
+      expect_that(res_distance[1][1], is_a("numeric"))
+    })
+  }
+}
