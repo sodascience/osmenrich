@@ -81,10 +81,9 @@ Specifying these variables in the `enrich_osm()` function, allows the user to ch
 ```R
 enrich_osm(
   [...],
-  r = 100, # radius for features retrieval
-  kernel = 'gaussian', # weighting function
-  reduce_fun = 'mean', # aggregation function
-  measure = 
+  r = 100, # Radius for features objects retrieval
+  kernel = "gaussian", # Weighting function
+  reduce_fun = "mean" # Aggregation function
 )
 ```
 
