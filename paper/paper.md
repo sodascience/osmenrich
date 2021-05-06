@@ -29,7 +29,7 @@ bibliography: paper.bib
 
 # Summary
 
-The `osmenrich` package provides a user-friendly way to enrich geographic datasets in `R`, for example observations on a map, with geographic features around those observations. Additionally, it can weigh these features by their distance or (walking / driving / cycling) duration from the observations. This package builds on existing infrastructure to interface with OpenStreetMap (`osmdata`, Padgham et al., 2017), and works well with the existing ecosystem of packages for (geospatial) data analysis, namely `sf` [@sf:2018] and the `tidyverse` [@tidyverse:2019]. Thus, this package streamlines and standardizes the process going from a raw dataset with observations and locations to a `tidy` [@tidy-data:2014], rich dataset with multiple relevant geographical features about those locations. \autoref{fig:workflow} shows graphically the basic workflow of `osmenrich`.
+The `osmenrich` package provides a user-friendly way to enrich geographic datasets in `R`, for example observations on a map, with geographic features around those observations. Additionally, it can weigh these features by their (walking / driving / cycling) distance or duration from the observations. This package builds on existing infrastructure to interface with OpenStreetMap (`osmdata`, Padgham et al., 2017), and works well with the existing ecosystem of packages for (geospatial) data analysis, namely `sf` [@sf:2018] and the `tidyverse` [@tidyverse:2019]. Thus, this package streamlines and standardizes the process going from a raw dataset with observations and locations to a `tidy` [@tidy-data:2014], rich dataset with multiple relevant geographical features about those locations. \autoref{fig:workflow} shows graphically the basic workflow of `osmenrich`.
 
 The R package `osmenrich` is available on [GitHub](https://github.com/sodascience/osmenrich).
 
@@ -37,13 +37,13 @@ The R package `osmenrich` is available on [GitHub](https://github.com/sodascienc
 
 # Statement of need
 
-Geographic data is valuable in research where the environment influences the process under investigation. For example, the `osmenrich` package is useful in the analysis of data retrieved from citizen science projects such as [plastic spotter](https://www.plasticspotter.nl/) or the [great backyard bird count](https://www.birdcount.org/). At the same time, within the R ecosystem multiple software solutions exist for extracting data from geographic information systems [@osmdata:2017, @googleway:2020, @mapbox:2020]. However, to include these geographic data in further analysis (e.g. carrying out kriging in `gstat`, E. J. Pebesma, 2004), the data often need further processing and, crucially, _aggregation_. Within this problem space, the contributions of `osmenrich` are as follows:
+Geographic data is valuable in research where the environment influences the process under investigation. For example, the `osmenrich` package is useful in the analysis of data retrieved from citizen science projects such as [plastic spotter](https://www.plasticspotter.nl/) or the [great backyard bird count](https://www.birdcount.org/). At the same time, within the R ecosystem multiple software solutions exist for extracting data from geographic information systems [@osmdata:2017, @googleway:2020, @mapbox:2020]. However, to include these geographic data in further analysis (e.g. carrying out kriging in `gstat`) [@gstat:2004] the data often need further processing and, crucially, _aggregation_. Within this problem space, the contributions of `osmenrich` are as follows:
 
 - Creating a user-friendly interface to OpenStreetMap, abstracting away the necessary API calls (see section _Main function_).
-- Defyining standardized ways to aggregate geographic information based on kernels (see section _Aggregation_).
+- Defining standardized ways to aggregate geographic information based on kernels (see section _Aggregation_).
 - Allowing distance measures based on routing, such as duration by foot or distance by car (see section _Routing_).
 
-Using our package, researchers can focus on investigating research questions, rather than spending time figuring out how to aggregate geographic data. The `osmenrich` package is especially suited for questions surrounding interactions between a process and its close physical environemnt, such as gathering data within a determined distance from observations to improve a prediction process or to **XXX**.
+Using our package, researchers can focus on investigating research questions, rather than spending time figuring out how to aggregate geographic data. The `osmenrich` package is especially suited for questions surrounding interactions between a process and its close physical environemnt, such as gathering data within a determined distance from observations to improve a prediction process.
 
 Before describing the main function and features of this package, we introduce the grammar used in this paper. We call objects with geocoded data that a researcher wants to enrich "_reference objects_", while objects the researcher is interested in retrieving "_feature objects_". If a dataset contains geocoded data, the `osmenrich` package can extract information about real-world objects (_feature points_) around each of the _reference points_ contained in the dataset, compute the distance/duration between them and enrich the initial dataset with this information. The result is a `tidy sf` dataset.
 
@@ -69,7 +69,7 @@ To convert the retrieved features to a single number per reference object, an ag
 
 1. The `kernel` determines the weighing function applied on the distances (or durations) between the objects retrieved and the reference points. The `osmenrich` package provides three different kernels to be used out-of-the-box (`uniform`, `gaussian` and `parabola`) and defaults to `kernel = uniform`. However, the package allows users to also specify custom-made kernels.
 ![Weighting functions included in `osmenrich` kernels. \label{fig:kernels}](figures/kernels.png)
-2. The aggregation function parameter `reduce_fun`, is used to reduce the weighted vectors of distances (or durations) into single numbers. This parameters defaults to `reduce_fun = sum`, however it accepts any standard `R` function, such as `mean` or `median`.
+2. The aggregation function parameter `reduce_fun`, is used to reduce the weighted vectors of distances (or durations) into single numbers. This parameter defaults to `reduce_fun = sum`, however it accepts any standard `R` function, such as `mean` or `median`.
 
 Specifying these variables in the `enrich_osm()` function, allows the user to choose specific types of weighting and aggregation to be applied on the features objects retrieved from OpenStreetMap.
 
@@ -88,9 +88,9 @@ To retrieve _feature objects_ around the _reference objects_ and the distances (
 
 The package leverages publicly available servers to enable basic data enrichment without the need of setting up any local instance of these servers. However, for large data enrichment tasks and for tasks involving the computation of distances (or durations) between objects using specific profiles, the setup of one or more of these servers is required.
 
-We created a [GitHub repository](https://github.com/sodascience/osmenrich_docker) hosting the instruction and the `docker_compose.yml` files needed to setup these servers. To facilitate the routing of users to the right setup for their need, we provide three use cases and their respective recommended setup.
+We created a [GitHub repository](https://github.com/sodascience/osmenrich_docker) hosting the instruction and the `docker_compose.yml` files needed to set up these servers. To facilitate the routing of users to the right setup for their need, we provide three use cases and their respective recommended setup.
 
-Once the desired server(s) is setup, the user can set the parameter `measure` to specify which profile to use to compute distances (or durations) between the objects. Depending on the routing servers available, the `osmenrich` package can retrieve metrics computed on three different types of profile (`car`, `bike` or `foot`).
+Once the desired server(s) is set up, the user can set the parameter `measure` to specify which profile to use to compute distances (or durations) between the objects. Depending on the routing servers available, the `osmenrich` package can retrieve metrics computed on three different types of profile (`car`, `bike` or `foot`).
 
 ```R
 # If available, specify the address of local OSRM instance or balancer
@@ -116,12 +116,26 @@ As a brief example, we have included an example dataset of common swift's nests 
 ```R
 
 head(common_swift)
-# Show the output of the command
+# Simple feature collection with 6 features and 1 field
+# Geometry type: POINT
+# Dimension:     XY
+# Bounding box:  xmin: 5.086195 ymin: 52.0879 xmax: 5.08662 ymax: 52.08866
+# CRS:           EPSG:4326
+# # A tibble: 6 x 2
+#  nest_count            geometry
+#        <dbl>         <POINT [°]>
+# 1          1  (5.086195 52.0884)
+# 2          2 (5.086602 52.08866)
+# 3          1  (5.086619 52.0884)
+# 4          1 (5.086604 52.08837)
+# 5          1   (5.08633 52.0879)
+# 6          1  (5.08662 52.08826)
 ```
 
 ```R
-bird_sf <-
-  bird_sf %>%
+# Enrichment step
+enriched_common_swift <-
+  common_swift %>%
   enrich_osm(
     name = "tree_1km",
     key = "natural",
@@ -130,11 +144,24 @@ bird_sf <-
     r = 1000
   )
 
-bird_sf
-# Show the output of the command
+head(enriched_common_swift)
+# Simple feature collection with 6 features and 2 fields
+# Geometry type: POINT
+# Dimension:     XY
+# Bounding box:  xmin: 5.086195 ymin: 52.0879 xmax: 5.08662 ymax: 52.08866
+# CRS:           EPSG:4326
+# # A tibble: 6 x 3
+#   nest_count            geometry tree_1km
+#        <dbl>         <POINT [°]>    <dbl>
+# 1          1  (5.086195 52.0884)  0.00799
+# 2          2 (5.086602 52.08866)  0.00692
+# 3          1  (5.086619 52.0884)  0.00689
+# 4          1 (5.086604 52.08837)  0.00693
+# 5          1   (5.08633 52.0879)  0.00753
+# 6          1  (5.08662 52.08826)  0.00688
 ```
 
-As you can see the dataset has an additional columnm repre , and weighted by this
+As shown in the output of `enriched_common_swift`, following the enrichment step the dataset gains an additional column named `tree_1km`. This column contains the sum weighted by the `gaussian` kernel of the numbers of trees within 1km around each nest location.
 
 # Acknowledgements
 
