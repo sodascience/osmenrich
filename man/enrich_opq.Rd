@@ -5,7 +5,7 @@
 \alias{add_bbox}
 \alias{add_feature}
 \alias{add_type}
-\alias{add_distance}
+\alias{add_measure}
 \alias{add_kernel}
 \title{Enrich an overpass query for column output}
 \usage{
@@ -15,7 +15,7 @@ enrich_opq(
   key = NULL,
   value = NULL,
   type = "points",
-  distance = "spherical",
+  measure = "spherical",
   r = NULL,
   kernel = "uniform",
   reduce_fun = sum,
@@ -30,7 +30,7 @@ add_feature(opq, key, value)
 
 add_type(opq, type)
 
-add_distance(opq, distance)
+add_measure(opq, measure)
 
 add_kernel(opq, kernel, r, reduce_fun, ...)
 }
@@ -47,14 +47,14 @@ add_kernel(opq, kernel, r, reduce_fun, ...)
 \item{type}{\code{character} the osm feature type or types to consider
 (e.g., points, polygons), see details}
 
-\item{distance}{\code{character} the distance metric used, see details}
+\item{measure}{\code{character} the measure metric used, see details}
 
 \item{r}{The search radius used by the \code{kernel} function.}
 
 \item{kernel}{\code{function} the kernel function used, see details}
 
 \item{reduce_fun}{The aggregation function used by the \code{kernel} function to
-aggregate the retrieved data points.}
+aggregate the retrieved data objects}
 
 \item{control}{The list with configuration variables for the OSRM server.
 It contains \code{timeout}, defining the number of seconds before the request

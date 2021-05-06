@@ -4,12 +4,12 @@
 
 #' @title Kernels used in summarizing features
 #'
-#' @description Kernels convert distance vectors to single numbers,
+#' @description Kernels convert distance/ duration vectors to single numbers,
 #'   with a certain weight for certain distances. In general, at 0 distance,
 #'   these return a value of 1, and the value decreases as the distance
 #'   increases, reaching 0 at the limit of the support.
 #'
-#' @param d The vector of distances.
+#' @param d The vector of distances/ durations.
 #' @param r The radius of interest for the kernel to aggregate data.
 #' @param reduce_fun The reduce function used to aggregate data.
 #'
@@ -20,7 +20,8 @@
 #'   radius r, and returns 0 elsewhere. It is a scaled Epanechnikov kernel.
 #'   Uniform kernel returns 1 within radius r, 0 elsewhere.
 #'
-#' @return numeric, function (usually sum) of kernel-weighted distances
+#' @return numeric, function (usually sum) of kernel-weighted distances or
+#'   durations
 #'
 #' @name kernels
 #' @export
