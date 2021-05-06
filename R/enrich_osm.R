@@ -9,11 +9,11 @@
 #'   [osmdata::add_osm_feature()]
 #' @param type `character` the osm feature type or types to consider
 #' (e.g., points, polygons), see details
-#' @param distance `character` the distance metric used, see details
+#' @param measure `character` the measure metric used, see details
 #' @param kernel `function` the kernel function used, see details
 #' @param r The search radius used by the `kernel` function.
 #' @param reduce_fun The aggregation function used by the `kernel` function to
-#'   aggregate the retrieved data points.
+#'   aggregate the retrieved data objects
 #' @param control The list with configuration variables for the OSRM server.
 #'   It contains `timeout`, defining the number of seconds before the request
 #'   to OSRM times out, and `memsize`, defining the maximum size of the query to
@@ -34,11 +34,9 @@
 #'   - multilines
 #'   - multipolygons
 #'
-#'   `Distance` represents the metric used to compute the distances between the
-#'   rows in the dataset and the OSM features. `Duration` represents the metric
-#'   that indicates the average duration to cover the distances between the
-#'   rows in the dataset and the OSM features. The following metrics are
-#'   available in this package, assuming that the OSRM server is setup as
+#'  `Measure` represents the metric used to compute the distances or durations
+#'   between the rows in the dataset and the OSM features. The following metrics
+#'   are available in this package, assuming that the OSRM server is setup as
 #'   suggested in our guide at:
 #'   https://github.com/sodascience/osmenrich_docker:
 #'   - spherical
@@ -49,10 +47,11 @@
 #'   - distance_by_bike
 #'   - duration_by_bike
 #'
-#' `Kernel` is a kernel function from the `osmenrich` package to be used in
-#'   weighing the features and the radius/distance where features are
-#'   considered. For simply counting the number of occurrences within a radius,
-#'   use `kernel_uniform` with radius `r`.
+#' `Kernel` indicates the kernel function from the `osmenrich` package to be
+#'   used to weight the objects retrieved by their distances (or durations) from
+#'   the reference objects and then convert these vectors into single numbers.
+#'   The simplest kernel allows the user to count the number of occurrences
+#'   of reference objects within a radius `r` and is called `kernel_uniform`.
 #'
 #' For more details see the introductory vignette of `osmenrich`:
 #'   \code{vignette("introduction", package = "osmenrich")}
@@ -90,7 +89,7 @@
 #' }
 #'
 #' @seealso [enrich_opq()]
-#' @note If you want to get a large number of points make sure to set the
+#' @note If you want to get a large number of objects make sure to set the
 #'   `.timeout` (time before request times out) and `.memsize` (maxmimum
 #'   size of the request) arguments for the Overpass server and set
 #'   the "max-table-size" argument correctly when starting the
@@ -102,7 +101,7 @@ enrich_osm <- function(
                        key = NULL,
                        value = NULL,
                        type = "points",
-                       distance = "spherical",
+                       measure = "spherical",
                        r = NULL,
                        kernel = "uniform",
                        reduce_fun = sum,
@@ -118,7 +117,7 @@ enrich_osm <- function(
     query <- enrich_opq(
       dataset = dataset,
       name = name, key = key, value = value, type = type,
-      distance = distance, r = r, kernel = kernel,
+      measure = measure, r = r, kernel = kernel,
       reduce_fun = reduce_fun, control = control, .verbose = .verbose,
       ...
     )
@@ -190,9 +189,9 @@ data_enrichment <- function(ref_data, query, colname, .verbose = TRUE) {
 
   if (.verbose) {
     cli::cli_process_start(
-      msg = cli::col_cyan(glue::glue("Computing distance matrix for {colname}...")),
-      msg_done = cli::col_green("Computed distance matrix for {colname}."),
-      msg_failed = cli::col_red(glue::glue("Failed to compute distance matrix for {colname}!"))
+      msg = cli::col_cyan(glue::glue("Computing measure matrix for {colname}...")),
+      msg_done = cli::col_green("Computed measure matrix for {colname}."),
+      msg_failed = cli::col_red(glue::glue("Failed to compute measure matrix for {colname}!"))
     )
   }
 
@@ -205,18 +204,18 @@ data_enrichment <- function(ref_data, query, colname, .verbose = TRUE) {
   options(warn=0)
 
   # Create matrix ref <-> ftr
-  distance_mat <- distance_matrix(
-    distance_name = query[["distance"]],
-    distance_fun  = query[["distancefun"]],
+  measure_mat <- measure_matrix(
+    measure_name = query[["measure"]],
+    measure_fun  = query[["measurefun"]],
     ref_geometry = ref_geometry,
     ftr_geometry = ftr_geometry
   )
 
-  # Apply the kernel function over the rows of the distance matrix
+  # Apply the kernel function over the rows of the measure matrix
   apply_args <-
     c(
       list(
-        X = distance_mat,
+        X = measure_mat,
         MARGIN = 1,
         FUN = query[["kernelfun"]]
       ),
@@ -234,18 +233,18 @@ data_enrichment <- function(ref_data, query, colname, .verbose = TRUE) {
 
 #' @rdname enrich
 #' @keywords internal
-distance_matrix <- function(distance_name,
-                            distance_fun,
+measure_matrix <- function(measure_name,
+                            measure_fun,
                             ref_geometry,
                             ftr_geometry) {
   # If "spherical" then no call to OSRM necessary
-  if (distance_name == "spherical") {
+  if (measure_name == "spherical") {
     matrix <- sf::st_distance(ref_geometry, ftr_geometry)
     return(matrix)
   }
 
   if (!check_osrm_limits(src = ref_geometry, dst = ftr_geometry)) {
-    matrix <- distance_fun(ref_geometry, ftr_geometry)
+    matrix <- measure_fun(ref_geometry, ftr_geometry)
   } else {
     print("Splitting main call and creating sub-calls...")
     tot_nrows <- nrow(ref_geometry) * nrow(sf::st_coordinates(ftr_geometry))
@@ -254,7 +253,7 @@ distance_matrix <- function(distance_name,
     for (i in seq(1, tot_nrows, chunk_size)) {
       seq_size <- chunk_size
       if ((i + seq_size) > tot_nrows) seq_size <- tot_nrows - i + 1
-      matrix <- distance_fun(ref_geometry[i:(i+seq_size),],
+      matrix <- measure_fun(ref_geometry[i:(i+seq_size),],
                             ftr_geometry[i:(i+seq_size),])
       if (first) {
         result <- matrix

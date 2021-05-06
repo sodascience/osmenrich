@@ -22,7 +22,7 @@ test_that("enrich_osm() test if example enrichment works", {
       key = "amenity",
       value = "waste_basket",
       r = 100,
-      distance = "spherical"
+      measure = "spherical"
     )
 
   expect_equal(class(sf_enriched$waste_baskets), "integer")
