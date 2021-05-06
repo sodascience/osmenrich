@@ -59,4 +59,7 @@ Collate:
     osrm_table.R
     enrich_opq.R
     enrich_osm.R
+    data.R
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
