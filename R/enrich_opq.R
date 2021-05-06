@@ -8,12 +8,12 @@
 #'   [osmdata::add_osm_feature()]
 #' @param type `character` the osm feature type or types to consider
 #' (e.g., points, polygons), see details
-#' @param distance `character` the distance metric used, see details
+#' @param measure `character` the measure metric used, see details
 #' @param kernel `function` the kernel function used, see details
 #' @param opq overpass query that is being enriched
 #' @param r The search radius used by the `kernel` function.
 #' @param reduce_fun The aggregation function used by the `kernel` function to
-#'   aggregate the retrieved data points.
+#'   aggregate the retrieved data objects
 #' @param control The list with configuration variables for the OSRM server.
 #'   It contains `timeout`, defining the number of seconds before the request
 #'   to OSRM times out, and `memsize`, defining the maximum size of the query to
@@ -33,7 +33,7 @@ enrich_opq <- function(
                        key = NULL,
                        value = NULL,
                        type = "points",
-                       distance = "spherical",
+                       measure = "spherical",
                        r = NULL,
                        kernel = "uniform",
                        reduce_fun = sum,
@@ -45,7 +45,7 @@ enrich_opq <- function(
     add_bbox(r, control) %>%
     add_feature(key, value) %>%
     add_type(type) %>%
-    add_distance(distance) %>%
+    add_measure(measure) %>%
     add_kernel(kernel, r, reduce_fun, ...)
   opq$kernel <- as.character(substitute(kernel))
   opq$name <- name
@@ -156,16 +156,16 @@ add_type <- function(opq, type) {
 
 #' @rdname enrich_opq
 #' @export
-add_distance <- function(opq, distance) {
-  if (!is.character(distance)) stop("Metric should be a character.")
-  if (!distance %in% names(osmenrich_distancefuns)) {
+add_measure <- function(opq, measure) {
+  if (!is.character(measure)) stop("Metric should be a character.")
+  if (!measure %in% names(osmenrich_measurefuns)) {
     stop(
-      "Measure ", distance, " not available. Available options: \n- ",
-      paste(names(osmenrich_distancefuns), collapse = "\n- ")
+      "Measure ", measure, " not available. Available options: \n- ",
+      paste(names(osmenrich_measurefuns), collapse = "\n- ")
     )
   }
-  opq$distance <- distance
-  opq$distancefun <- osmenrich_distancefuns[[distance]]
+  opq$measure <- measure
+  opq$measurefun <- osmenrich_measurefuns[[measure]]
   if (!is(opq, "enriched_overpass_query")) {
     class(opq) <- c(class(opq), "enriched_overpass_query")
   }
@@ -230,7 +230,7 @@ check_enriched_opq <- function(opq) {
   if (!is(opq, "enriched_overpass_query")) {
     stop("Query is not an enriched overpass query. See ?enrich_opq.")
   }
-  required <- c("type", "distance", "kernel")
+  required <- c("type", "measure", "kernel")
   missings <- !required %in% names(opq)
   if (any(missings)) {
     stop(
@@ -242,7 +242,7 @@ check_enriched_opq <- function(opq) {
 }
 
 #' @keywords internal
-osmenrich_distancefuns <- list(
+osmenrich_measurefuns <- list(
   "spherical" = sf::st_distance,
   "distance_by_foot" = distance_by_foot,
   "duration_by_foot" = duration_by_foot,
@@ -275,7 +275,7 @@ print.enriched_overpass_query <- function(x, ...) {
     "\u00B7 Name:        ", x$name, "\n",
     "\u00B7 Features:    'key': ", x$key, "; 'value': ", x$value, "\n",
     "\u00B7 Type:        ", paste0(x$type, collapse = ", "), "\n",
-    "\u00B7 Distance:    ", x$distance, "\n",
+    "\u00B7 Measure:    ", x$measure, "\n",
     "\u00B7 Kernel:      ", x$kernel, kernelpars_string,
     "\n ---\n",
     "\u00B7 BBox:        ", x$bbox, "\n"

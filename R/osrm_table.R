@@ -1,14 +1,14 @@
 #' @name osrm_table
-#' @title Get Travel Time Matrices Between Points
+#' @title Get travel time matrices between objects
 #' @description Build and send OSRM API queries to get travel time matrices
-#'   between points. This function interfaces the \emph{table} OSRM service.
+#'   between objects. This function interfaces the \emph{table} OSRM service.
 #'
-#' @param src A data frame containing origin points identifiers, longitudes
+#' @param src A data frame containing origin objects identifiers, longitudes
 #'   and latitudes (WGS84). It can also be a `SpatialPointsDataFrame`, a
 #'   `SpatialPolygonsDataFrame` or an `sf` object. If so, row names are
 #'   used as identifiers. If dst and src parameters are used,
 #'   only pairs between scr/dst are computed.
-#' @param dst A data frame containing destination points identifiers, longitudes
+#' @param dst A data frame containing destination objects identifiers, longitudes
 #'   and latitudes (WGS84). It can also be a `SpatialPointsDataFrame` a
 #'   `SpatialPolygonsDataFrame` or an `sf` object. If so, row names are used
 #'   as identifiers.
@@ -24,7 +24,7 @@
 #' @return A list containing 3 data frames is returned.
 #'   `durations` is the matrix of travel times (in minutes);
 #'   `sources` and `destinations` are the coordinates of
-#'   the origin and destination points actually used to compute the travel
+#'   the origin and destination objects actually used to compute the travel
 #'   times (WGS84).
 #'
 #' @seealso [set_server_profile()]

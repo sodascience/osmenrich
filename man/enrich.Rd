@@ -4,7 +4,7 @@
 \alias{enrich}
 \alias{enrich_osm}
 \alias{data_enrichment}
-\alias{distance_matrix}
+\alias{measure_matrix}
 \alias{control_enrich}
 \title{Enrich \code{sf} object with OSM data}
 \usage{
@@ -14,7 +14,7 @@ enrich_osm(
   key = NULL,
   value = NULL,
   type = "points",
-  distance = "spherical",
+  measure = "spherical",
   r = NULL,
   kernel = "uniform",
   reduce_fun = sum,
@@ -23,9 +23,9 @@ enrich_osm(
   ...
 )
 
-data_enrichment(data, query, colname, .verbose = TRUE)
+data_enrichment(ref_data, query, colname, .verbose = TRUE)
 
-distance_matrix(distancename, distancefun, ref_geometry, ftr_geometry)
+measure_matrix(measure_name, measure_fun, ref_geometry, ftr_geometry)
 
 control_enrich(timeout = 300, memsize = 1073741824)
 }
@@ -42,14 +42,14 @@ control_enrich(timeout = 300, memsize = 1073741824)
 \item{type}{\code{character} the osm feature type or types to consider
 (e.g., points, polygons), see details}
 
-\item{distance}{\code{character} the distance metric used, see details}
+\item{measure}{\code{character} the measure metric used, see details}
 
 \item{r}{The search radius used by the \code{kernel} function.}
 
 \item{kernel}{\code{function} the kernel function used, see details}
 
 \item{reduce_fun}{The aggregation function used by the \code{kernel} function to
-aggregate the retrieved data points.}
+aggregate the retrieved data objects}
 
 \item{control}{The list with configuration variables for the OSRM server.
 It contains \code{timeout}, defining the number of seconds before the request
@@ -79,11 +79,9 @@ Available options are:
 \item multipolygons
 }
 
-\code{Distance} represents the metric used to compute the distances between the
-rows in the dataset and the OSM features. \code{Duration} represents the metric
-that indicates the average duration to cover the distances between the
-rows in the dataset and the OSM features. The following metrics are
-available in this package, assuming that the OSRM server is setup as
+\code{Measure} represents the metric used to compute the distances or durations
+between the rows in the dataset and the OSM features. The following metrics
+are available in this package, assuming that the OSRM server is setup as
 suggested in our guide at:
 https://github.com/sodascience/osmenrich_docker:
 \itemize{
@@ -96,16 +94,17 @@ https://github.com/sodascience/osmenrich_docker:
 \item duration_by_bike
 }
 
-\code{Kernel} is a kernel function from the \code{osmenrich} package to be used in
-weighing the features and the radius/distance where features are
-considered. For simply counting the number of occurrences within a radius,
-use \code{kernel_uniform} with radius \code{r}.
+\code{Kernel} indicates the kernel function from the \code{osmenrich} package to be
+used to weight the objects retrieved by their distances (or durations) from
+the reference objects and then convert these vectors into single numbers.
+The simplest kernel allows the user to count the number of occurrences
+of reference objects within a radius \code{r} and is called \code{kernel_uniform}.
 
 For more details see the introductory vignette of \code{osmenrich}:
 \code{vignette("introduction", package = "osmenrich")}
 }
 \note{
-If you want to get a large number of points make sure to set the
+If you want to get a large number of objects make sure to set the
 \code{.timeout} (time before request times out) and \code{.memsize} (maxmimum
 size of the request) arguments for the Overpass server and set
 the "max-table-size" argument correctly when starting the
