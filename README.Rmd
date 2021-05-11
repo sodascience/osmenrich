@@ -12,11 +12,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-<!-- <p align="center"> -->
-<!--   <img src="man/figures/logo.png" alt="osmenrich logo" width="250"></img> -->
-<!-- </p> -->
+<p align="center">
+  <img src="man/figures/logo.png" width="250px"></img>
+</p>
 
-# osmenrich: enrich geocoded data using OpenStreetMap <img src="man/figures/logo.png" alt="osmenrich logo" width="250" align="right" />
+# osmenrich: enrich geocoded data using OpenStreetMap
 
 <!-- badges: start -->
 [![Github Action test](https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg)](https://github.com/sodascience/osmenrich/actions)
