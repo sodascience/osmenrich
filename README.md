@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd-->
 
-<p align="center">
+<!-- <p align="center"> -->
 
-<img src="man/figures/logo.png" alt="osmenrich logo" width="250"></img>
+<!--   <img src="man/figures/logo.png" alt="osmenrich logo" width="250"></img> -->
 
-</p>
+<!-- </p> -->
 
-# osmenrich: enrich geocoded data using OpenStreetMap
+# osmenrich: enrich geocoded data using OpenStreetMap <img src="man/figures/logo.png" alt="osmenrich logo" width="250" align="right" />
 
 <!-- badges: start -->
 
