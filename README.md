@@ -3,7 +3,7 @@
 
 <p align="center">
 
-<img src="man/figures/logo.png" alt="osmenrich logo" width="250"></img>
+<img src="man/figures/logo.png" width="250px"></img>
 
 </p>
 
