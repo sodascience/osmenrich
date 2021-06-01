@@ -29,7 +29,7 @@ bibliography: paper.bib
 
 # Summary
 
-The `osmenrich` package provides a user-friendly way to enrich geographic datasets in `R`, for example observations on a map, with geographic features around those observations. Additionally, it can weigh these features by their (walking / driving / cycling) distance or duration from the observations. This package builds on existing infrastructure to interface with OpenStreetMap (`osmdata`, Padgham et al., 2017), and works well with the existing ecosystem of packages for (geospatial) data analysis, namely `sf` [@sf:2018] and the `tidyverse` [@tidyverse:2019]. Thus, this package streamlines and standardizes the process going from a raw dataset with observations and locations to a `tidy` [@tidy-data:2014], rich dataset with multiple relevant geographical features about those locations. \autoref{fig:workflow} shows graphically the basic workflow of `osmenrich`.
+The `osmenrich` package provides a user-friendly way to enrich geographic datasets in `R`, for example observations on a map, with geographic features around those observations. Additionally, it can weigh these features by their (walking / driving / cycling) distance or duration from the observations. This package builds on existing infrastructure to interface with OpenStreetMap (`osmdata`, Padgham et al., 2017), and works well with the existing ecosystem of packages for (geospatial) data analysis, namely `sf` [@sf:2018] and the `tidyverse` [@tidyverse:2019]. This package streamlines and standardizes the process going from a raw dataset with observations and locations to a `tidy` [@tidy-data:2014], rich dataset with multiple relevant geographical features about those locations. \autoref{fig:workflow} shows graphically the basic workflow of `osmenrich`.
 
 The R package `osmenrich` is available on [GitHub](https://github.com/sodascience/osmenrich).
 
@@ -37,19 +37,17 @@ The R package `osmenrich` is available on [GitHub](https://github.com/sodascienc
 
 # Statement of need
 
-Geographic data is valuable in research where the environment influences the process under investigation. For example, the `osmenrich` package is useful in the analysis of data retrieved from citizen science projects such as [plastic spotter](https://www.plasticspotter.nl/) or the [great backyard bird count](https://www.birdcount.org/). At the same time, within the R ecosystem multiple software solutions exist for extracting data from geographic information systems [@osmdata:2017, @googleway:2020, @mapbox:2020]. However, to include these geographic data in further analysis (e.g. carrying out kriging in `gstat`) [@gstat:2004] the data often need further processing and, crucially, _aggregation_. Within this problem space, the contributions of `osmenrich` are as follows:
+Geographic data is valuable in research where the environment influences the process under investigation. For example, the `osmenrich` package is useful in the analysis of data retrieved from citizen science projects such as [plastic spotter](https://www.plasticspotter.nl/) or the [great backyard bird count](https://www.birdcount.org/). At the same time, within the R ecosystem multiple software solutions exist for extracting data from geographic information systems [@osmdata:2017; @googleway:2020; @mapbox:2020]. However, to include these geographic data in further analysis (e.g. carrying out kriging in `gstat`) [@gstat:2004] the data often need further processing and, crucially, _aggregation_. Within this problem space, `osmenrich` contributes by:
 
 - Creating a user-friendly interface to OpenStreetMap, abstracting away the necessary API calls (see section _Main function_).
 - Defining standardized ways to aggregate geographic information based on kernels (see section _Aggregation_).
 - Allowing distance measures based on routing, such as duration by foot or distance by car (see section _Routing_).
 
-Using our package, researchers can focus on investigating research questions, rather than spending time figuring out how to aggregate geographic data. The `osmenrich` package is especially suited for questions surrounding interactions between a process and its close physical environment, such as gathering data within a determined distance from observations to improve a prediction process.
-
-Before describing the main function and features of this package, we introduce the grammar used in this paper. We call objects with geocoded data that a researcher wants to enrich "_reference objects_", while objects the researcher is interested in retrieving "_feature objects_". The `osmenrich` package can find real-world feature objects around each of the reference objects contained in a dataset, compute the distance/duration between them and enrich the initial dataset with this information. The result is a `tidy sf` dataset.
+Using our package, researchers can focus on investigating research questions, rather than spending time figuring out how to aggregate geographic data. The `osmenrich` package is especially suited for questions surrounding interactions between a process and its close physical environment, such as gathering real-world feature objects within a determined distance from observations to improve a prediction process. Throughout this paper, objects with geocoded data are called "_reference objects_", while objects of interest are called "_feature objects_".
 
 # Main function
 
-To enrich data, the `osmenrich` package uses the main function `enrich_osm()`. This function takes a dataset containing geocoded _reference objects_ in `sf` format, retrieves specified _feature objects_ from a local or remote OpenStreetMap server (see _Routing_ section), computes the enrichment using specified parameters and outputs an enriched `sf` dataset.
+To enrich data, the `osmenrich` package uses the main function `enrich_osm()`. This function takes a dataset containing geocoded _reference objects_ in `sf` format, retrieves specified _feature objects_ from a local or remote OpenStreetMap server (see _Routing_ section), computes the enrichment using specified parameters and outputs an enriched tidy `sf` dataset.
 
 ```R
 enrich_osm(
@@ -61,7 +59,7 @@ enrich_osm(
 )
 ```
 
-The code listing above shows an example of a basic enrichment of reference points with the number of waste baskets in the surrounding 100 meters. Specifically, the function uses the bounding box created by the _reference objects_ from the input dataset and searches for the specified _feature objects_ in OpenStreetMap with parameters `key` and `value` within the radius `r` (in meters) around each of the _reference objects_. The `key` and `value` parameters are also used as tags in OpenStreetMap to describe physical features of map elements. The user is able to search for them using [official OpenStreetMap documentation](https://wiki.openstreetmap.org/wiki/Map_features). Finally the `enrich_osm` function creates a new column named after the parameter `name` containing the enriched data. See Section _Full usage example_ for an example usage of this function.
+The code listing above shows an example of a basic enrichment of _reference points_ with the number of waste baskets in the surrounding 100 meters. Specifically, the function uses the bounding box created by the _reference objects_ from the input dataset and searches for the specified _feature objects_ in OpenStreetMap with parameters `key` and `value` within the radius `r` (in meters) around each of the _reference objects_. The `key` and `value` parameters are also used as tags in OpenStreetMap to describe physical features of map elements. The user is able to search for them using [official OpenStreetMap documentation](https://wiki.openstreetmap.org/wiki/Map_features). Finally the `enrich_osm` function creates a new column named after the parameter `name` containing the enriched data. See Section _Full usage example_ for an example usage of this function.
 
 # Aggregation
 
@@ -84,7 +82,7 @@ enrich_osm(
 
 # Routing
 
-To retrieve _feature objects_ around the _reference objects_ and the distances (or durations) between them, the `osmenrich` package uses an OpenStreetMap server (Overpass) and, optionally, one or more instances of the Open Source Routing Machine (OSRM).
+To retrieve _feature objects_ around the _reference objects_ and the distances (or durations) between them, the `osmenrich` package uses an OpenStreetMap server and, optionally, one or more instances of the Open Source Routing Machine (OSRM).
 
 The package leverages publicly available servers to enable basic data enrichment without the need of setting up any local instance of these servers. However, for large data enrichment tasks and for tasks involving the computation of distances (or durations) between objects using specific profiles, the setup of one or more of these servers is required.
 
@@ -105,13 +103,13 @@ enrich_osm(
 
 # Full usage example
 
-`osmenrich` is available on [GitHub](https://github.com/sodascience/osmenrich) and can be installed and loaded into the R session with the remotes package from GitHub. Then the package can be loaded in the usual way:
+`osmenrich` is available on [GitHub](https://github.com/sodascience/osmenrich) and can be installed and loaded into the R session with the `remotes` package.
 
 ```R
 library(osmenrich)
 ```
 
-As a brief example, we have included an example dataset of common swift's nests provided openly by the city of Utrecht, the Netherlands. A researcher may want to investigate the effect of natural material availability on nesting behaviour. In this example, we use "trees" as a proxy for natural material availability. However, we could easily retrieve any other data type available in OpenStreetMap.
+We have included an example dataset of common swift's nests provided openly by the city of Utrecht, the Netherlands. A researcher may want to investigate the effect of natural material availability on nesting behaviour. In this example, we use "trees" as a proxy for natural material availability.
 
 ```R
 
