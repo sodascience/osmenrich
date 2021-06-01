@@ -134,7 +134,7 @@ Given these assumptions, you can now use our package `osmenrich` to gather these
 
 #### Use `osmenrich` for computing the data enrichment
 
-As stated above, you are now interested in retrieving a proxy of natural material availability and a proxy of commercial activity. For the sake of this example, you decide to retrieve trees and shops, as they represent a close enough proxy to naturla materials and commercial activity. 
+As stated above, you are now interested in retrieving a proxy of natural material availability and a proxy of commercial activity. For the sake of this example, you decide to retrieve trees and shops, as they represent a close enough proxy to natural materials and commercial activity. 
 
 To retrieve these OSM features, you will use the main function from `osmenrich`, `enrich_osm()`. In the code below we retrieve shops and trees within a radius of 1km (r = 1000). If you are interested in retrieving other data points, please refer to the [official list of available features](https://wiki.openstreetmap.org/wiki/Map_features) in OSM.
 
