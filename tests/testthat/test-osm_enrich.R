@@ -2,11 +2,8 @@ library(tibble)
 library(sf)
 library(osmdata)
 
-# Skip tests if connection to internet is not available
-if (!is.character(RCurl::getURL("www.google.com")))
-  skip("No internet connection found!")
+if (!is.character(RCurl::getURL("www.google.com"))) skip("No internet connection found!")
 
-# Create sf used in tests
 sf_example <-
   tribble(
     ~person, ~id,  ~lat,  ~lon, ~val,
@@ -21,8 +18,10 @@ test_that("enrich_osm() test if example enrichment works", {
       name = "waste_baskets",
       key = "amenity",
       value = "waste_basket",
-      r = 100,
-      measure = "spherical"
+      r = 50,
+      distance = "spherical",
+      kernel = "uniform",
+      type = "points"
     )
 
   expect_equal(class(sf_enriched$waste_baskets), "integer")

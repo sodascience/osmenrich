@@ -2,14 +2,14 @@
 % Please edit documentation in R/utils.R
 \name{create_osrm_input_table}
 \alias{create_osrm_input_table}
-\title{Build OSRM query}
+\title{Build OSRM query applying google encryption algorithm if necessary}
 \usage{
 create_osrm_input_table(loc, osrm_server, osrm_profile)
 }
 \description{
-Build OSRM query
+Build OSRM query applying google encryption algorithm if necessary
 }
 \seealso{
-\code{\link[=osrm_table]{osrm_table()}} for the main function
+\code{\link{osrmtable}} for the main function
 }
 \keyword{internal}

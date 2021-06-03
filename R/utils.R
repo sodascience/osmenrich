@@ -1,43 +1,36 @@
 #' @title Test if server set is available.
 #'
 #' @description The user should indicate the address where one or more instance
-#'   of the OSRM server are running. In case more instances are running at the
-#'   same time, we force the user to place them behind a reverse proxy (we force
-#'   to indicate only one server address). We further recommend to use our
-#'   default docker-compose configuration to have a working configuration
-#'   with three OSRM servers behind an nginx server
-#'   (https://github.com/sodascience/osmenrich_docker).
+#' of the OSRM server are running. In case more instances are running at the
+#' same time, we force the user to place them behind a reverse proxy (we force
+#' to indicate only one server address). We further recommend to use our
+#' default docker-compose configuration to have a working configuration
+#' with three OSRM servers behind an nginx server
+#' (https://github.com/sodascience/osmenrich_docker).
 #'
-#'   If no servers are used, the default server from the OSRM project
-#'   (http://router.project-osrm.org/) will be used. This is not recommended
-#'   as this server is intended only for demo purposes, might fail in case of
-#'   overload and only returns distances for the driving profile.
+#' If no servers are used, the default server from the OSRM project
+#' (http://router.project-osrm.org/) will be used. This is not recommended
+#' as this server is intended only for demo purposes, might fail in case of
+#' overload and only returns distances for the driving profile.
 #' @param profile The name of the profile
 #' @return Set the `osrm.server` and the `osrm.profile`
-#'   The name of the profile will be used only if the server (via `osrm.server`)
-#'   is set. Otherwise, the default server will be used
+#' The name of the profile will be used only if the server (via `osrm.server`)
+#' is set. Otherwise, the default server will be used
 #'
 #' @keywords internal
-#' @seealso [enrich_osm()] for the main enrichment function
+#' @seealso \code{\link{osrmtable}} for the main function
 set_server_profile <- function(server, profile) {
     # If server not set or not reachable use default server
     tryCatch(
         {
             if (is.null(server) || !url_available(server)) {
-                # Test if public server is available by making small query
-                url <- "http://router.project-osrm.org/"
-                query <- "route/v1/driving/13.388860,52.517037;13.397634,52.5"
-                query2 <- "29407?overview=false"
-                r <- httr::GET(paste0(url, query, query2))
-
-                if (r["status_code"] == 200) {
-                    osrm_server <- "http://router.project-osrm.org/"
-                } else {
-                    e <- simpleError("Public OSRM server does not seem to
-                                     respond correctly.")
-                    stop(e)
-                }
-
+                osrm_server <- "http://router.project-osrm.org/"
+                # options(
+                #     osrm.server = paste0(
+                #         osrm_server,
+                #         "routed-",
+                #         profile, "/"
+                #     )
                 options(osrm.server = osrm_server)
                 options(osrm.profile = profile)
             } else {
@@ -55,7 +48,7 @@ set_server_profile <- function(server, profile) {
 
 #' @title Check if server is available
 #' @keywords internal
-#' @seealso [set_server_profile()]
+#' @seealso \code{\link{set_server_profile}}
 url_available <- function(u) {
     tryCatch(
         {
@@ -70,7 +63,7 @@ url_available <- function(u) {
 #' @description Dataframes are necessary for the transformations
 #' needed to query the osrm servers.
 #' @keywords internal
-#' @seealso [osrm_table()] for the main function
+#' @seealso \code{\link{osrmtable}}
 transform_to_df <- function(sf) {
     coords_matrix <- sf::st_coordinates(sf)
     df <- data.frame(
@@ -83,9 +76,9 @@ transform_to_df <- function(sf) {
     return(df)
 }
 
-#' @title Build OSRM query
+#' @title Build OSRM query applying google encryption algorithm if necessary
 #' @keywords internal
-#' @seealso [osrm_table()] for the main function
+#' @seealso \code{\link{osrmtable}} for the main function
 create_osrm_input_table <- function(loc, osrm_server, osrm_profile) {
     # Check if user forgot to insert "/" at the end of the osrm.server
     if (!endsWith(osrm_server, "/")) {
@@ -102,7 +95,7 @@ create_osrm_input_table <- function(loc, osrm_server, osrm_profile) {
 
 #' @title Adjust coordinates to fit within OSRM requirements
 #' @keywords internal
-#' @seealso [osrm_table()] for the main function
+#' @seealso \code{\link{osrmtable}}
 adjust_coord <- function(coord) {
     format(round(as.numeric(coord), 5),
         scientific = FALSE, justify = "none",
@@ -112,10 +105,10 @@ adjust_coord <- function(coord) {
 
 #' @title Check OSRM's query limits and provide warnings.
 #' @description This function is created in order to prevent the user
-#'   from composing queries that go over the `default` limits of the
-#'   OSRM servers.
+#' from composing queries that go over the `default` limits of the
+#' OSRM servers.
 #' @keywords internal
-#' @seealso [osrm_table()] for the main function
+#' @seealso \code{\link{osrmtable}} for the main function
 check_osrm_limits <- function(src, dst) {
     nrow_src <- nrow(sf::st_coordinates(src))
     nrow_dst <- nrow(sf::st_coordinates(dst))
@@ -150,7 +143,7 @@ check_osrm_limits <- function(src, dst) {
 
 #' @title Format OSRM output tables
 #' @keywords internal
-#' @seealso [osrm_table()] for the main function
+#' @seealso \code{\link{osrmtable}} for the main function
 format_osrm_output_table <- function(out, features, type) {
     if (type == "durations") {
         out_matrix <- out$durations
@@ -163,13 +156,13 @@ format_osrm_output_table <- function(out, features, type) {
         Please check your OSRM server configuration.")
         stop(e)
     }
-    dimnames(out_matrix) <- list(features$id)
+    dimnames(out_matrix) <- features$id
     return(out_matrix)
 }
 
 #' @title Format output coordinates table
 #' @keywords internal
-#' @seealso [osrm_table()] for the main function
+#' @seealso \code{\link{osrmtable}} for the main function
 format_coord_table <- function(out, features, type) {
     if (type == "sources") {
         sources <- format_sources(out, features)
@@ -182,7 +175,7 @@ format_coord_table <- function(out, features, type) {
 }
 
 #' @keywords internal
-#' @seealso [format_coord_table()]
+#' @seealso \code{\link{format_coord_table}}
 format_sources <- function(out, features) {
     return(data.frame(matrix(unlist(out$sources$location,
         use.names = T
@@ -193,7 +186,7 @@ format_sources <- function(out, features) {
 }
 
 #' @keywords internal
-#' @seealso [format_coord_table()]
+#' @seealso \code{\link{format_coord_table}}
 format_destinations <- function(out, features) {
     return(data.frame(matrix(unlist(out$destinations$location,
         use.names = T

@@ -15,8 +15,8 @@ on:
       - main
       - release
       - develop
-    paths-ignore:
-      - "docs/**"
+    paths-ignore: 
+      - 'docs/**'
 
 name: R-CMD-check
 
@@ -30,16 +30,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {
-              os: ubuntu-16.04,
-              r: "release",
-              rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest",
-            }
-          - {
-              os: ubuntu-16.04,
-              r: "3.5",
-              rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest",
-            }
+          - {os: ubuntu-16.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+          - {os: ubuntu-16.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+          - {os: ubuntu-16.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -79,7 +72,7 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "16.04"))')
 
-      - name: Install dependencies and packages used in the documentation
+      - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
@@ -95,9 +88,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
-        run: |
-          options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--ignore-vignettes"), build_args = c("--no-build-vignettes"), error_on = "warning", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Show testthat output

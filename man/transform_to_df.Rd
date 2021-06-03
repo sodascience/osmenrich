@@ -11,6 +11,6 @@ Dataframes are necessary for the transformations
 needed to query the osrm servers.
 }
 \seealso{
-\code{\link[=osrm_table]{osrm_table()}} for the main function
+\code{\link{osrmtable}}
 }
 \keyword{internal}

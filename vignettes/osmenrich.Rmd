@@ -6,7 +6,7 @@ description: >
   Learn how OSMenrich works, and how you can 
   customise it.
 vignette: >
-  %\VignetteIndexEntry{Introduction to osmenrich}
+  %\VignetteIndexEntry{introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 
 ```{r, eval = FALSE}
 library(osmenrich)
+
 ```
 
 
@@ -46,14 +47,10 @@ To do this, the package needs to connect to a server containing OpenStreetMap da
 
 ## How to use `osmenrich`
 
-If you do have this package, due to recent changes in GitHub's naming of branches, please make sure you have the latest version of `remotes` or at least version `2.2` (`install.packages("remotes")`).
-
-Once you did this, to continue the installation of the `osmenrich` package, run:
-
 `osmenrich` can be installed with the remotes package from GitHub with
 
 ```{r, eval = FALSE}
-remotes::install_github("sodascience/osmenrich@main")
+remotes::install_github("sodascience/osmenrich")
 ```
 
 and then load it in the usual way:
@@ -62,14 +59,14 @@ and then load it in the usual way:
 library(osmenrich)
 ```
 
-Out of the box `osmenrich` uses pubic remote servers to retrieve OSM data and to compute distances/durations from _reference points_ to _feature points_.
+Out of the box `osmenrich` uses pubic remote servers to retrieve OSM data and to compute distances/durations from _reference points_ to _feature points_
 
 
 ### Use of remote and local servers
 
 As stated above, `osmenrich` makes use of an OSM server and one or more OSRM servers to retrieve OSM data ( _feature points_ ) and to calculate metrics such as distances and durations. The OSM _feature points_ available can be found by:
-1. Visiting the OSM wiki: https://wiki.openstreetmap.org/wiki/Map_features.
-2. Loading the `osmdata` (`library(osmdata)`) and calling the function `available_features()` and `available_tags()`.
+1. Visiting the OSM wiki: https://wiki.openstreetmap.org/wiki/Map_features
+2. Loading the `osmdata` (`library(osmdata)`) and calling the function `available_features()` and `available_tags()`
 
 The basic data enrichment will work without having to setup any one of these server locally, thanks to publicly available servers. However, for large data enrichment tasks and for tasks involving the computation of durations between _reference points_ and _feature points_ and/or the computation of custom distances or durations between these points (such as the distances between two points computed on a walking distance or cycling), the setup of one or more of these servers is required.
 
@@ -96,13 +93,13 @@ To facilitate the routing of users to the right setup for their need, we provide
   * *Target use-case*: the user wants to enrich adding features for a large area and/or is interested in specific metrics for distances/durations (i.e. foot or bike)
   * *Size of data to be requested*: theoretically unlimited
   * *Setup servers via Docker*: use the `docker_compose.yml` to setup both the `overpass` (OSM) and all three `OSRM` servers.
-  * *Link to example*: [Advanced Example - Vignette](advanced_enrichment.Rmd)
+  * *Link to example*: [Advanced Example](#todo)
 
 ## Examples
 
 ### Base Example {#basexample}
 
-Let's enrich a spatial (`sf`) dataset (`sf_example`) with the number of waste baskets in a radius of 500 meters from each of the point specified in a dataset:
+Let's enrich a spatial (`sf`) dataset (`sf_example`) with the number of waste baskets in a radius of 100 meters from each of the point specified in a dataset:
 
 ```{r, eval = FALSE}
 # Import libraries
@@ -113,63 +110,59 @@ library(osmenrich)
 # Create an example dataset to enrich
 sf_example <-
   tribble(
-    ~person,  ~lat,   ~lon,
-    "Alice",  52.12,  5.09,
-    "Bob",    52.13,  5.08,
+    ~person, ~id,  ~lat,  ~lon, ~val,
+    "Alice",   1, 52.12,  5.09,   5L,
+    "Bob",     2, 52.13,  5.08,   2L
   ) %>%
-  sf::st_as_sf(
-    coords = c("lon", "lat"),
-    crs = 4326
-  )
+  sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
 
-# Print it
+# Print the tibble
 sf_example
-#> Simple feature collection with 2 features and 1 field
-#> geometry type:  POINT
-#> dimension:      XY
-#> bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
-#> CRS:            EPSG:4326
-#> # A tibble: 2 x 2
-#>   person     geometry
-#> * <chr>   <POINT [°]>
-#> 1 Alice  (5.09 52.12)
-#> 2 Bob    (5.08 52.13)
+# > Simple feature collection with 2 features and 3 fields
+# > geometry type:  POINT
+# > dimension:      XY
+# > bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
+# > CRS:            EPSG:4326
+# > # A tibble: 2 x 4
+# >  person    id   val     geometry
+# > * <chr>  <dbl> <int>  <POINT [°]>
+# > 1 Alice      1     5 (5.09 52.12)
+# > 2 Bob        2     2 (5.08 52.13)
 ```
 
-To enrich the `sf_example` dataset with "waste baskets" in a 500m radius, we create a query using the `enrich_osm()` function. This function uses the bounding box created by the points present in the example dataset and searches for the specified `key = "amenity"` and `value = "waste_basket`. We also add a custom `name` for the newly created column and specify the radius (`r`) used in the search.
+To enrich the `sf_example` dataset with "waste baskets" in a 100m radius, we create a query using the `enrich_osm()` function. This function uses the bounding box created by the points present in the example dataset and searches for the specified `key = "amenity"` and `value = "waste_basket`. We also add a custom `name` for the newly created column and specify the radius (`r`) used in the search.
 
 ```{r, eval = FALSE}
 # Simple OSMEnrich query
-sf_example_enriched <- sf_example %>%
+sf_example_simple <- sf_example %>%
   enrich_osm(
-    name = "n_waste_baskets",
+    name = "waste_baskets",
     key = "amenity",
     value = "waste_basket",
-    r = 500
+    r = 100
   )
-#> Downloading data for waste_baskets... Done.
-#> Downloaded 147 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
-#> Computing distance matrix for waste_baskets...Done.
+# > Downloading data for waste_baskets... Done.
+# > Downloaded 26 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.
+# > Computing distance matrix for wastebaskets...Done.
+# > Adding waste_baskets to data.
 
-sf_example_enriched
-#> Simple feature collection with 2 features and 2 fields
-#> geometry type:  POINT
-#> dimension:      XY
-#> bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
-#> geographic CRS: WGS 84
-#> # A tibble: 2 x 3
-#>   person     geometry waste_baskets
-#> * <chr>   <POINT [°]>         <int>
-#> 1 Alice  (5.09 52.12)            75
-#> 2 Bob    (5.08 52.13)             1
+# Print the enriched tibble
+sf_example_simple
+# > Simple feature collection with 2 features and 4 fields
+# > geometry type:  POINT
+# > dimension:      XY
+# > bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13
+# > CRS:            EPSG:4326
+# > # A tibble: 2 x 5
+# >   person    id   val     geometry waste_baskets
+# > * <chr>  <dbl> <int>  <POINT [°]>         <int>
+# > 1 Alice      1     5 (5.09 52.12)             3
+# > 2 Bob        2     2 (5.08 52.13)             0
 ```
-
-The waste baskets column is now the result of summing all the wastebaskets in a 500 meter radius for Alice and Bob:
-![](../man/figures/example_wastebaskets_r500.png)
 
 ### Normal Example {#normalexample}
 
-### Normal enrichment example
+### Advanced enrichment example
 
 Using the example dataset `sf_example` specified in the previous example, we continue with a more advanced enrichment example. Here, we use a number of additional available variables to specify our initial "waste_baskets" query. We add the following:
 
@@ -177,7 +170,7 @@ Using the example dataset `sf_example` specified in the previous example, we con
 - `distance: "distance_by_car"`: we are not anymore interested in just retrieving the number of points in a certain area (given by the radius `r`), but we now want to retrieve the sum of the driving distances from a point to all the waste_baskets within radius `r`.
 - `kernel: "parabola"`: we can specify the kernel function used in summarizing the features retrieved (in this example waste_baskets). Kernels convert distance or duration vectors to single numbers, with a certain weight for certain distances. This package also support the usage of custom kernel functions.
 
-In this example, we make use of a local instance of the OSRM server to query the driving distances (`distance = "distance_by_car"`). Follow the instructions in section [osmenrich Docker repository](https://github.com/sodascience/osmenrich_docker) to set it up. Otherwise, out-of-the-box this package will support querying **only** driving distances. If you are interested in querying distances or durations for other means of transportation, you will need to set up local OSRM instances.
+In this example, we make use of a local instance of the OSRM server to query the driving distances (`distance = "distance_by_car"`). Follow the instructions in section [Osmenrich Docker repository](https://github.com/sodascience/osmenrich_docker) to set it up. Otherwise, out-of-the-box this package will support querying **only** driving distances. If you are interested in querying distances or durations for other means of transportation, you will need to set up local OSRM instances.
 
 ```{r, eval = FALSE}
 # Specify the address of local OSRM instance
@@ -211,9 +204,3 @@ sf_example_advanced
 # > 1 Alice      1     5 (5.09 52.12)             1
 # > 2 Bob        2     2 (5.08 52.13)             0
 ```
-
-### Advanced Example 
-
-For a more advanced example in which `osmenrich` is put to use with other packages, please refer to [this tutorial](advanced_enrichment.Rmd).
-
-

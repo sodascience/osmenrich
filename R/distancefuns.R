@@ -1,66 +1,65 @@
-#' Compute distance and duration measures matrix using the OSRM server.
+#' Compute distance measures matrix using the OSRM server
 #'
 #' Uses an OSRM (open source routing machine) instance to compute distance
-#'   measures between source geometry and destination geometry. Measures
-#'   available are those enabled by the OSRM API service: walking, driving and
-#'   cycling. These measures are available in the following metrics:
-#'   duration (in minutes) and distance (in meters).
+#' measures between source geometry and destination geometry. Measures
+#' available are those enabled by the OSRM API service: walking, driving and
+#' cycling. These measures are available in the following metrics:
+#' duration (in minutes) and distance (in meters).
 #'
-#' @param src `sfc` object with the source points.
-#' @param dst `sfc` object with the destination points.
-#' @param profile `character` `str` object indicating the OSRM profile needed.
-#' @return `matrix` Matrix with measures (distances or durations)
-#'   from src (rows) to dst (cols).
+#' @param src `sfc_POINT` sfc object with the source points.
+#' @param dst `sfc_POINT` sfc object with the destination points.
+#' @param profile `character` str object indicating the OSRM profile needed.
+#' @return `matrix` with measures from src (rows) to dst (cols).
 #'
-#' @family Functions to measure distance and duration.
-#' @seealso [enrich_opq()], [osrm_table()]
+#' @family distance measure functions
+#' @seealso link{osrm_table} and link{osrm_opqenrich}
 #'
-#' @name measure_funs
+#' @name distancefuns
 #' @export
 
-#' @rdname measure_funs
+#' @rdname distancefuns
 #' @export
 duration_by_foot <- function(src, dst) {
   matrix <- osrm_duration(src, dst, "walking")
   return(matrix)
 }
 
-#' @rdname measure_funs
+#' @rdname distancefuns
 #' @export
 distance_by_foot <- function(src, dst) {
   matrix <- osrm_distance(src, dst, "walking")
   return(matrix)
 }
 
-#' @rdname measure_funs
+#' @rdname distancefuns
 #' @export
 duration_by_car <- function(src, dst) {
   matrix <- osrm_duration(src, dst, "driving")
   return(matrix)
 }
 
-#' @rdname measure_funs
+#' @rdname distancefuns
 #' @export
 distance_by_car <- function(src, dst) {
   matrix <- osrm_distance(src, dst, "driving")
   return(matrix)
 }
 
-#' @rdname measure_funs
+#' @rdname distancefuns
 #' @export
 duration_by_bike <- function(src, dst) {
   matrix <- osrm_duration(src, dst, "cycling")
   return(matrix)
 }
 
-#' @rdname measure_funs
+#' @rdname distancefuns
 #' @export
 distance_by_bike <- function(src, dst) {
   matrix <- osrm_distance(src, dst, "cycling")
   return(matrix)
 }
 
-#' @rdname measure_funs
+#' @rdname distancefuns
 #' @export
 osrm_distance <- function(src, dst, profile) {
   # create sf from src and dst
@@ -82,7 +81,7 @@ osrm_distance <- function(src, dst, profile) {
   return(distance_mat)
 }
 
-#' @rdname measure_funs
+#' @rdname distancefuns
 #' @export
 osrm_duration <- function(src, dst, profile) {
   # create sf from src and dst

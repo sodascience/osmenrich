@@ -29,6 +29,6 @@ as this server is intended only for demo purposes, might fail in case of
 overload and only returns distances for the driving profile.
 }
 \seealso{
-\code{\link[=enrich_osm]{enrich_osm()}} for the main enrichment function
+\code{\link{osrmtable}} for the main function
 }
 \keyword{internal}

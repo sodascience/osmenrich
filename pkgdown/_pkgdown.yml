@@ -2,23 +2,16 @@ home:
   title: An R package to enrich geocoded data with OpenStreetMaps
   description: Enrich sf data using geographic features retrieved from OpenStreetMaps public data.
   links:
-    - text: Ask a question about osmenrich on GitHub
-      href: https://github.com/sodascience/osmenrich/issues
-    - text: View the GitHub repository with the backend setup
-      href: https://github.com/sodascience/osmenrich_docker
-  strip_header: true
+  - text: Ask a question about osmenrich on GitHub
+    href: https://github.com/sodascience/osmenrich/issues
+  - text: View the GitHub repository with the backend setup
+    href: https://github.com/sodascience/osmenrich_docker
 
 authors:
   Erik-Jan van Kesteren:
-    href: "https://erikjanvankesteren.nl/"
-  Leonardo Jaya Vida:
-    href: "https://leonardovida.com/"
-  Jonathan de Bruin:
-    href: "https://github.com/J535D165"
-  Daniel Oberski:
-    href: "https://daob.nl/"
-  SoDa Team:
-    href: "https://odissei-data.nl/nl/soda/"
+    href: https://erikjanvankesteren.nl/
+  Leonardo Vida:
+    href: https://leonardovida.com/
 
 development:
   mode: auto
@@ -29,41 +22,45 @@ repo:
     issue: https://github.com/sodascience/osmenrich/issues/
   branch: main
 
+template:
+  params:
+    ganalytics: G-NEMHDHYTS8
+
 reference:
-  - title: Enrich sf data
-    desc: Enrich sf data with OpenStreetMap features.
-  - contents:
-      - enrich_osm
-      - enrich_opq
-  - title: Retrieve and compute distances and durations
-    desc: Functions used to retrieve distances and duration from OSRM servers and kernel functions used to compute aggregation of these metrics.
-  - contents:
-      - distance_funs
-      - kernels
-  - title: OSRM functions
-    desc: Functions to communicate with remote or local OSRM servers.
-  - contents:
-      - osrm_table
-      - create_osrm_input_table
-      - format_osrm_output_table
-  - title: Utilities functions
-    desc: Additional utilities functions.
-  - contents:
-      - check_osrm_limits
-      - set_server_profile
-      - transform_to_df
-      - url_available
-      - adjust_coord
-      - format_coord_table
+- title: Enrich sf data
+  desc: Enrich sf data with OpenStreetMap features.
+- contents:
+  - enrich_osm
+  - enrich_opq
+- title: Retrieve and compute distances and durations
+  desc: Functions used to retrieve distances and duration from OSRM servers and kernel functions used to compute aggregation of these metrics.
+- contents:
+  - distancefuns
+  - kernels
+- title: OSRM functions
+  desc: Functions to communicate with remote or local OSRM servers.
+- contents:
+  - osrmtable
+  - create_osrm_input_table
+  - format_osrm_output_table
+- title: Utilities functions
+  desc: Additional utilities functions.
+- contents:
+  - check_osrm_limits
+  - set_server_profile
+  - transform_to_df
+  - url_available
+  - adjust_coord
+  - format_coord_table
 
 navbar:
   structure:
     left:
-      - home
-      - intro
-      - reference
-      - articles
-      - news
+    - home
+    - intro
+    - reference
+    - articles
+    - news
     right: github
   components:
     home:
@@ -73,11 +70,9 @@ navbar:
       text: Reference
       href: reference/index.html
 
+
 articles:
-  - title: Introduction to osmenrich
-    contents:
-      - osmenrich
-  - title: Advanced tutorials
-    contents:
-      - advanced_enrichment
-      - introduction_kernels
+- title: Introduction
+  contents:
+  - osmenrich
+

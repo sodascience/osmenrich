@@ -12,6 +12,6 @@ from composing queries that go over the \code{default} limits of the
 OSRM servers.
 }
 \seealso{
-\code{\link[=osrm_table]{osrm_table()}} for the main function
+\code{\link{osrmtable}} for the main function
 }
 \keyword{internal}
