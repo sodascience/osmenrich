@@ -4,7 +4,7 @@ Title: Enrich sf Data with Geographic Features from OpenStreetMaps
 Description: Add columns to sf data using geographic features from 
     OpenStreetMap. In the case of point geocoded observations, column values
     are based on weighted distances to the desired features.
-Version: 1.0
+Version: 1.1
 Author: ODISSEI SoDa Team
 Authors@R: c(
     person("Erik-Jan", "van Kesteren", email = "e.vankesteren1@uu.nl",
@@ -33,12 +33,33 @@ Imports:
     tibble,
     httr,
     RCurl,
-    jsonlite
+    jsonlite,
+    cli,
+    glue
 RoxygenNote: 7.1.1.9000
 Roxygen: list(markdown = TRUE)
 Suggests:
-    testthat,
-    covr,
+    tidyverse,
+    rmarkdown,
     knitr,
-    rmarkdown
+    ggplot2,
+    ggspatial,
+    ggeffects,
+    raster,
+    mgcv,
+    covr,
+    testthat,
+    firatheme
+Remotes: vankesteren/firatheme
+Collate:
+    exports.R
+    utils.R
+    kernels.R
+    distance_funs.R
+    osrm_table.R
+    enrich_opq.R
+    enrich_osm.R
+    data.R
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)

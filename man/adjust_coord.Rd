@@ -10,6 +10,6 @@ adjust_coord(coord)
 Adjust coordinates to fit within OSRM requirements
 }
 \seealso{
-\code{\link{osrmtable}}
+\code{\link[=osrm_table]{osrm_table()}} for the main function
 }
 \keyword{internal}

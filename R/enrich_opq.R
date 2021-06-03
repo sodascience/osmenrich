@@ -1,21 +1,30 @@
-#' Enrich an overpass query for column output
+#' @name enrich_opq
+#' @title Enrich an overpass query for column output
 #'
 #' @param name name of the enriched column
 #' @param dataset target `sf` dataset to enrich with this package
-#' @param key target OSM feature key to add, see \link{add_osm_feature}
-#' @param value target value for OSM feature key to add, see \link{add_osm_feature}
+#' @param key target OSM feature key to add, see [osmdata::add_osm_feature()]
+#' @param value target value for OSM feature key to add, see
+#'   [osmdata::add_osm_feature()]
 #' @param type `character` the osm feature type or types to consider
 #' (e.g., points, polygons), see details
-#' @param distance `character` the distance metric used, see details
+#' @param measure `character` the measure metric used, see details
 #' @param kernel `function` the kernel function used, see details
 #' @param opq overpass query that is being enriched
+#' @param r The search radius used by the `kernel` function.
+#' @param reduce_fun The aggregation function used by the `kernel` function to
+#'   aggregate the retrieved data objects
+#' @param control The list with configuration variables for the OSRM server.
+#'   It contains `timeout`, defining the number of seconds before the request
+#'   to OSRM times out, and `memsize`, defining the maximum size of the query to
+#'   OSRM.
 #' @param .verbose `bool` whether to print info during enrichment
-#' @param ... arguments passed to the kernel function
+#' @param ... Additional parameters to be passed into the OSM query, such as
+#'   a user-defined kernel.
 #'
 #' @importFrom methods is
-#' @rdname enrich_opq
 #'
-#' @seealso [osmenrich::enrich_osm]
+#' @seealso [enrich_osm()]
 #'
 #' @export
 enrich_opq <- function(
@@ -24,17 +33,20 @@ enrich_opq <- function(
                        key = NULL,
                        value = NULL,
                        type = "points",
-                       distance = "spherical",
+                       measure = "spherical",
+                       r = NULL,
                        kernel = "uniform",
+                       reduce_fun = sum,
+                       control = list(),
                        .verbose = TRUE,
                        ...) {
   opq <-
     dataset %>%
-    add_bbox(...) %>%
+    add_bbox(r, control) %>%
     add_feature(key, value) %>%
     add_type(type) %>%
-    add_distance(distance) %>%
-    add_kernel(kernel, ...)
+    add_measure(measure) %>%
+    add_kernel(kernel, r, reduce_fun, ...)
   opq$kernel <- as.character(substitute(kernel))
   opq$name <- name
   opq$key <- key
@@ -44,17 +56,14 @@ enrich_opq <- function(
 
 #' @rdname enrich_opq
 #' @export
-add_bbox <- function(dataset, ...) {
+add_bbox <- function(dataset, r, control) {
   if (is.null(dataset)) {
     stop("Specify a dataset to enrich.")
   }
-  # Extract distance specified by user
-  dst <- match.call(expand.dots = FALSE)$`...`
-  pos <- (match(kernel_pars, names(dst), 0L))
   # Extract bbox and transform 3488 (meters)
   bbox_tmp <- sf::st_transform(sf::st_as_sfc(sf::st_bbox(dataset)), 3488)
   # Add buffer of distance
-  bbox_tmp <- sf::st_buffer(x = bbox_tmp, dist = dst[[kernel_pars[pos]]])
+  bbox_tmp <- sf::st_buffer(x = bbox_tmp, dist = r)
   # Convert back to 4326  (lat, lon) and find bbox of polygon
   bbox <- sf::st_bbox(sf::st_transform(bbox_tmp, 4326))
   # Find bbox "limits", Overpass ignores after 7 digits
@@ -63,17 +72,10 @@ add_bbox <- function(dataset, ...) {
   xmax <- as.double(formatC(bbox["xmax"], digits = 7, format = "f"))
   xmin <- as.double(formatC(bbox["xmin"], digits = 7, format = "f"))
   # Set timeout 300 seconds, memsize = 1GiB if not set
-  kwargs <- list(...)
-  if (is.null(kwargs$timeout)) {
-    kwargs$timeout <- 300
-  }
-  if (is.null(kwargs$memsize)) {
-    kwargs$memsize <- 1073741824
-  }
   opq <- osmdata::opq(
     bbox = c(xmin, ymin, xmax, ymax),
-    timeout = kwargs$timeout,
-    memsize = kwargs$memsize
+    timeout = control$timeout,
+    memsize = control$memsize
   )
   if (!is(opq, "enriched_overpass_query")) {
     class(opq) <- c(class(opq), "enriched_overpass_query")
@@ -154,16 +156,16 @@ add_type <- function(opq, type) {
 
 #' @rdname enrich_opq
 #' @export
-add_distance <- function(opq, distance) {
-  if (!is.character(distance)) stop("Metric should be a character.")
-  if (!distance %in% names(osmenrich_distancefuns)) {
+add_measure <- function(opq, measure) {
+  if (!is.character(measure)) stop("Metric should be a character.")
+  if (!measure %in% names(osmenrich_measurefuns)) {
     stop(
-      "Measure ", distance, " not available. Available options: \n- ",
-      paste(names(osmenrich_distancefuns), collapse = "\n- ")
+      "Measure ", measure, " not available. Available options: \n- ",
+      paste(names(osmenrich_measurefuns), collapse = "\n- ")
     )
   }
-  opq$distance <- distance
-  opq$distancefun <- osmenrich_distancefuns[[distance]]
+  opq$measure <- measure
+  opq$measurefun <- osmenrich_measurefuns[[measure]]
   if (!is(opq, "enriched_overpass_query")) {
     class(opq) <- c(class(opq), "enriched_overpass_query")
   }
@@ -172,13 +174,16 @@ add_distance <- function(opq, distance) {
 
 #' @rdname enrich_opq
 #' @export
-add_kernel <- function(opq, kernel, ...) {
+add_kernel <- function(opq, kernel, r, reduce_fun, ...) {
   if (!(class(kernel) == "function") && !is.character(kernel)) {
     stop(
       "Kernel should be either be chosen among the available options:\n- ",
       paste(names(osmenrich_kernelfuns), collapse = "\n- "),
       "\nOr should be a function of the form: `function(d, r, fun) fun(d,r)`"
     )
+  }
+  if (!is.function(reduce_fun)) {
+    stop("The reduce function should be a function (E.g. 'sum')")
   }
   if (class(kernel) == "function") {
     kernelfun <- kernel
@@ -188,8 +193,8 @@ add_kernel <- function(opq, kernel, ...) {
       },
       error = function(e) {
         message("The kernel is not a recognized function.\n
-    It should be of the form `function(d, r, fun) fun(d,r).\n
-    Error: \n", e)
+  It should be of the form `function(d, r, fun) fun(d,r).\n
+  Error: \n", e)
       }
     )
   }
@@ -212,7 +217,7 @@ add_kernel <- function(opq, kernel, ...) {
     }
   }
   opq$kernel <- as.character(substitute(kernel))
-  opq$kernelpars <- list(...)
+  opq$kernelpars <- list(r, reduce_fun, ...)
   opq$kernelfun <- kernelfun
   if (!is(opq, "enriched_overpass_query")) {
     class(opq) <- c(class(opq), "enriched_overpass_query")
@@ -225,7 +230,7 @@ check_enriched_opq <- function(opq) {
   if (!is(opq, "enriched_overpass_query")) {
     stop("Query is not an enriched overpass query. See ?enrich_opq.")
   }
-  required <- c("type", "distance", "kernel")
+  required <- c("type", "measure", "kernel")
   missings <- !required %in% names(opq)
   if (any(missings)) {
     stop(
@@ -237,7 +242,7 @@ check_enriched_opq <- function(opq) {
 }
 
 #' @keywords internal
-osmenrich_distancefuns <- list(
+osmenrich_measurefuns <- list(
   "spherical" = sf::st_distance,
   "distance_by_foot" = distance_by_foot,
   "duration_by_foot" = duration_by_foot,
@@ -257,11 +262,6 @@ osmenrich_kernelfuns <- list(
   "uniform" = kernel_uniform
 )
 
-#' @keywords internal
-#' The kernel types are always expressed in meters
-# TODO: change name
-kernel_pars <- c("r", "sd")
-
 #' @method print enriched_overpass_query
 #' @export
 print.enriched_overpass_query <- function(x, ...) {
@@ -275,7 +275,7 @@ print.enriched_overpass_query <- function(x, ...) {
     "\u00B7 Name:        ", x$name, "\n",
     "\u00B7 Features:    'key': ", x$key, "; 'value': ", x$value, "\n",
     "\u00B7 Type:        ", paste0(x$type, collapse = ", "), "\n",
-    "\u00B7 Distance:    ", x$distance, "\n",
+    "\u00B7 Measure:    ", x$measure, "\n",
     "\u00B7 Kernel:      ", x$kernel, kernelpars_string,
     "\n ---\n",
     "\u00B7 BBox:        ", x$bbox, "\n"
