@@ -9,3 +9,10 @@
 ^_pkgdown.yml$
 ^docs/$
 ^pkgdown/$
+^doc$
+^Meta$
+^\.zenodo.json
+^rosm.cache
+^CITATION.cff
+^docs
+^pkgdown

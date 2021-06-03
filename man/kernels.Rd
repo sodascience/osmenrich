@@ -7,27 +7,28 @@
 \alias{kernel_uniform}
 \title{Kernels used in summarizing features}
 \usage{
-kernel_gaussian(d, r = 100, FUN = sum)
+kernel_gaussian(d, r = 100, reduce_fun = sum)
 
-kernel_parabola(d, r = 100, FUN = sum)
+kernel_parabola(d, r = 100, reduce_fun = sum)
 
-kernel_uniform(d, r = 100, FUN = sum)
+kernel_uniform(d, r = 100, reduce_fun = sum)
 }
 \arguments{
-\item{d}{vector of distances}
+\item{d}{The vector of distances/ durations.}
 
-\item{r}{radius of interest}
+\item{r}{The radius of interest for the kernel to aggregate data.}
 
-\item{FUN}{reduce function}
+\item{reduce_fun}{The reduce function used to aggregate data.}
 }
 \value{
-numeric, function (usually sum) of kernel-weighted distances
+numeric, function (usually sum) of kernel-weighted distances or
+durations
 }
 \description{
-Kernels convert distance vectors to single numbers, with a certain weight
-for certain distances. In general, at 0 distance, these return a value of 1,
-and the value decreases as the distance increases, reaching 0 at the limit
-of the support.
+Kernels convert distance/ duration vectors to single numbers,
+with a certain weight for certain distances. In general, at 0 distance,
+these return a value of 1, and the value decreases as the distance
+increases, reaching 0 at the limit of the support.
 }
 \details{
 Gaussian kernel is a truncated gaussian, where r = 4*sigma
@@ -38,5 +39,5 @@ radius r, and returns 0 elsewhere. It is a scaled Epanechnikov kernel.
 Uniform kernel returns 1 within radius r, 0 elsewhere.
 }
 \seealso{
-\link{enrich_opq}
+\code{\link[=enrich_opq]{enrich_opq()}}
 }
