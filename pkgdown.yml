@@ -2,6 +2,8 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  advanced_enrichment: advanced_enrichment.html
+  introduction_kernels: introduction_kernels.html
   osmenrich: osmenrich.html
-last_built: 2021-06-03T12:04Z
+last_built: 2021-06-03T17:12Z
 

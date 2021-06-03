@@ -47,10 +47,10 @@
 
 
 <meta property="og:title" content="Kernels used in summarizing features — kernels" />
-<meta property="og:description" content="Kernels convert distance vectors to single numbers, with a certain weight
-for certain distances. In general, at 0 distance, these return a value of 1,
-and the value decreases as the distance increases, reaching 0 at the limit
-of the support." />
+<meta property="og:description" content="Kernels convert distance/ duration vectors to single numbers,
+with a certain weight for certain distances. In general, at 0 distance,
+these return a value of 1, and the value decreases as the distance
+increases, reaching 0 at the limit of the support." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -65,16 +65,6 @@ of the support." />
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NEMHDHYTS8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NEMHDHYTS8');
-</script>
 
 
   </head>
@@ -93,7 +83,7 @@ of the support." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">osmenrich</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
       </span>
     </div>
 
@@ -144,38 +134,39 @@ of the support." />
     </div>
 
     <div class="ref-description">
-    <p>Kernels convert distance vectors to single numbers, with a certain weight
-for certain distances. In general, at 0 distance, these return a value of 1,
-and the value decreases as the distance increases, reaching 0 at the limit
-of the support.</p>
+    <p>Kernels convert distance/ duration vectors to single numbers,
+with a certain weight for certain distances. In general, at 0 distance,
+these return a value of 1, and the value decreases as the distance
+increases, reaching 0 at the limit of the support.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>kernel_gaussian</span><span class='op'>(</span><span class='va'>d</span>, r <span class='op'>=</span> <span class='fl'>100</span>, FUN <span class='op'>=</span> <span class='va'>sum</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>kernel_gaussian</span><span class='op'>(</span><span class='va'>d</span>, r <span class='op'>=</span> <span class='fl'>100</span>, reduce_fun <span class='op'>=</span> <span class='va'>sum</span><span class='op'>)</span>
 
-<span class='fu'>kernel_parabola</span><span class='op'>(</span><span class='va'>d</span>, r <span class='op'>=</span> <span class='fl'>100</span>, FUN <span class='op'>=</span> <span class='va'>sum</span><span class='op'>)</span>
+<span class='fu'>kernel_parabola</span><span class='op'>(</span><span class='va'>d</span>, r <span class='op'>=</span> <span class='fl'>100</span>, reduce_fun <span class='op'>=</span> <span class='va'>sum</span><span class='op'>)</span>
 
-<span class='fu'>kernel_uniform</span><span class='op'>(</span><span class='va'>d</span>, r <span class='op'>=</span> <span class='fl'>100</span>, FUN <span class='op'>=</span> <span class='va'>sum</span><span class='op'>)</span></pre>
+<span class='fu'>kernel_uniform</span><span class='op'>(</span><span class='va'>d</span>, r <span class='op'>=</span> <span class='fl'>100</span>, reduce_fun <span class='op'>=</span> <span class='va'>sum</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>d</th>
-      <td><p>vector of distances</p></td>
+      <td><p>The vector of distances/ durations.</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>radius of interest</p></td>
+      <td><p>The radius of interest for the kernel to aggregate data.</p></td>
     </tr>
     <tr>
-      <th>FUN</th>
-      <td><p>reduce function</p></td>
+      <th>reduce_fun</th>
+      <td><p>The reduce function used to aggregate data.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>numeric, function (usually sum) of kernel-weighted distances</p>
+    <p>numeric, function (usually sum) of kernel-weighted distances or
+durations</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Gaussian kernel is a truncated gaussian, where r = 4*sigma
@@ -186,7 +177,7 @@ radius r, and returns 0 elsewhere. It is a scaled Epanechnikov kernel.
 Uniform kernel returns 1 within radius r, 0 elsewhere.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='enrich_opq.html'>enrich_opq</a></p></div>
+    <div class='dont-index'><p><code><a href='enrich_opq.html'>enrich_opq()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -199,7 +190,7 @@ Uniform kernel returns 1 within radius r, 0 elsewhere.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://erikjanvankesteren.nl/'>Erik-Jan van Kesteren</a>, Leonardo Jaya Vida, Jonathan de Bruin, SoDa Team.</p>
+  <p>Developed by <a href='https://erikjanvankesteren.nl/'>Erik-Jan van Kesteren</a>, <a href='https://leonardovida.com/'>Leonardo Jaya Vida</a>, <a href='https://github.com/J535D165'>Jonathan de Bruin</a>, <a href='https://odissei-data.nl/nl/soda/'>SoDa Team</a>.</p>
 </div>
 
 <div class="pkgdown">

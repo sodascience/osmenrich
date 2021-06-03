@@ -23,13 +23,7 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-NEMHDHYTS8"></script><script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NEMHDHYTS8');
-</script>
+<![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
     <div class="container template-home">
@@ -44,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">osmenrich</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
       </span>
     </div>
 
@@ -90,29 +84,26 @@
   <div class="contents col-md-9">
 
 <p align="center">
-<img src="reference/figures/logo.png" width="250px"><!-- badges: start
-  <br/>
-  <span>
-    <a href="https://travis-ci.org/vankesteren/tensorsem"><img src="https://travis-ci.org/vankesteren/tensorsem.svg?branch=master"></img></a>
-    <a href="https://zenodo.org/badge/latestdoi/168356695"><img src="https://zenodo.org/badge/168356695.svg" alt="DOI"></a>
-    [![R build status](https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg)](https://github.com/sodascience/osmenrich/actions)
-    [![Codecov test coverage](https://codecov.io/gh/sodascience/osmenrich/branch/master/graph/badge.svg)](https://codecov.io/gh/sodascience/osmenrich?branch=master)
-  </span>
-  badges: end --></p>
-<p><br></p>
-<div id="enrich-geocoded-data-using-openstreetmap" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#enrich-geocoded-data-using-openstreetmap" class="anchor"></a>Enrich geocoded data using OpenStreetMap</h1></div>
-<p><img src="https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg" alt="Github Action test"><a href="https://zenodo.org/badge/latestdoi/337555188"><img src="https://zenodo.org/badge/337555188.svg" alt="DOI"></a></p>
+</p>
+<p><img src="reference/figures/logo.png" width="250px"></p>
+
+<div id="osmenrich-enrich-geocoded-data-using-openstreetmap" class="section level1">
+
+<!-- badges: start -->
+<p><a href="https://github.com/sodascience/osmenrich/actions"><img src="https://github.com/sodascience/osmenrich/workflows/R-CMD-check/badge.svg" alt="Github Action test"></a> <a href="https://zenodo.org/badge/latestdoi/337555188"><img src="https://zenodo.org/badge/337555188.svg" alt="DOI"></a> <!-- badges: end --></p>
 <p>The goal of <code>osmenrich</code> is to easily enrich geocoded data (<code>latitude</code>/<code>longitude</code>) with geographic features from OpenStreetMap (OSM). The main language of the package is <code>R</code> and this package is designed to work with the <a href="https://r-spatial.github.io/sf/"><code>sf</code></a> and <a href="https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html"><code>osmdata</code></a> packages for collecting and manipulating geodata.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>To install the package, run:</p>
+<p>To install the package, you first need to have the <code>remotes</code> package installed. If you do not have this package yet, please install it first with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"sodascience/osmenrich"</span><span class="op">)</span></code></pre></div>
-<p>or, for the development version, run:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></code></pre></div>
+<p>If you do have this package, due to recent changes in GitHub’s naming of branches, please make sure you have the latest version of <code>remotes</code> or at least version <code>2.2</code>.</p>
+<p>Once you did this, to continue the installation of the <code>osmenrich</code> package, run:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"sodascience/osmenrich@main"</span><span class="op">)</span></code></pre></div>
+<p>or, for the development version, run:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"sodascience/osmenrich@develop"</span><span class="op">)</span></code></pre></div>
 <p>This will use the default public APIs for OSM data and routing (for computing driving/walking distances and durations). <strong>Do not use <code>osmenrich</code> with default APIs for large datasets!</strong> If you want to learn how to use <code>osmenrich</code> for large queries follow the instructions in section <a href="#local-api-setup">Local API Setup</a> below.</p>
 </div>
@@ -122,10 +113,10 @@
 <div id="simple-enrichment-example" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simple-enrichment-example" class="anchor"></a>Simple enrichment example</h3>
-<p>Let’s enrich a spatial (<code>sf</code>) dataset (<code>sf_example</code>) with the number of waste baskets in a radius of 100 meters from each of the point specified in a dataset:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>Let’s enrich a spatial (<code>sf</code>) dataset (<code>sf_example</code>) with the number of waste baskets in a radius of 500 meters from each of the point specified in a dataset:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Import libraries</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">tidyverse</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">osmenrich</span><span class="op">)</span>
 
@@ -153,8 +144,8 @@
 <span class="co">#&gt; * &lt;chr&gt;   &lt;POINT [°]&gt;</span>
 <span class="co">#&gt; 1 Alice  (5.09 52.12)</span>
 <span class="co">#&gt; 2 Bob    (5.08 52.13)</span></code></pre></div>
-<p>To enrich the <code>sf_example</code> dataset with “waste baskets” in a 100m radius, you can create a query using the <code><a href="reference/enrich.html">enrich_osm()</a></code> function. This function uses the bounding box created by the points present in the example dataset and searches for the specified <code>key = "amenity"</code> and <code>value = "waste_basket</code>. You can also add a custom <code>name</code> for the newly created column and specify the radius (<code>r</code>) used in the search. See <a href="https://wiki.openstreetmap.org/wiki/Map_features">Map Features on the website of OSM</a> for a complete list of <code>key</code> and <code>value</code> combinations.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>To enrich the <code>sf_example</code> dataset with “waste baskets” in a 500m radius, you can create a query using the <code><a href="reference/enrich.html">enrich_osm()</a></code> function. This function uses the bounding box created by the points present in the example dataset and searches for the specified <code>key = "amenity"</code> and <code>value = "waste_basket</code>. You can also add a custom <code>name</code> for the newly created column and specify the radius (<code>r</code>) used in the search. See <a href="https://wiki.openstreetmap.org/wiki/Map_features">Map Features on the website of OSM</a> for a complete list of <code>key</code> and <code>value</code> combinations.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Simple OSMEnrich query</span>
 <span class="va">sf_example_enriched</span> <span class="op">&lt;-</span> <span class="va">sf_example</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/enrich.html">enrich_osm</a></span><span class="op">(</span>
@@ -165,9 +156,9 @@
   <span class="op">)</span>
 <span class="co">#&gt; Downloading data for waste_baskets... Done.</span>
 <span class="co">#&gt; Downloaded 147 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.</span>
-<span class="co">#&gt; Computing distance matrix for waste_baskets...Done.</span></code></pre></div>
+<span class="co">#&gt; Computing distance matrix for n_waste_baskets...Done.</span></code></pre></div>
 <p>The resulting enriched dataset <code>sf_example_enriched</code> is a <code>sf</code> object and can be printed as usual to inspect the newly added column <code>n_waste_baskets</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sf_example_enriched</span>
 <span class="co">#&gt; Simple feature collection with 2 features and 2 fields</span>
 <span class="co">#&gt; geometry type:  POINT</span>
@@ -175,11 +166,12 @@
 <span class="co">#&gt; bbox:           xmin: 5.08 ymin: 52.12 xmax: 5.09 ymax: 52.13</span>
 <span class="co">#&gt; geographic CRS: WGS 84</span>
 <span class="co">#&gt; # A tibble: 2 x 3</span>
-<span class="co">#&gt;   person     geometry waste_baskets</span>
+<span class="co">#&gt;   person     geometry n_waste_baskets</span>
 <span class="co">#&gt; * &lt;chr&gt;   &lt;POINT [°]&gt;         &lt;int&gt;</span>
 <span class="co">#&gt; 1 Alice  (5.09 52.12)            75</span>
 <span class="co">#&gt; 2 Bob    (5.08 52.13)             1</span></code></pre></div>
-<p>The waste baskets column is now the result of summing all the wastebaskets in a 500 meter radius for Alice and Bob: <img src="reference/figures/example_wastebaskets_r500.png"></p>
+<p>The waste baskets column is now the result of summing all the wastebaskets in a 500 meter radius for Alice and Bob:</p>
+<p><img src="reference/figures/example_wastebaskets_r500.png"></p>
 </div>
 </div>
 <div id="local-api-setup" class="section level2">
@@ -187,14 +179,14 @@
 <a href="#local-api-setup" class="anchor"></a>Local API setup</h2>
 <p>OSM enrichment can ask for a lot of data, which can overload public APIs. If you intend to enrich large amounts of data or compute routing distances (e.g., driving duration) between many points, you should set up a local API endpoint.</p>
 <p>Multiple <code>docker-compose</code> workflows for doing this are avaialble in the separate <a href="https://github.com/sodascience/osmenrich_docker">osmenrich_docker repository</a>. Use the <code>README</code> in the repository to select the workflow that fits your desired outcome.</p>
-<p><img src="reference/figures/docker.png" width="250px"></p>
+<p><img src="reference/figures/docker.png" alt="Docker logo" width="250px"></p>
 <!-- CONTRIBUTING -->
 </div>
 <div id="contributing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contributing" class="anchor"></a>Contributing</h2>
 <p>Contributions are what make the open source community an amazing place to learn, inspire, and create. Any contributions you make are <strong>greatly appreciated</strong>.</p>
-<p>In this project, the <a href="https://nvie.com/posts/a-successful-%20git-branching-model/">Gitflow workflow</a> is used. Instead of having a single <code>master</code>/<code>main</code> branch, the project makes use of two branches to record the history of the project: <code>develop</code> and <code>master</code>. The <code>master</code> branch is used only for the official releases of the project, while the <code>develop</code> branch is used to integrate the new features developed. Finally, <code>feature</code> branches are used to develop new features or additions to the project that will be <code>rebased and squashed</code> in the <code>develop</code> branch.</p>
+<p>In this project, the <a href="https://nvie.com/posts/a-successful-git-branching-model/">Gitflow workflow</a> is used. Instead of having a single <code>main</code> branch, the project makes use of two branches to record the history of the project: <code>develop</code> and <code>main</code>. The <code>main</code> branch is used only for the official releases of the project, while the <code>develop</code> branch is used to integrate the new features developed. Finally, <code>feature</code> branches are used to develop new features or additions to the project that will be <code>rebased and squashed</code> in the <code>develop</code> branch.</p>
 <p>The workflow to contribute with Gitflow becomes:</p>
 <ol>
 <li>Fork the Project</li>
@@ -208,16 +200,16 @@
 <h2 class="hasAnchor">
 <a href="#license-and-citation" class="anchor"></a>License and citation</h2>
 <p>The <code>osmenrich</code> package is published under the MIT license. When using <code>osmenrich</code> for academic work, please cite:</p>
-<pre><code>van Kesteren, Erik-Jan, Vida, Leonardo, de Bruin, Jonathan, &amp; Oberski, Daniel. (2021, February 11).
-Enrich sf Data with Geographic Features from OpenStreetMaps (Version v1.0). Zenodo. http://doi.org/10.5281/zenodo.4534188</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>van Kesteren, Erik<span class="op">-</span>Jan, Vida, Leonardo, de Bruin, Jonathan, <span class="op">&amp;</span><span class="st"> </span>Oberski, <span class="kw">Daniel.</span> (<span class="dv">2021</span>, February <span class="dv">11</span>).</span>
+<span id="cb7-2"><a href="#cb7-2"></a>Enrich sf Data with Geographic Features from <span class="kw">OpenStreetMaps</span> (Version v1<span class="fl">.0</span>). Zenodo. http<span class="op">:</span><span class="er">//</span>doi.org<span class="op">/</span><span class="fl">10.5281</span><span class="op">/</span>zenodo<span class="fl">.4534188</span></span></code></pre></div>
 <!-- CONTACT -->
 </div>
 <div id="contact" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contact" class="anchor"></a>Contact</h2>
 <p>This package is developed and maintained by the <a href="https://odissei-data.nl/nl/soda/">ODISSEI Social Data Science (SoDa)</a> team.</p>
-<p>Do you have questions, suggestions, or remarks? File an issue in the issue tracker or feel free to contact <a href="https://github.com/vankesteren">Erik-Jan van Kesteren</a> (<a href="https://twitter.com/ejvankesteren">@ejvankesteren</a>) or <a href="https://github.com/leonardovida">Leonardo Vida</a> (<a href="https://twitter.com/leonardojvida">@leonardojvida</a>)</p>
-<p><img src="reference/figures/word_colour-l.png" width="250px"></p>
+<p>Do you have questions, suggestions, or remarks? File an issue in the issue tracker or feel free to contact <a href="https://github.com/vankesteren">Erik-Jan van Kesteren</a> (<br><span class="math display">@<em>e</em><em>j</em><em>v</em><em>a</em><em>n</em><em>k</em><em>e</em><em>s</em><em>t</em><em>e</em><em>r</em><em>e</em><em>n</em></span><br>(<a href="https://twitter.com/ejvankesteren" class="uri">https://twitter.com/ejvankesteren</a>)) or <a href="https://github.com/leonardovida">Leonardo Vida</a> (<br><span class="math display">@<em>l</em><em>e</em><em>o</em><em>n</em><em>a</em><em>r</em><em>d</em><em>o</em><em>j</em><em>v</em><em>i</em><em>d</em><em>a</em></span><br>(<a href="https://twitter.com/leonardojvida" class="uri">https://twitter.com/leonardojvida</a>))</p>
+<p><img src="reference/figures/word_colour-l.png" alt="SoDa logo" width="250px"></p>
 </div>
 </div>
 
@@ -248,9 +240,12 @@ Enrich sf Data with Geographic Features from OpenStreetMaps (Version v1.0). Zeno
 <ul class="list-unstyled">
 <li>
 <a href="https://erikjanvankesteren.nl/">Erik-Jan van Kesteren</a> <br><small class="roles"> Maintainer </small> <a href="https://orcid.org/0000-0003-1548-1663" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Leonardo Jaya Vida <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-0461-016X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Jonathan de Bruin <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4297-0502" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>SoDa Team <br><small class="roles"> Copyright holder, funder </small>  </li>
+<li>
+<a href="https://leonardovida.com/">Leonardo Jaya Vida</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-0461-016X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>
+<a href="https://github.com/J535D165">Jonathan de Bruin</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4297-0502" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>
+<a href="https://odissei-data.nl/nl/soda/">SoDa Team</a> <br><small class="roles"> Copyright holder, funder </small>  </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
@@ -260,7 +255,7 @@ Enrich sf Data with Geographic Features from OpenStreetMaps (Version v1.0). Zeno
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://erikjanvankesteren.nl/">Erik-Jan van Kesteren</a>, Leonardo Jaya Vida, Jonathan de Bruin, SoDa Team.</p>
+  <p>Developed by <a href="https://erikjanvankesteren.nl/">Erik-Jan van Kesteren</a>, <a href="https://leonardovida.com/">Leonardo Jaya Vida</a>, <a href="https://github.com/J535D165">Jonathan de Bruin</a>, <a href="https://odissei-data.nl/nl/soda/">SoDa Team</a>.</p>
 </div>
 
 <div class="pkgdown">

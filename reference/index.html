@@ -62,16 +62,6 @@
 <![endif]-->
 
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NEMHDHYTS8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NEMHDHYTS8');
-</script>
-
 
   </head>
 
@@ -89,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">osmenrich</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
       </span>
     </div>
 
@@ -160,13 +150,13 @@
       <tr>
         
         <td>
-          <p><code><a href="enrich.html">enrich_osm()</a></code> </p>
+          <p><code><a href="enrich.html">enrich_osm()</a></code> <code><a href="enrich.html">data_enrichment()</a></code> <code><a href="enrich.html">measure_matrix()</a></code> <code><a href="enrich.html">control_enrich()</a></code> </p>
         </td>
-        <td><p>Enrich OSM Data</p></td>
+        <td><p>Enrich <code>sf</code> object with OSM data</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="enrich_opq.html">enrich_opq()</a></code> <code><a href="enrich_opq.html">add_bbox()</a></code> <code><a href="enrich_opq.html">add_feature()</a></code> <code><a href="enrich_opq.html">add_type()</a></code> <code><a href="enrich_opq.html">add_distance()</a></code> <code><a href="enrich_opq.html">add_kernel()</a></code> </p>
+          <p><code><a href="enrich_opq.html">enrich_opq()</a></code> <code><a href="enrich_opq.html">add_bbox()</a></code> <code><a href="enrich_opq.html">add_feature()</a></code> <code><a href="enrich_opq.html">add_type()</a></code> <code><a href="enrich_opq.html">add_measure()</a></code> <code><a href="enrich_opq.html">add_kernel()</a></code> </p>
         </td>
         <td><p>Enrich an overpass query for column output</p></td>
       </tr>
@@ -185,15 +175,33 @@
       <tr>
         
         <td>
-          <p><code><a href="distancefuns.html">duration_by_foot()</a></code> <code><a href="distancefuns.html">distance_by_foot()</a></code> <code><a href="distancefuns.html">duration_by_car()</a></code> <code><a href="distancefuns.html">distance_by_car()</a></code> <code><a href="distancefuns.html">duration_by_bike()</a></code> <code><a href="distancefuns.html">distance_by_bike()</a></code> <code><a href="distancefuns.html">osrm_distance()</a></code> <code><a href="distancefuns.html">osrm_duration()</a></code> </p>
+          <p><code><a href="common_swift.html">common_swift</a></code> </p>
         </td>
-        <td><p>Compute distance measures matrix using the OSRM server</p></td>
+        <td><p>Nests count of common swifts in Utrecht.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="enrich_opq.html">enrich_opq()</a></code> <code><a href="enrich_opq.html">add_bbox()</a></code> <code><a href="enrich_opq.html">add_feature()</a></code> <code><a href="enrich_opq.html">add_type()</a></code> <code><a href="enrich_opq.html">add_measure()</a></code> <code><a href="enrich_opq.html">add_kernel()</a></code> </p>
+        </td>
+        <td><p>Enrich an overpass query for column output</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="kernels.html">kernel_gaussian()</a></code> <code><a href="kernels.html">kernel_parabola()</a></code> <code><a href="kernels.html">kernel_uniform()</a></code> </p>
         </td>
         <td><p>Kernels used in summarizing features</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="measure_funs.html">duration_by_foot()</a></code> <code><a href="measure_funs.html">distance_by_foot()</a></code> <code><a href="measure_funs.html">duration_by_car()</a></code> <code><a href="measure_funs.html">distance_by_car()</a></code> <code><a href="measure_funs.html">duration_by_bike()</a></code> <code><a href="measure_funs.html">distance_by_bike()</a></code> <code><a href="measure_funs.html">osrm_distance()</a></code> <code><a href="measure_funs.html">osrm_duration()</a></code> </p>
+        </td>
+        <td><p>Compute distance and duration measures matrix using the OSRM server.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="osrm_table.html">osrm_table()</a></code> </p>
+        </td>
+        <td><p>Get travel time matrices between objects</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -210,15 +218,15 @@
       <tr>
         
         <td>
-          <p><code><a href="osrmtable.html">osrm_table()</a></code> </p>
+          <p><code><a href="osrm_table.html">osrm_table()</a></code> </p>
         </td>
-        <td><p>Get Travel Time Matrices Between Points</p></td>
+        <td><p>Get travel time matrices between objects</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="create_osrm_input_table.html">create_osrm_input_table()</a></code> </p>
         </td>
-        <td><p>Build OSRM query applying google encryption algorithm if necessary</p></td>
+        <td><p>Build OSRM query</p></td>
       </tr><tr>
         
         <td>
@@ -289,7 +297,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://erikjanvankesteren.nl/'>Erik-Jan van Kesteren</a>, Leonardo Jaya Vida, Jonathan de Bruin, SoDa Team.</p>
+  <p>Developed by <a href='https://erikjanvankesteren.nl/'>Erik-Jan van Kesteren</a>, <a href='https://leonardovida.com/'>Leonardo Jaya Vida</a>, <a href='https://github.com/J535D165'>Jonathan de Bruin</a>, <a href='https://odissei-data.nl/nl/soda/'>SoDa Team</a>.</p>
 </div>
 
 <div class="pkgdown">

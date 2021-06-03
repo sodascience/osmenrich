@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check OSRM's query limits and provide warnings. — check_osrm_limits • osmenrich</title>
+<title>Get travel time matrices between objects — osrm_table • osmenrich</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,9 @@
 
 
 
-<meta property="og:title" content="Check OSRM's query limits and provide warnings. — check_osrm_limits" />
-<meta property="og:description" content="This function is created in order to prevent the user
-from composing queries that go over the default limits of the
-OSRM servers." />
+<meta property="og:title" content="Get travel time matrices between objects — osrm_table" />
+<meta property="og:description" content="Build and send OSRM API queries to get travel time matrices
+between objects. This function interfaces the table OSRM service." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -127,23 +126,71 @@ OSRM servers." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Check OSRM's query limits and provide warnings.</h1>
+    <h1>Get travel time matrices between objects</h1>
     
-    <div class="hidden name"><code>check_osrm_limits.Rd</code></div>
+    <div class="hidden name"><code>osrm_table.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function is created in order to prevent the user
-from composing queries that go over the <code>default</code> limits of the
-OSRM servers.</p>
+    <p>Build and send OSRM API queries to get travel time matrices
+between objects. This function interfaces the <em>table</em> OSRM service.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_osrm_limits</span><span class='op'>(</span><span class='va'>src</span>, <span class='va'>dst</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>osrm_table</span><span class='op'>(</span>
+  src <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dst <span class='op'>=</span> <span class='cn'>NULL</span>,
+  measure <span class='op'>=</span> <span class='st'>"duration"</span>,
+  osrm_profile <span class='op'>=</span> <span class='st'>"driving"</span>,
+  osrm_server <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"osrm.server"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>src</th>
+      <td><p>A data frame containing origin objects identifiers, longitudes
+and latitudes (WGS84). It can also be a <code>SpatialPointsDataFrame</code>, a
+<code>SpatialPolygonsDataFrame</code> or an <code>sf</code> object. If so, row names are
+used as identifiers. If dst and src parameters are used,
+only pairs between scr/dst are computed.</p></td>
+    </tr>
+    <tr>
+      <th>dst</th>
+      <td><p>A data frame containing destination objects identifiers, longitudes
+and latitudes (WGS84). It can also be a <code>SpatialPointsDataFrame</code> a
+<code>SpatialPolygonsDataFrame</code> or an <code>sf</code> object. If so, row names are used
+as identifiers.</p></td>
+    </tr>
+    <tr>
+      <th>measure</th>
+      <td><p>A character indicating what measures are calculated. It can
+be "duration" (in minutes), "distance" (meters), or both c('duration',
+'distance'). The public server only allows "duration".</p></td>
+    </tr>
+    <tr>
+      <th>osrm_profile</th>
+      <td><p>The routing profile to use, e.g. "car", "bike" or "foot"
+(when not using the public server). Uses <code><a href='https://rdrr.io/r/base/options.html'>getOption("osrm.profile")</a></code> to
+retrieve the default profile ("car").</p></td>
+    </tr>
+    <tr>
+      <th>osrm_server</th>
+      <td><p>The base URL of the routing server. Uses
+<code><a href='https://rdrr.io/r/base/options.html'>getOption("osrm.server")</a></code> to retrieve the current server by default.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list containing 3 data frames is returned.
+<code>durations</code> is the matrix of travel times (in minutes);
+<code>sources</code> and <code>destinations</code> are the coordinates of
+the origin and destination objects actually used to compute the travel
+times (WGS84).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='osrm_table.html'>osrm_table()</a></code> for the main function</p></div>
+    <div class='dont-index'><p><code><a href='set_server_profile.html'>set_server_profile()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Enrich OSM Data — enrich • osmenrich</title>
+<title>Enrich sf object with OSM data — enrich • osmenrich</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,12 +46,8 @@
 
 
 
-<meta property="og:title" content="Enrich OSM Data — enrich" />
-<meta property="og:description" content="Perform enriched query on osm and add as new column.
-The enrichment call works in the following way: an enriched_overpass_query
-(e.g. waste_query) is created and then a new column is added by specifying
-the name of the column (&quot;waste_baskets = waste_query&quot;). This call
-also works with more than one queries." />
+<meta property="og:title" content="Enrich sf object with OSM data — enrich" />
+<meta property="og:description" content="Perform enriched query on OSM and add as new column." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -66,16 +62,6 @@ also works with more than one queries." />
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NEMHDHYTS8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NEMHDHYTS8');
-</script>
 
 
   </head>
@@ -94,7 +80,7 @@ also works with more than one queries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">osmenrich</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
       </span>
     </div>
 
@@ -139,17 +125,13 @@ also works with more than one queries." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Enrich OSM Data</h1>
+    <h1>Enrich <code>sf</code> object with OSM data</h1>
     
     <div class="hidden name"><code>enrich.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Perform enriched query on osm and add as new column.</p>
-<p>The enrichment call works in the following way: an <code>enriched_overpass_query</code>
-(e.g. <code>waste_query</code>) is created and then a new column is added by specifying
-the name of the column (<code>"waste_baskets = waste_query"</code>). This call
-also works with more than one queries.</p>
+    <p>Perform enriched query on OSM and add as new column.</p>
     </div>
 
     <pre class="usage"><span class='fu'>enrich_osm</span><span class='op'>(</span>
@@ -158,11 +140,20 @@ also works with more than one queries.</p>
   key <span class='op'>=</span> <span class='cn'>NULL</span>,
   value <span class='op'>=</span> <span class='cn'>NULL</span>,
   type <span class='op'>=</span> <span class='st'>"points"</span>,
-  distance <span class='op'>=</span> <span class='st'>"spherical"</span>,
+  measure <span class='op'>=</span> <span class='st'>"spherical"</span>,
+  r <span class='op'>=</span> <span class='cn'>NULL</span>,
   kernel <span class='op'>=</span> <span class='st'>"uniform"</span>,
-  <span class='va'>...</span>,
-  .verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span></pre>
+  reduce_fun <span class='op'>=</span> <span class='va'>sum</span>,
+  control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  .verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
+
+<span class='fu'>data_enrichment</span><span class='op'>(</span><span class='va'>ref_data</span>, <span class='va'>query</span>, <span class='va'>colname</span>, .verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
+<span class='fu'>measure_matrix</span><span class='op'>(</span><span class='va'>measure_name</span>, <span class='va'>measure_fun</span>, <span class='va'>ref_geometry</span>, <span class='va'>ftr_geometry</span><span class='op'>)</span>
+
+<span class='fu'>control_enrich</span><span class='op'>(</span>timeout <span class='op'>=</span> <span class='fl'>300</span>, memsize <span class='op'>=</span> <span class='fl'>1073741824</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -177,11 +168,12 @@ also works with more than one queries.</p>
     </tr>
     <tr>
       <th>key</th>
-      <td><p>target OSM feature key to add, see add_osm_feature</p></td>
+      <td><p>target OSM feature key to add, see <code><a href='https://docs.ropensci.org/osmdata/reference/add_osm_feature.html'>osmdata::add_osm_feature()</a></code></p></td>
     </tr>
     <tr>
       <th>value</th>
-      <td><p>target value for OSM feature key to add, see add_osm_feature</p></td>
+      <td><p>target value for OSM feature key to add, see
+<code><a href='https://docs.ropensci.org/osmdata/reference/add_osm_feature.html'>osmdata::add_osm_feature()</a></code></p></td>
     </tr>
     <tr>
       <th>type</th>
@@ -189,47 +181,112 @@ also works with more than one queries.</p>
 (e.g., points, polygons), see details</p></td>
     </tr>
     <tr>
-      <th>distance</th>
-      <td><p><code>character</code> the distance metric used, see details</p></td>
+      <th>measure</th>
+      <td><p><code>character</code> the measure metric used, see details</p></td>
+    </tr>
+    <tr>
+      <th>r</th>
+      <td><p>The search radius used by the <code>kernel</code> function.</p></td>
     </tr>
     <tr>
       <th>kernel</th>
       <td><p><code>function</code> the kernel function used, see details</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p><code>enriched_overpass_query</code> column or columns to add</p></td>
+      <th>reduce_fun</th>
+      <td><p>The aggregation function used by the <code>kernel</code> function to
+aggregate the retrieved data objects</p></td>
+    </tr>
+    <tr>
+      <th>control</th>
+      <td><p>The list with configuration variables for the OSRM server.
+It contains <code>timeout</code>, defining the number of seconds before the request
+to OSRM times out, and <code>memsize</code>, defining the maximum size of the query to
+OSRM.</p></td>
     </tr>
     <tr>
       <th>.verbose</th>
       <td><p><code>bool</code> whether to print info during enrichment</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional parameters to be passed into the OSM query, such as
+a user-defined kernel.</p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>Type</code> represents the feature type to be considered. Usually this
+would be points, but polygons and multipolygons are also possible. This
+argument can also be a vector of multiple types. Non-point types will be
+converted to points using the <code>st_centroid</code> function from the <code>sf</code> package
+(NB this does not necessarily work well for all features!).
+Available options are:</p><ul>
+<li><p>points</p></li>
+<li><p>lines</p></li>
+<li><p>polygons</p></li>
+<li><p>multilines</p></li>
+<li><p>multipolygons</p></li>
+</ul>
+
+<p><code>Measure</code> represents the metric used to compute the distances or durations
+between the rows in the dataset and the OSM features. The following metrics
+are available in this package, assuming that the OSRM server is setup as
+suggested in our guide at:
+https://github.com/sodascience/osmenrich_docker:</p><ul>
+<li><p>spherical</p></li>
+<li><p>distance_by_foot</p></li>
+<li><p>duration_by_foot</p></li>
+<li><p>distance_by_car</p></li>
+<li><p>duration_by_car</p></li>
+<li><p>distance_by_bike</p></li>
+<li><p>duration_by_bike</p></li>
+</ul>
+
+<p><code>Kernel</code> indicates the kernel function from the <code>osmenrich</code> package to be
+used to weight the objects retrieved by their distances (or durations) from
+the reference objects and then convert these vectors into single numbers.
+The simplest kernel allows the user to count the number of occurrences
+of reference objects within a radius <code>r</code> and is called <code>kernel_uniform</code>.</p>
+<p>For more details see the introductory vignette of <code>osmenrich</code>:
+<code>vignette("introduction", package = "osmenrich")</code></p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>If you want to get a large number of points make sure to set the
-.timeout (time before request times out) and .memsize (maxmimum
+    <p>If you want to get a large number of objects make sure to set the
+<code>.timeout</code> (time before request times out) and <code>.memsize</code> (maxmimum
 size of the request) arguments for the Overpass server and set
 the "max-table-size" argument correctly when starting the
 OSRM server(s).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='enrich_opq.html'>enrich_opq</a></code></p></div>
+    <div class='dont-index'><p><code><a href='enrich_opq.html'>enrich_opq()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># Load libraries</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
 
-<span class='co'>#' # Enrich data creating new column `waste_baskets`</span>
-<span class='va'>sf_enriched</span> <span class='op'>&lt;-</span> <span class='va'>dataset</span> <span class='op'>%&gt;%</span>
+<span class='co'># Create example dataset</span>
+<span class='va'>sf_example</span> <span class='op'>&lt;-</span>
+<span class='fu'>tribble</span><span class='op'>(</span>
+  <span class='op'>~</span><span class='va'>person</span>,  <span class='op'>~</span><span class='va'>lat</span>,   <span class='op'>~</span><span class='va'>lon</span>,
+  <span class='st'>"Alice"</span>,  <span class='fl'>52.12</span>,  <span class='fl'>5.09</span>,
+  <span class='st'>"Bob"</span>,    <span class='fl'>52.13</span>,  <span class='fl'>5.08</span>,
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span>
+  coords <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lon"</span>, <span class='st'>"lat"</span><span class='op'>)</span>,
+  crs <span class='op'>=</span> <span class='fl'>4326</span>
+ <span class='op'>)</span>
+
+<span class='co'># Enrich data creating new column `waste_baskets`</span>
+<span class='va'>sf_enriched</span> <span class='op'>&lt;-</span> <span class='va'>sf_example</span> <span class='op'>%&gt;%</span>
   <span class='fu'>enrich_osm</span><span class='op'>(</span>
-    name <span class='op'>=</span> <span class='st'>"waste_baskets"</span>,
+    name <span class='op'>=</span> <span class='st'>"n_waste_baskets"</span>,
     key <span class='op'>=</span> <span class='st'>"amenity"</span>,
     value <span class='op'>=</span> <span class='st'>"waste_basket"</span>,
-    type <span class='op'>=</span> <span class='st'>"points"</span>,
-    distance <span class='op'>=</span> <span class='st'>"walking_duration"</span>,
-    kernel <span class='op'>=</span> <span class='st'>"uniform"</span>,
-    r <span class='op'>=</span> <span class='fl'>100</span>
+    reduce_fun <span class='op'>=</span> <span class='va'>sum</span>
   <span class='op'>)</span>
 <span class='op'>}</span>
 
@@ -245,7 +302,7 @@ OSRM server(s).</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://erikjanvankesteren.nl/'>Erik-Jan van Kesteren</a>, Leonardo Jaya Vida, Jonathan de Bruin, SoDa Team.</p>
+  <p>Developed by <a href='https://erikjanvankesteren.nl/'>Erik-Jan van Kesteren</a>, <a href='https://leonardovida.com/'>Leonardo Jaya Vida</a>, <a href='https://github.com/J535D165'>Jonathan de Bruin</a>, <a href='https://odissei-data.nl/nl/soda/'>SoDa Team</a>.</p>
 </div>
 
 <div class="pkgdown">
