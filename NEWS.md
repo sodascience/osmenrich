@@ -1,5 +1,21 @@
 # osmenrich
 
+## osmenrich 1.2
+
+### Major changes:
+- Documentation updates:
+  - Add hyperlink to Map Features on the OSM website
+  - Remove words like 'our' and 'we'
+  - Fixed documentation inaccuracies
+  - Refactored naming of variables
+  - Replace `dontrun` by `donttest`
+  - Clarify title of `enrich_osm.R`
+  - Update README and add wastebasket figure
+- Package updates:
+  - Added the example dataset `common_swift`
+  - Move details of `enrich_opq.R` to `enrich_osm.R`
+  - Add feature geometry correction in `enrich_osm.R`
+
 ## osmenrich 1.1
 
 ### Major changes:

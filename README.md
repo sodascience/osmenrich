@@ -1,11 +1,13 @@
 
 <!-- README.md is generated from README.Rmd-->
 
-<p align="center">
+<p align="right">
 
 <img src="man/figures/logo.png" width="250px"></img>
 
 </p>
+
+<br/>
 
 # osmenrich: enrich geocoded data using OpenStreetMap
 
