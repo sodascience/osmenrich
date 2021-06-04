@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">osmenrich</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
       </span>
     </div>
 
@@ -210,7 +210,7 @@
 <span class="co">#&gt; ℹ Downloading data for commercial_activity_1km...</span>
 <span class="co">#&gt; ✓ Downloaded data for commercial_activity_1km.</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ℹ Downloaded 1494 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.</span>
+<span class="co">#&gt; ℹ Downloaded 1495 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.</span>
 <span class="co">#&gt; ℹ Computing measure matrix for commercial_activity_1km...</span>
 <span class="co">#&gt; ✓ Computed measure matrix for commercial_activity_1km.</span>
 <span class="co">#&gt; </span>
@@ -246,10 +246,9 @@
 <span class="co">#&gt; Warning in st_centroid.sfc(bird_grid): st_centroid does not give correct</span>
 <span class="co">#&gt; centroids for longitude/latitude data</span>
 <span class="co">#&gt; ℹ Downloading data for commercial_activity_1km...</span>
-<span class="co">#&gt; Request failed [429]. Retrying in 1 seconds...</span>
 <span class="co">#&gt; ✓ Downloaded data for commercial_activity_1km.</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ℹ Downloaded 1493 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.</span>
+<span class="co">#&gt; ℹ Downloaded 1494 points, 0 lines, 0 polygons, 0 mlines, 0 mpolygons.</span>
 <span class="co">#&gt; ℹ Computing measure matrix for commercial_activity_1km...</span>
 <span class="co">#&gt; ✓ Computed measure matrix for commercial_activity_1km.</span>
 <span class="co">#&gt; </span>
@@ -330,7 +329,7 @@
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Family: Zero inflated Poisson(1.672,0.844) </span>
+<span class="co">#&gt; Family: Zero inflated Poisson(1.676,0.847) </span>
 <span class="co">#&gt; Link function: identity </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Formula:</span>
@@ -339,21 +338,21 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Parametric coefficients:</span>
 <span class="co">#&gt;                                   Estimate Std. Error z value Pr(&gt;|z|)    </span>
-<span class="co">#&gt; (Intercept)                         -6.523      1.094  -5.963 2.47e-09 ***</span>
-<span class="co">#&gt; poly(commercial_activity_1km, 2)1 -319.973    101.346  -3.157 0.001593 ** </span>
-<span class="co">#&gt; poly(commercial_activity_1km, 2)2 -200.681     56.716  -3.538 0.000403 ***</span>
-<span class="co">#&gt; tree_1km                           -27.490     16.178  -1.699 0.089269 .  </span>
+<span class="co">#&gt; (Intercept)                         -6.500      1.094  -5.942 2.81e-09 ***</span>
+<span class="co">#&gt; poly(commercial_activity_1km, 2)1 -317.831    101.208  -3.140 0.001687 ** </span>
+<span class="co">#&gt; poly(commercial_activity_1km, 2)2 -199.202     56.559  -3.522 0.000428 ***</span>
+<span class="co">#&gt; tree_1km                           -27.364     16.115  -1.698 0.089498 .  </span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Approximate significance of smooth terms:</span>
 <span class="co">#&gt;           edf Ref.df Chi.sq p-value    </span>
-<span class="co">#&gt; te(x,y) 14.97     24  89.92  &lt;2e-16 ***</span>
+<span class="co">#&gt; te(x,y) 14.96     24  89.77  &lt;2e-16 ***</span>
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Deviance explained = 91.1%</span>
-<span class="co">#&gt; -REML = 165.51  Scale est. = 1         n = 299</span></code></pre></div>
+<span class="co">#&gt; -REML =  165.5  Scale est. = 1         n = 299</span></code></pre></div>
 <p>You can also plot the marginal effect of commercial activity and check that birds are negatively affected by too little shops in the area (not enough food?) as well as too many (too many people?).</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.10</span>, <span class="fl">0.01</span><span class="op">)</span>
