@@ -1,13 +1,12 @@
 
 <!-- README.md is generated from README.Rmd-->
 
-<p align="right">
+<p align="center">
 
-<img src="man/figures/logo.png" width="250px"></img>
+<a href="https://github.com/sodascience/osmenrich">
+<img width="30%" height="30%" src="man/figures/logo.png"> </a>
 
 </p>
-
-<br/>
 
 # osmenrich: enrich geocoded data using OpenStreetMap
 
@@ -168,24 +167,9 @@ Contributions are what make the open source community an amazing place
 to learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
-In this project, the [Gitflow
-workflow](https://nvie.com/posts/a-successful-git-branching-model/) is
-used. Instead of having a single `main` branch, the project makes use of
-two branches to record the history of the project: `develop` and `main`.
-The `main` branch is used only for the official releases of the project,
-while the `develop` branch is used to integrate the new features
-developed. Finally, `feature` branches are used to develop new features
-or additions to the project that will be `rebased and squashed` in the
-`develop` branch.
-
-The workflow to contribute with Gitflow becomes:
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b
-    feature/<AmazingFeature>`)
-3.  Commit your Changes (`git commit -m 'Add some <AmazingFeature>'`)
-4.  Push to the Branch (`git push origin feature/<AmazingFeature>`)
-5.  Open a Pull Request
+Please refer to the
+[CONTRIBUTING](https://github.com/sodascience/osmenrich/blob/main/CONTRIBUTING.md)
+file for more information on issues and pull requests.
 
 ## License and citation
 
