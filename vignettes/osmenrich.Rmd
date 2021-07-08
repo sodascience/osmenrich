@@ -212,8 +212,10 @@ sf_example_advanced
 # > 2 Bob        2     2 (5.08 52.13)             0
 ```
 
-### Advanced Example 
+### Advanced Examples 
 
-For a more advanced example in which `osmenrich` is put to use with other packages, please refer to [this tutorial](advanced_enrichment.Rmd).
+For a more advanced example in which `osmenrich` is put to use with other packages, please refer to [this tutorial](advanced_enrichment).
+
+For an example on the working of kernels within `osmenrich`, please refer to [this tutorial](introduction_kernels).
 
 
