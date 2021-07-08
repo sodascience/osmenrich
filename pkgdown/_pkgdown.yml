@@ -38,7 +38,7 @@ reference:
   - title: Retrieve and compute distances and durations
     desc: Functions used to retrieve distances and duration from OSRM servers and kernel functions used to compute aggregation of these metrics.
   - contents:
-      - distance_funs
+      - measure_funs
       - kernels
   - title: OSRM functions
     desc: Functions to communicate with remote or local OSRM servers.
@@ -55,6 +55,10 @@ reference:
       - url_available
       - adjust_coord
       - format_coord_table
+  - title: Example data
+    desc: Example dataframe for basic enrichments.
+  - contents:
+      - common_swift
 
 navbar:
   structure:
