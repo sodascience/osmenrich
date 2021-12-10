@@ -19,13 +19,21 @@ enrich_osm(
   kernel = "uniform",
   reduce_fun = sum,
   control = list(),
+  exact_distance = TRUE,
   .verbose = TRUE,
   ...
 )
 
-data_enrichment(ref_data, query, colname, .verbose = TRUE)
+data_enrichment(ref_data, query, colname, .verbose, r, exact_distance)
 
-measure_matrix(measure_name, measure_fun, ref_geometry, ftr_geometry)
+measure_matrix(
+  measure_name,
+  measure_fun,
+  ref_geometry,
+  ftr_geometry,
+  r,
+  exact_distance
+)
 
 control_enrich(timeout = 300, memsize = 1073741824)
 }
@@ -55,6 +63,9 @@ aggregate the retrieved data objects}
 It contains \code{timeout}, defining the number of seconds before the request
 to OSRM times out, and \code{memsize}, defining the maximum size of the query to
 OSRM.}
+
+\item{exact_distance}{\code{bool} whether to use exact distances or euclidean distances
+(much faster but give small differences in the kernel estimation)}
 
 \item{.verbose}{\code{bool} whether to print info during enrichment}
 
