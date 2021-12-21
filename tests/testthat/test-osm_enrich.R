@@ -25,5 +25,5 @@ test_that("enrich_osm() test if example enrichment works", {
       measure = "spherical"
     )
 
-  expect_equal(class(sf_enriched$waste_baskets), "integer")
+  expect_equal(class(sf_enriched$waste_baskets), "numeric")
 })

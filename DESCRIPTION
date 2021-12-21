@@ -35,7 +35,8 @@ Imports:
     RCurl,
     jsonlite,
     cli,
-    glue
+    glue,
+    dbscan
 RoxygenNote: 7.1.1.9000
 Roxygen: list(markdown = TRUE)
 Suggests:
