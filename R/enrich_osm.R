@@ -18,6 +18,8 @@
 #'   It contains `timeout`, defining the number of seconds before the request
 #'   to OSRM times out, and `memsize`, defining the maximum size of the query to
 #'   OSRM.
+#' @param exact_distance `bool` whether to use exact distances or euclidean distances
+#' (much faster but give small differences in the kernel estimation)
 #' @param .verbose `bool` whether to print info during enrichment
 #' @param ... Additional parameters to be passed into the OSM query, such as
 #'   a user-defined kernel.
@@ -96,18 +98,19 @@
 #'   OSRM server(s).
 #' @export
 enrich_osm <- function(
-                       dataset,
-                       name = NULL,
-                       key = NULL,
-                       value = NULL,
-                       type = "points",
-                       measure = "spherical",
-                       r = NULL,
-                       kernel = "uniform",
-                       reduce_fun = sum,
-                       control = list(),
-                       .verbose = TRUE,
-                       ...) {
+  dataset,
+  name = NULL,
+  key = NULL,
+  value = NULL,
+  type = "points",
+  measure = "spherical",
+  r = NULL,
+  kernel = "uniform",
+  reduce_fun = sum,
+  control = list(),
+  exact_distance = TRUE,
+  .verbose = TRUE,
+  ...) {
   if (is.null(name)) stop("Enter a query name.")
   if (length(name) > 1) {
     stop("You can enrich one query at the time only.")
@@ -123,7 +126,7 @@ enrich_osm <- function(
     )
     # Enrichment call
     enriched_data <- data_enrichment(
-      ref_data = dataset, query = query, colname = name, .verbose = .verbose
+      ref_data = dataset, query = query, colname = name, .verbose = .verbose, r = r, exact_distance = exact_distance
     )
     return(enriched_data)
   }
@@ -131,7 +134,7 @@ enrich_osm <- function(
 
 #' @rdname enrich
 #' @keywords internal
-data_enrichment <- function(ref_data, query, colname, .verbose = TRUE) {
+data_enrichment <- function(ref_data, query, colname, .verbose, r, exact_distance) {
   # Check inputs
   if (!is(ref_data, "sf")) stop("Data should be sf object.")
   check_enriched_opq(query)
@@ -208,20 +211,27 @@ data_enrichment <- function(ref_data, query, colname, .verbose = TRUE) {
     measure_name = query[["measure"]],
     measure_fun  = query[["measurefun"]],
     ref_geometry = ref_geometry,
-    ftr_geometry = ftr_geometry
+    ftr_geometry = ftr_geometry,
+    r = r,
+    exact_distance = exact_distance
   )
 
-  # Apply the kernel function over the rows of the measure matrix
-  apply_args <-
-    c(
-      list(
-        X = measure_mat,
-        MARGIN = 1,
-        FUN = query[["kernelfun"]]
-      ),
-      query[["kernelpars"]]
-    )
-  feature <- do.call(what = apply, args = apply_args)
+
+  if (query[["measure"]] == "spherical") {
+    feature <- purrr::map_dbl(measure_mat, query[["kernelfun"]], r = query[["kernelpars"]][[1]])
+  } else {
+    # Apply the kernel function over the rows of the measure matrix
+    apply_args <-
+      c(
+        list(
+          X = measure_mat,
+          MARGIN = 1,
+          FUN = query[["kernelfun"]]
+        ),
+        query[["kernelpars"]]
+      )
+    feature <- do.call(what = apply, args = apply_args)
+  }
 
   if (.verbose) {
     cli::cli_process_done()
@@ -234,12 +244,40 @@ data_enrichment <- function(ref_data, query, colname, .verbose = TRUE) {
 #' @rdname enrich
 #' @keywords internal
 measure_matrix <- function(measure_name,
-                            measure_fun,
-                            ref_geometry,
-                            ftr_geometry) {
+                           measure_fun,
+                           ref_geometry,
+                           ftr_geometry,
+                           r,
+                           exact_distance) {
   # If "spherical" then no call to OSRM necessary
   if (measure_name == "spherical") {
-    matrix <- sf::st_distance(ref_geometry, ftr_geometry)
+    if (length(ftr_geometry) == 0) {
+      #Infinite distance if there are no points
+      matrix <- rep(Inf, nrow(ref_geometry))
+    } else {
+      # Convert to meters
+      m_ref_geometry <- sf::st_coordinates(sf::st_transform(ref_geometry, crs = 3488))
+      m_ftr_geometry <- sf::st_coordinates(sf::st_transform(ftr_geometry, crs = 3488))
+
+      if (exact_distance){
+        # Calculate indices of neighbors to radius r + 10% since the distance are not exact. We re-calculate distances next and filter during the kernel transformation.
+        ids <- dbscan::frNN(x = m_ftr_geometry, query = m_ref_geometry, sort = FALSE,
+                            eps = r*1.25)$id
+        # Calculate neighbors
+        ids_coord <- lapply(ids, function(i) {ftr_geometry[i]} )
+
+        #Calculate correct distances
+        ref_geometry_list <- split(ref_geometry, seq(nrow(ref_geometry)))
+        matrix <- purrr::map2(ref_geometry_list, ids_coord, sf::st_distance)
+        matrix <- lapply(matrix,as.vector)
+      }
+      else {
+        # Calculate euclidean distances
+        matrix <- dbscan::frNN(x = m_ftr_geometry, query = m_ref_geometry, sort = FALSE,
+                               eps = r*1.25)$dist
+      }
+    }
+
     return(matrix)
   }
 
